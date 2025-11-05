@@ -1,6 +1,6 @@
 html {
   scroll-behavior: smooth;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 body {
@@ -10,7 +10,7 @@ body {
   /* background: whitesmoke; */
   position: relative;
   background-color: ghostwhite;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 ::selection {
   background-color: olive;
@@ -511,31 +511,71 @@ html::-webkit-scrollbar-thumb:hover {
   bottom: 0.8rem;
 }
 
-/* ===== 行動版 Mobile ===== */
+/* Desktop - Hide mobile tab switcher */
+.mobile-tab-switcher {
+  display: none !important;
+}
+
 @media screen and (max-width: 600px) {
-  /* html,
+  /* 強制啟用滾動 */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  html {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    height: auto !important;
+    min-height: 100vh;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+  
   body {
-    overflow: auto !important;
-  } */
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100vh;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    position: relative !important;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+  
   .layout {
     width: 100vw;
-    height: auto;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
     display: block;
+    position: relative !important;
+    overflow: visible !important;
   }
   .sidebar {
     width: 100vw;
     height: auto;
-    flex-direction: row;
+    min-height: auto;
+    flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
-    position: static;
+    align-items: stretch;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
     border-bottom: 1px solid #ccc;
-    padding: 0;
-    font-size: 1rem;
+    padding: 0.5em;
+    font-size: 0.9rem;
+    overflow-x: visible;
+    overflow-y: visible;
   }
   .sidebar hr,
   .sidebar-hr {
-    display: none;
+    display: block;
+    border: 0;
+    height: 1px;
+    background: #ccc;
+    margin: 0.3em 0;
   }
   .sidebar-middle {
     display: none;
@@ -543,53 +583,125 @@ html::-webkit-scrollbar-thumb:hover {
   .sidebar a,
   .sidebar > a,
   .sidebar > div {
-    display: inline-block;
-    margin: 0 0.5em;
-    padding: 0;
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0.5em;
+    text-align: left;
+    border-radius: 4px;
+  }
+  .sidebar a:hover,
+  .sidebar > a:hover {
+    background-color: rgba(0, 0, 0, 0.05);
   }
   .sidebar p,
   .sidebar a p {
-    display: inline;
-    font-size: 1rem;
-    padding: 0 0.5em;
+    display: block;
+    font-size: 0.9rem;
+    padding: 0.3em 0;
     margin: 0;
-    background: none !important;
-    color: #222 !important;
+    white-space: normal;
+    text-align: left;
+  }
+  .sidebar p[style*="background-color"] {
+    background-color: inherit !important;
   }
   .machine-rotate-logo {
-    width: 2.5em !important;
+    width: 2em !important;
     height: auto !important;
     margin-right: 0.5em;
+    vertical-align: middle;
   }
+  /* Mobile Tab Switcher - 只在手機版顯示 */
+  .mobile-tab-switcher {
+    display: flex !important;
+    gap: 0.5em;
+    padding: 0.5em;
+    background-color: ghostwhite;
+    border-bottom: 1px solid #ccc;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    margin: -0.5em -0.5em 0.5em -0.5em;
+  }
+  
+  .mobile-tab-btn {
+    flex: 1;
+    padding: 0.8em 1em;
+    border: 1px solid #ccc;
+    background-color: white;
+    color: #222;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-radius: 4px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .mobile-tab-btn.active {
+    background-color: olivedrab;
+    color: ghostwhite;
+    border-color: olivedrab;
+    font-weight: bold;
+  }
+  
+  .mobile-tab-btn:active {
+    transform: scale(0.98);
+  }
+  
   .mid,
-  .right,
-  .account,
-  .admin,
-  .edit-page {
-    display: block !important;
-    width: 100vw !important;
-    min-width: 0 !important;
-    max-width: 100vw !important;
-    height: auto !important;
-    overflow: visible !important;
-    box-sizing: border-box;
+  .right {
+    position: relative;
+  }
+  
+  .mid.hidden,
+  .right.hidden {
+    display: none !important;
   }
   .scroll-inner {
     height: auto !important;
     max-height: none !important;
     overflow: visible !important;
+    padding: 0.5em;
     padding-bottom: 2em;
   }
-  table.layout,
-  table,
-  .faqtable {
+  table.layout {
     width: 100vw !important;
     display: block;
     table-layout: fixed;
-    overflow-x: auto;
   }
-  td,
-  th {
+  table.layout tr {
+    display: block;
+    width: 100%;
+  }
+  table.layout td {
+    display: block;
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+  table:not(.layout),
+  .faqtable {
+    width: 100% !important;
+    display: table;
+    table-layout: auto;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  table:not(.layout) td,
+  table:not(.layout) th,
+  .faqtable td,
+  .faqtable th {
+    display: table-cell;
+    width: auto !important;
+    box-sizing: border-box;
+    font-size: 0.9rem;
+    padding: 0.5em;
+    white-space: normal;
+    word-break: break-word;
+  }
+  td.layout-td,
+  .mid td,
+  .right td {
     display: block;
     width: 100% !important;
     box-sizing: border-box;
@@ -647,21 +759,57 @@ html::-webkit-scrollbar-thumb:hover {
     display: none !important;
   }
 
-  /* 手機版來不及做所以先劃掉 */
-  #loading-mask {
-    display: none !important;
+  /* 繼續手機版設定 */
+  .layout {
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    display: block !important;
+    position: relative !important;
   }
-
-  html,
-  body {
-    width: 100vw;
-    height: 100vh;
-    margin: 0;
-    padding: 0;
-    overflow: hidden !important;
-    user-select: none !important;
-    -webkit-user-select: none !important; /* for Safari */
-    -ms-user-select: none !important; /* for IE/Edge */
+  
+  table.layout {
+    height: auto !important;
+    min-height: auto !important;
+  }
+  
+  table.layout tr {
+    display: block !important;
+    height: auto !important;
+  }
+  
+  table.layout td {
+    display: block !important;
+    height: auto !important;
+  }
+  
+  #loading-mask {
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    position: fixed !important;
+  }
+  
+  .scroll-inner {
+    padding-bottom: 1em;
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    position: relative !important;
+  }
+  
+  .account,
+  .admin {
+    height: auto !important;
+    min-height: auto !important;
+    overflow-y: visible !important;
+    position: relative !important;
+  }
+  
+  .mid,
+  .right {
+    position: relative !important;
+    overflow: visible !important;
   }
 }
 
