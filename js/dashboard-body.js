@@ -124,6 +124,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
+  // 檢測是否為手機版
+  const isMobile = window.innerWidth <= 600;
+  const displayValue = isMobile ? "block" : "table-cell";
+
   window.showFAQSection = function showFAQSection() {
     const editBrandPage = document.getElementById("edit-brand-page");
     const mid = document.querySelector(".mid");
@@ -132,14 +136,30 @@ document.addEventListener("DOMContentLoaded", function () {
     const account = document.querySelector(".account");
     const faq = document.getElementById("faq");
     const contact = document.getElementById("contact-method");
-    if (editBrandPage) editBrandPage.style.display = "none";
-    if (mid) mid.style.display = "none";
-    if (right) right.style.display = "none";
-    if (editPage) editPage.style.display = "none";
-    if (account) account.style.display = "none";
-    if (faq) faq.style.display = "table-cell";
-    if (contact) contact.style.display = "none";
+    const allSections = [editBrandPage, mid, right, editPage, account, faq, contact];
+    
+    // 移除所有 active class 和 inline style
+    allSections.forEach(el => {
+      if (el) {
+        el.classList.remove("mobile-active");
+        if (isMobile) {
+          el.style.display = "";
+        } else {
+          el.style.display = "none";
+        }
+      }
+    });
+    
+    // 顯示選中的區塊
+    if (faq) {
+      if (isMobile) {
+        faq.classList.add("mobile-active");
+      } else {
+        faq.style.display = "table-cell";
+      }
+    }
   };
+  
   window.showContactSection = function showContactSection() {
     const editBrandPage = document.getElementById("edit-brand-page");
     const mid = document.querySelector(".mid");
@@ -148,14 +168,30 @@ document.addEventListener("DOMContentLoaded", function () {
     const account = document.querySelector(".account");
     const faq = document.getElementById("faq");
     const contact = document.getElementById("contact-method");
-    if (editBrandPage) editBrandPage.style.display = "none";
-    if (mid) mid.style.display = "none";
-    if (right) right.style.display = "none";
-    if (editPage) editPage.style.display = "none";
-    if (account) account.style.display = "none";
-    if (faq) faq.style.display = "none";
-    if (contact) contact.style.display = "table-cell";
+    const allSections = [editBrandPage, mid, right, editPage, account, faq, contact];
+    
+    // 移除所有 active class 和 inline style
+    allSections.forEach(el => {
+      if (el) {
+        el.classList.remove("mobile-active");
+        if (isMobile) {
+          el.style.display = "";
+        } else {
+          el.style.display = "none";
+        }
+      }
+    });
+    
+    // 顯示選中的區塊
+    if (contact) {
+      if (isMobile) {
+        contact.classList.add("mobile-active");
+      } else {
+        contact.style.display = "table-cell";
+      }
+    }
   };
+  
   window.showAccountSection = function showAccountSection() {
     const editBrandPage = document.getElementById("edit-brand-page");
     const mid = document.querySelector(".mid");
@@ -164,13 +200,28 @@ document.addEventListener("DOMContentLoaded", function () {
     const account = document.getElementById("account");
     const faq = document.getElementById("faq");
     const contact = document.getElementById("contact-method");
-    if (editBrandPage) editBrandPage.style.display = "none";
-    if (mid) mid.style.display = "none";
-    if (right) right.style.display = "none";
-    if (editPage) editPage.style.display = "none";
-    if (account) account.style.display = "table-cell";
-    if (faq) faq.style.display = "none";
-    if (contact) contact.style.display = "none";
+    const allSections = [editBrandPage, mid, right, editPage, account, faq, contact];
+    
+    // 移除所有 active class 和 inline style
+    allSections.forEach(el => {
+      if (el) {
+        el.classList.remove("mobile-active");
+        if (isMobile) {
+          el.style.display = "";
+        } else {
+          el.style.display = "none";
+        }
+      }
+    });
+    
+    // 顯示選中的區塊
+    if (account) {
+      if (isMobile) {
+        account.classList.add("mobile-active");
+      } else {
+        account.style.display = "table-cell";
+      }
+    }
   };
 
   window.showDashboardSection = function showDashboardSection() {
@@ -181,13 +232,35 @@ document.addEventListener("DOMContentLoaded", function () {
     const account = document.querySelector(".account");
     const faq = document.getElementById("faq");
     const contact = document.getElementById("contact-method");
-    if (editBrandPage) editBrandPage.style.display = "none";
-    if (mid) mid.style.display = "table-cell";
-    if (right) right.style.display = "table-cell";
-    if (editPage) editPage.style.display = "none";
-    if (account) account.style.display = "none";
-    if (faq) faq.style.display = "none";
-    if (contact) contact.style.display = "none";
+    const allSections = [editBrandPage, editPage, account, faq, contact];
+    
+    // 移除所有 active class 和 inline style
+    allSections.forEach(el => {
+      if (el) {
+        el.classList.remove("mobile-active");
+        if (isMobile) {
+          el.style.display = "";
+        } else {
+          el.style.display = "none";
+        }
+      }
+    });
+    
+    // 顯示選中的區塊
+    if (mid) {
+      if (isMobile) {
+        mid.classList.add("mobile-active");
+      } else {
+        mid.style.display = "table-cell";
+      }
+    }
+    if (right) {
+      if (isMobile) {
+        right.classList.add("mobile-active");
+      } else {
+        right.style.display = "table-cell";
+      }
+    }
   };
 
   window.openAccountEditPage = function openAccountEditPage() {
@@ -195,10 +268,28 @@ document.addEventListener("DOMContentLoaded", function () {
     const account = document.getElementById("account");
     const mid = document.querySelector(".mid");
     const right = document.querySelector(".right");
-    if (editAccountPage) editAccountPage.style.display = "table-cell";
-    if (account) account.style.display = "none";
-    if (mid) mid.style.display = "none";
-    if (right) right.style.display = "none";
+    const allSections = [account, mid, right];
+    
+    // 移除所有 active class 和 inline style
+    allSections.forEach(el => {
+      if (el) {
+        el.classList.remove("mobile-active");
+        if (isMobile) {
+          el.style.display = "";
+        } else {
+          el.style.display = "none";
+        }
+      }
+    });
+    
+    // 顯示選中的區塊
+    if (editAccountPage) {
+      if (isMobile) {
+        editAccountPage.classList.add("mobile-active");
+      } else {
+        editAccountPage.style.display = "table-cell";
+      }
+    }
 
     // 自動填入現有資料
     const fields = [
@@ -223,4 +314,27 @@ document.addEventListener("DOMContentLoaded", function () {
       nationalitySelect.value = nationalityVal;
     }
   };
+
+  // 頁面載入時預設顯示 dashboard
+  // 先確保所有區塊都被隱藏（手機版）
+  if (isMobile) {
+    const allSections = [
+      document.getElementById("edit-brand-page"),
+      document.querySelector(".mid"),
+      document.querySelector(".right"),
+      document.getElementById("edit-account-page"),
+      document.querySelector(".account"),
+      document.getElementById("faq"),
+      document.getElementById("contact-method")
+    ];
+    allSections.forEach(el => {
+      if (el) {
+        el.classList.remove("mobile-active");
+      }
+    });
+  }
+  // 然後顯示 dashboard
+  if (window.showDashboardSection) {
+    window.showDashboardSection();
+  }
 });
