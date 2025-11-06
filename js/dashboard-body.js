@@ -79,15 +79,41 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   };
+
+  // 檢測是否為手機版（需要在函數之前定義）
+  const isMobile = window.innerWidth <= 600;
+  const displayValue = isMobile ? "block" : "table-cell";
+
   window.openEditPage = function openEditPage() {
     const editPage = document.getElementById("edit-brand-page");
     const mid = document.querySelector(".mid");
     const right = document.querySelector(".right");
     const account = document.querySelector(".account");
-    if (editPage) editPage.style.display = "table-cell";
-    if (mid) mid.style.display = "none";
-    if (right) right.style.display = "none";
-    if (account) account.style.display = "none";
+    const editAccountPage = document.getElementById("edit-account-page");
+    const faq = document.getElementById("faq");
+    const contact = document.getElementById("contact-method");
+    const allSections = [mid, right, account, editAccountPage, faq, contact];
+    
+    // 移除所有 active class 和 inline style
+    allSections.forEach(el => {
+      if (el) {
+        el.classList.remove("mobile-active");
+        if (isMobile) {
+          el.style.display = "";
+        } else {
+          el.style.display = "none";
+        }
+      }
+    });
+    
+    // 顯示編輯頁面
+    if (editPage) {
+      if (isMobile) {
+        editPage.classList.add("mobile-active");
+      } else {
+        editPage.style.display = "table-cell";
+      }
+    }
 
     // 自動填入現有資料
     const fields = [
@@ -123,10 +149,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   };
-
-  // 檢測是否為手機版
-  const isMobile = window.innerWidth <= 600;
-  const displayValue = isMobile ? "block" : "table-cell";
 
   window.showFAQSection = function showFAQSection() {
     const editBrandPage = document.getElementById("edit-brand-page");
@@ -215,6 +237,52 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     
     // 顯示選中的區塊
+    if (account) {
+      if (isMobile) {
+        account.classList.add("mobile-active");
+      } else {
+        account.style.display = "table-cell";
+      }
+    }
+  };
+
+  // 關閉編輯品牌頁面
+  window.closeEditBrandPage = function closeEditBrandPage() {
+    const editPage = document.getElementById("edit-brand-page");
+    const mid = document.querySelector(".mid");
+    const right = document.querySelector(".right");
+    const account = document.querySelector(".account");
+    
+    if (editPage) {
+      editPage.classList.remove("mobile-active");
+      if (isMobile) {
+        editPage.style.display = "";
+      } else {
+        editPage.style.display = "none";
+      }
+    }
+    
+    // 顯示 dashboard
+    if (window.showDashboardSection) {
+      window.showDashboardSection();
+    }
+  };
+
+  // 關閉編輯帳戶頁面
+  window.closeEditAccountPage = function closeEditAccountPage() {
+    const editAccountPage = document.getElementById("edit-account-page");
+    const account = document.getElementById("account");
+    
+    if (editAccountPage) {
+      editAccountPage.classList.remove("mobile-active");
+      if (isMobile) {
+        editAccountPage.style.display = "";
+      } else {
+        editAccountPage.style.display = "none";
+      }
+    }
+    
+    // 顯示 account 區塊
     if (account) {
       if (isMobile) {
         account.classList.add("mobile-active");
