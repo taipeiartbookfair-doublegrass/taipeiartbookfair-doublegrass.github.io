@@ -579,7 +579,6 @@ html::-webkit-scrollbar-thumb:hover {
     width: 100vw !important;
     min-width: 0 !important;
     max-width: 100vw !important;
-    height: auto !important;
     overflow: visible !important;
     box-sizing: border-box;
   }
@@ -594,6 +593,22 @@ html::-webkit-scrollbar-thumb:hover {
   #edit-account-page.mobile-active,
   #edit-brand-page.mobile-active {
     display: block !important;
+  }
+  /* 手機版：mid section 內的表格保持完整寬度 */
+  .mid table,
+  .mid.mobile-active table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    display: table !important; /* 確保表格結構正常 */
+  }
+  .mid table tbody,
+  .mid.mobile-active table tbody {
+    width: 100% !important;
+    display: table-row-group !important; /* 確保 tbody 保持表格結構 */
+  }
+  /* 確保隱藏的條碼行不影響表格寬度 */
+  #barcode-row[style*="display: none"] {
+    display: none !important;
   }
   .open-call-schedule{
     display: none !important;
@@ -649,6 +664,23 @@ html::-webkit-scrollbar-thumb:hover {
     width: 100%;
   }
 
+  /* 手機版：account 區塊內的表格保持正常表格結構 */
+  .account table,
+  .account table tbody {
+    display: table !important;
+    width: 100% !important;
+    table-layout: auto !important;
+  }
+  .account table td,
+  .account table th {
+    display: table-cell !important;
+    width: auto !important;
+  }
+  .account.mobile-active {
+    display: block !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
   .scroll-inner {
     height: auto !important;
     max-height: none !important;
