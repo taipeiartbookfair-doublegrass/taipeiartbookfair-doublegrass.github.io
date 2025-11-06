@@ -201,6 +201,13 @@ document.addEventListener("DOMContentLoaded", async function () {
   document.getElementById("application-number").textContent =
     apiData["報名編號"] || "";
 
+  // 生成條碼
+  if (window.generateBarcode) {
+    setTimeout(() => {
+      window.generateBarcode();
+    }, 100);
+  }
+
   // 取得報名編號與 boothType
   function getBoothTypeFromNumber(applicationNumber) {
     if (applicationNumber.includes("LB")) return "書攤";

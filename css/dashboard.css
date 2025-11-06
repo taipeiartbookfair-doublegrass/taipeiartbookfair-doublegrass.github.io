@@ -1,6 +1,6 @@
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 body {
@@ -10,7 +10,7 @@ body {
   /* background: whitesmoke; */
   position: relative;
   background-color: ghostwhite;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 ::selection {
   background-color: olive;
@@ -511,202 +511,163 @@ html::-webkit-scrollbar-thumb:hover {
   bottom: 0.8rem;
 }
 
-/* Desktop - Hide mobile tab switcher */
-.mobile-tab-switcher {
-  display: none !important;
-}
-
+/* ===== 行動版 Mobile ===== */
 @media screen and (max-width: 600px) {
-  /* 強制啟用滾動 */
-  * {
-    -webkit-overflow-scrolling: touch;
-  }
-  
-  html {
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    height: auto !important;
-    min-height: 100vh;
-    -webkit-overflow-scrolling: touch;
-    touch-action: pan-y;
-  }
-  
+  html,
   body {
-    width: 100% !important;
-    height: auto !important;
-    min-height: 100vh;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-    position: relative !important;
-    -webkit-overflow-scrolling: touch;
-    touch-action: pan-y;
+    overflow: auto !important;
+    background-color: aliceblue;
   }
-  
+  .sidebar-middle{
+    display: none !important;
+  }
+  .sidebar-logo {
+    display: none !important;
+  }
   .layout {
     width: 100vw;
-    height: auto !important;
-    min-height: auto !important;
-    max-height: none !important;
+    height: auto;
     display: block;
-    position: relative !important;
-    overflow: visible !important;
   }
   .sidebar {
-    width: 100vw;
     height: auto;
-    min-height: auto;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: stretch;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    border-bottom: 1px solid #ccc;
-    padding: 0.5em;
-    font-size: 0.9rem;
-    overflow-x: visible;
-    overflow-y: visible;
+    align-items: flex-start;
+    position: static;
+    border-bottom: 1px solid black;
+    font-size: 1rem;
+    writing-mode: vertical-lr;
+    background-color: lightgray;
   }
-  .sidebar hr,
-  .sidebar-hr {
-    display: block;
-    border: 0;
-    height: 1px;
-    background: #ccc;
-    margin: 0.3em 0;
-  }
-  .sidebar-middle {
-    display: none;
-  }
+
+
   .sidebar a,
   .sidebar > a,
   .sidebar > div {
     display: block;
-    width: 100%;
     margin: 0;
     padding: 0.5em;
-    text-align: left;
-    border-radius: 4px;
-  }
-  .sidebar a:hover,
-  .sidebar > a:hover {
-    background-color: rgba(0, 0, 0, 0.05);
+    width: 100%;
+    box-sizing: border-box;
+    border-right:1px solid black;
+    height:100%;
   }
   .sidebar p,
   .sidebar a p {
     display: block;
-    font-size: 0.9rem;
-    padding: 0.3em 0;
+    font-size: 1rem;
     margin: 0;
-    white-space: normal;
-    text-align: left;
+    background: none !important;
+    color: black !important;
+    padding-top: .3rem;
+    padding-bottom: .3rem;
+    padding-right: .8rem;
+    padding-left: .8rem;
   }
-  .sidebar p[style*="background-color"] {
-    background-color: inherit !important;
-  }
-  .machine-rotate-logo {
-    width: 2em !important;
+  /* 手機版：所有內容區塊預設隱藏 */
+  .mid, 
+  .right,
+  .account,
+  .admin,
+  .edit-page,
+  #faq,
+  #contact-method,
+  #edit-account-page,
+  #edit-brand-page {
+    display: none !important;
+    width: 100vw !important;
+    min-width: 0 !important;
+    max-width: 100vw !important;
     height: auto !important;
-    margin-right: 0.5em;
-    vertical-align: middle;
+    overflow: visible !important;
+    box-sizing: border-box;
   }
-  /* Mobile Tab Switcher - 只在手機版顯示 */
-  .mobile-tab-switcher {
-    display: flex !important;
-    gap: 0.5em;
-    padding: 0.5em;
-    background-color: ghostwhite;
-    border-bottom: 1px solid #ccc;
-    position: sticky;
-    top: 0;
-    z-index: 999;
-    margin: -0.5em -0.5em 0.5em -0.5em;
+  /* 手機版：只有有 mobile-active class 的元素才顯示 */
+  .mid.mobile-active,
+  .right.mobile-active,
+  .account.mobile-active,
+  .admin.mobile-active,
+  .edit-page.mobile-active,
+  #faq.mobile-active,
+  #contact-method.mobile-active,
+  #edit-account-page.mobile-active,
+  #edit-brand-page.mobile-active {
+    display: block !important;
   }
-  
-  .mobile-tab-btn {
-    flex: 1;
-    padding: 0.8em 1em;
-    border: 1px solid #ccc;
-    background-color: white;
-    color: #222;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.3s;
-    border-radius: 4px;
-    -webkit-tap-highlight-color: transparent;
-  }
-  
-  .mobile-tab-btn.active {
-    background-color: olivedrab;
-    color: ghostwhite;
-    border-color: olivedrab;
-    font-weight: bold;
-  }
-  
-  .mobile-tab-btn:active {
-    transform: scale(0.98);
-  }
-  
-  .mid,
-  .right {
-    position: relative;
-  }
-  
-  .mid.hidden,
-  .right.hidden {
+  .open-call-schedule{
     display: none !important;
   }
+  
+  /* 手機版：schedule 表格使用 flex，讓日期和項目對齊 */
+  #open-call-schedule table {
+    width: 100%;
+    display: block;
+  }
+  #open-call-schedule table tr {
+    display: flex !important;
+    flex-direction: row;
+    width: 100%;
+    gap: 0.5em;
+    margin-bottom: 0;
+  }
+  #open-call-schedule table tr:nth-child(even) {
+    margin-bottom: 1em;
+  }
+  #open-call-schedule table td {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 0.75em;
+    text-align: left;
+    box-sizing: border-box;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  /* 標題欄位 */
+  #open-call-schedule table tr:nth-child(odd) td {
+    background-color: #e8e8e8;
+    border-bottom: 2px solid #999;
+    padding-bottom: 0.5em;
+  }
+  /* 日期欄位 - 緊接在標題下方 */
+  #open-call-schedule table tr:nth-child(even) td {
+    font-weight: normal;
+    margin-top: -2px;
+    border-top: none;
+    padding-top: 0.5em;
+    font-size: .8rem;
+  }
+  /* 讓 rotated 文字在手機版正常顯示 */
+  #open-call-schedule .rotated {
+    transform: none !important;
+    white-space: wrap;
+    display: block;
+    font-size: 0.7rem;
+    line-height: 1.4;
+    width: 100%;
+  }
+
   .scroll-inner {
     height: auto !important;
     max-height: none !important;
     overflow: visible !important;
-    padding: 0.5em;
     padding-bottom: 2em;
   }
-  table.layout {
-    width: 100vw !important;
+  table.layout,
+  table,
+  .faqtable {
     display: block;
     table-layout: fixed;
-  }
-  table.layout tr {
-    display: block;
-    width: 100%;
-  }
-  table.layout td {
-    display: block;
-    width: 100% !important;
-    box-sizing: border-box;
-  }
-  table:not(.layout),
-  .faqtable {
-    width: 100% !important;
-    display: table;
-    table-layout: auto;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
   }
-  table:not(.layout) td,
-  table:not(.layout) th,
-  .faqtable td,
-  .faqtable th {
-    display: table-cell;
-    width: auto !important;
-    box-sizing: border-box;
-    font-size: 0.9rem;
-    padding: 0.5em;
-    white-space: normal;
-    word-break: break-word;
-  }
-  td.layout-td,
-  .mid td,
-  .right td {
+  td,
+  th {
     display: block;
     width: 100% !important;
     box-sizing: border-box;
     font-size: 1rem;
-    border: none;
     padding: 0.7em 0.5em;
   }
   .bio {
@@ -738,17 +699,21 @@ html::-webkit-scrollbar-thumb:hover {
   }
   .label,
   .labelAQ {
-    font-size: 1rem !important;
+    font-size: .8rem !important;
     padding: 2px 4px;
   }
   h3 {
-    font-size: 2.2rem !important;
-    line-height: 2.5rem !important;
+    font-size: 6rem !important;
+    line-height: 4.5rem !important;
   }
   /* FAQ number cell */
   .faq-number-cell {
-    width: 2em !important;
-    font-size: 1.2em;
+    font-size: 1em;
+    border: none;
+    text-align: center;
+    border-top: 1px dashed black;
+    padding: 5px;
+    line-height: 3.5rem;
   }
   /* Hide some less important columns if needed */
   #media-section-row5 td,
@@ -758,59 +723,44 @@ html::-webkit-scrollbar-thumb:hover {
   #tictactoe-container {
     display: none !important;
   }
+  .QA-section {
+    border: none;
+  }
 
-  /* 繼續手機版設定 */
-  .layout {
-    height: auto !important;
-    min-height: auto !important;
-    max-height: none !important;
-    display: block !important;
-    position: relative !important;
-  }
-  
-  table.layout {
-    height: auto !important;
-    min-height: auto !important;
-  }
-  
-  table.layout tr {
-    display: block !important;
-    height: auto !important;
-  }
-  
-  table.layout td {
-    display: block !important;
-    height: auto !important;
-  }
-  
+  /* 手機版 loading 樣式 - 全螢幕寬度 */
   #loading-mask {
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    position: fixed !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 1);
+    z-index: 9999;
+    overflow: hidden;
+  }
+
+  html,
+  body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: auto !important;
   }
   
-  .scroll-inner {
-    padding-bottom: 1em;
-    overflow: visible !important;
+  /* 條碼樣式 */
+  #barcode-canvas {
+    width: 100% !important;
     height: auto !important;
-    max-height: none !important;
-    position: relative !important;
+    display: block;
   }
-  
-  .account,
-  .admin {
-    height: auto !important;
-    min-height: auto !important;
-    overflow-y: visible !important;
-    position: relative !important;
-  }
-  
-  .mid,
-  .right {
-    position: relative !important;
-    overflow: visible !important;
-  }
+}
+
+/* 條碼樣式（通用） */
+#barcode-canvas {
+  width: 100% !important;
+  height: auto !important;
+  display: block;
 }
 
 /* ===== 大螢幕版 4K+ ===== */
