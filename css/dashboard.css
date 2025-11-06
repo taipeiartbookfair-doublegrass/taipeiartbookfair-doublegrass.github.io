@@ -538,7 +538,7 @@ html::-webkit-scrollbar-thumb:hover {
     border-bottom: 1px solid black;
     font-size: 1rem;
     writing-mode: vertical-lr;
-    background-color: lightgray;
+    background-color: olive;
   }
 
 
@@ -690,7 +690,7 @@ html::-webkit-scrollbar-thumb:hover {
   table.layout,
   table,
   .faqtable {
-    display: block;
+    display: table;
     table-layout: fixed;
     overflow-x: auto;
   }
