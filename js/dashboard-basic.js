@@ -201,13 +201,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   document.getElementById("application-number").textContent =
     apiData["報名編號"] || "";
 
-  // 生成條碼
-  if (window.generateBarcode) {
-    setTimeout(() => {
-      window.generateBarcode();
-    }, 100);
-  }
-
   // 取得報名編號與 boothType
   function getBoothTypeFromNumber(applicationNumber) {
     if (applicationNumber.includes("LB")) return "書攤";
@@ -314,6 +307,39 @@ document.addEventListener("DOMContentLoaded", async function () {
   const resultText = getApplicationResultText(apiData["錄取"], boothType);
   applicationResultEl.textContent = resultText;
   setApplicationResultStyle(applicationResultEl, resultText);
+
+  // 判斷是否有參展資格（顯示條碼的條件）
+  function hasExhibitionQualification(resultText) {
+    // 參展資格成立的情況
+    const qualifiedStatuses = [
+      "錄取",
+      "Accepted",
+      "條件式錄取",
+      "Conditionally Accepted",
+      "NGO"
+    ];
+    return qualifiedStatuses.includes(resultText);
+  }
+
+  // 控制條碼顯示
+  const barcodeRow = document.getElementById("barcode-row");
+  const shouldShowBarcode = hasExhibitionQualification(resultText);
+  
+  if (barcodeRow) {
+    if (shouldShowBarcode) {
+      // 顯示條碼行
+      const isMobile = window.innerWidth <= 600;
+      barcodeRow.style.display = isMobile ? "block" : "table-row";
+      // 生成條碼
+      if (window.generateBarcode) {
+        setTimeout(() => {
+          window.generateBarcode();
+        }, 100);
+      }
+    } else {
+      barcodeRow.style.display = "none";
+    }
+  }
 
   // boothType 設備、價錢、付款、電力、付款連結產生
   function updateBoothInfo(boothType) {
