@@ -633,6 +633,49 @@ html::-webkit-scrollbar-thumb:hover {
     width: 100% !important;
     display: table-row-group !important; /* 確保 tbody 保持表格結構 */
   }
+  /* 手機版：right section 內的表格保持完整寬度 */
+  .right table,
+  .right.mobile-active table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    display: table !important; /* 確保表格結構正常 */
+  }
+  .right table tbody,
+  .right.mobile-active table tbody {
+    width: 100% !important;
+    display: table-row-group !important; /* 確保 tbody 保持表格結構 */
+  }
+  /* 手機版：確保 booth-number-row 正確顯示為表格行 */
+  #booth-number-row {
+    display: table-row !important;
+    width: 100% !important;
+    position: relative !important;
+    overflow: visible !important;
+  }
+  /* 手機版：booth-number-row 內部的 td 寬度調整 */
+  #booth-number-row td[colspan="3"] {
+    width: 100% !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+  #booth-number-row table {
+    width: 100% !important;
+    display: table !important;
+  }
+  #booth-number-row table tr {
+    display: table-row !important;
+    width: 100% !important;
+  }
+  #booth-number-row table td {
+    width: auto !important;
+    display: table-cell !important;
+  }
+  #booth-number-row table td:first-child {
+    width: 60% !important;
+  }
+  #booth-number-row table td:last-child {
+    width: 40% !important;
+  }
   /* 確保隱藏的條碼行不影響表格寬度 */
   #barcode-row[style*="display: none"] {
     display: none !important;
