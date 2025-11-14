@@ -1513,8 +1513,8 @@ display:none;
 }
 
 /* 響應式設計 */
-@media (max-width: 768px) {
-  /* 手機版地圖樣式 */
+@media (max-width: 1024px) {
+  /* 手機版和平板版地圖樣式 */
   .exhibitor-map-container {
     position: static !important;
     width: 100% !important;
@@ -1537,7 +1537,7 @@ display:none;
   }
   
   .exhibitor-map-resize-handle {
-    display: none; /* 手機版隱藏調整大小手柄 */
+    display: none; /* 手機版和平板版隱藏調整大小手柄 */
   }
   
   .exhibitors-grid {

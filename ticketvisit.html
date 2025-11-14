@@ -1318,13 +1318,13 @@
         
         if (!mapContainer || !parentContainer) return;
         
-        // 檢測是否為手機版
-        function isMobile() {
-          return window.innerWidth <= 768;
+        // 檢測是否為手機版或平板版
+        function isMobileOrTablet() {
+          return window.innerWidth <= 1024;
         }
         
-        // 如果為手機版，不啟用拖動和調整大小功能
-        if (isMobile()) {
+        // 如果為手機版或平板版，不啟用拖動和調整大小功能
+        if (isMobileOrTablet()) {
           return;
         }
         
@@ -1368,26 +1368,28 @@
           };
         }
         
-        // 拖動功能
-        if (mapHeader) {
-          mapHeader.addEventListener('mousedown', function(e) {
-            // 如果點擊的是關閉按鈕，不觸發拖動
-            if (e.target === mapCloseBtn || e.target.closest('.exhibitor-map-close')) {
-              return;
-            }
-            
-            isDragging = true;
-            startX = e.clientX;
-            startY = e.clientY;
-            const mapRect = mapContainer.getBoundingClientRect();
-            const parentRect = parentContainer.getBoundingClientRect();
-            // 計算相對於父容器的位置
-            startLeft = mapRect.left - parentRect.left;
-            startTop = mapRect.top - parentRect.top;
-            
-            e.preventDefault();
-          });
-        }
+        // 拖動功能 - 整個地圖容器都可以拖動
+        mapContainer.addEventListener('mousedown', function(e) {
+          // 如果點擊的是調整大小手柄，不觸發拖動
+          if (e.target === resizeHandle || e.target.closest('.exhibitor-map-resize-handle')) {
+            return;
+          }
+          // 如果點擊的是關閉按鈕，不觸發拖動
+          if (e.target === mapCloseBtn || e.target.closest('.exhibitor-map-close')) {
+            return;
+          }
+          
+          isDragging = true;
+          startX = e.clientX;
+          startY = e.clientY;
+          const mapRect = mapContainer.getBoundingClientRect();
+          const parentRect = parentContainer.getBoundingClientRect();
+          // 計算相對於父容器的位置
+          startLeft = mapRect.left - parentRect.left;
+          startTop = mapRect.top - parentRect.top;
+          
+          e.preventDefault();
+        });
         
         // 調整大小功能
         if (resizeHandle) {
@@ -1497,9 +1499,9 @@
           });
         }
         
-        // 窗口大小改變時，如果是手機版則重置樣式
+        // 窗口大小改變時，如果是手機版或平板版則重置樣式
         window.addEventListener('resize', function() {
-          if (isMobile()) {
+          if (isMobileOrTablet()) {
             mapContainer.style.left = '';
             mapContainer.style.top = '';
             mapContainer.style.right = '';
