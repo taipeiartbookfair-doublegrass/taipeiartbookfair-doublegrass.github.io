@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; 
+             script-src 'self' 'unsafe-inline' https://www.google.com https://www.gstatic.com https://code.jquery.com https://www.googletagmanager.com; 
+             style-src 'self' 'unsafe-inline'; 
+             connect-src https://www.google-analytics.com https://script.google.com https://script.googleusercontent.com/;
+             frame-src https://www.google.com;"
+    />
+    <title>Open Call - 草率季Taipei Art Book Fair</title>
+    <link rel="shortcut icon" href="image/icon-1.ico" />
+    <link rel="stylesheet" href="css/font.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-EPSXJPDH6L"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-EPSXJPDH6L");
+    </script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+        background-color: #808080;
+        background-image: 
+          repeating-linear-gradient(0deg, 
+            rgba(0,0,0,0.05) 0px, 
+            rgba(0,0,0,0.05) 1px, 
+            transparent 1px, 
+            transparent 4px,
+            rgba(255,255,255,0.05) 4px,
+            rgba(255,255,255,0.05) 5px,
+            transparent 5px,
+            transparent 8px),
+          repeating-linear-gradient(90deg, 
+            rgba(0,0,0,0.05) 0px, 
+            rgba(0,0,0,0.05) 1px, 
+            transparent 1px, 
+            transparent 4px,
+            rgba(255,255,255,0.05) 4px,
+            rgba(255,255,255,0.05) 5px,
+            transparent 5px,
+            transparent 8px),
+          radial-gradient(circle at 2px 2px, rgba(0,0,0,0.1) 1px, transparent 0),
+          radial-gradient(circle at 6px 6px, rgba(255,255,255,0.1) 1px, transparent 0);
+        background-size: 8px 8px, 8px 8px, 4px 4px, 4px 4px;
+        background-position: 0 0, 0 0, 0 0, 2px 2px;
+        image-rendering: pixelated;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: crisp-edges;
+        min-height: 100vh;
+        overflow-x: hidden;
+        padding-bottom: 120px;
+      }
+
+      .opencall-container {
+
+        margin: 0 auto;
+        padding: 2vw;
+        box-sizing: border-box;
+      }
+
+      .textcolumn {
+        text-align: left;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2vw;
+        margin-bottom: 20px;
+      }
+
+      .column {
+        font-size: 14px;
+        line-height: 1.4rem;
+        padding: 10px;
+        background-color: yellow;
+        border: 1px solid black;
+        overflow-y: auto;
+        max-height: calc(100vh - 200px);
+      }
+
+      .column h2,
+      .column h3 {
+        margin-top: 0;
+        margin-bottom: 5px;
+        font-weight: 600;
+      }
+
+      .column h2 {
+        font-size: 1.3rem;
+      }
+
+      .column h3 {
+        font-size: 1.1rem;
+      }
+
+      .column p,
+      .column small {
+        margin-bottom: 5px;
+        font-size: 14px;
+        line-height: 1.4rem;
+      }
+
+      .column ul,
+      .column ol {
+        margin-bottom: 5px;
+        padding-left: 20px;
+      }
+
+      .column li {
+        margin-bottom: 3px;
+        font-size: 14px;
+        line-height: 1.4rem;
+      }
+
+      .column a {
+        color: black;
+        text-decoration: underline;
+      }
+
+      .column a:hover {
+        color: olive;
+      }
+
+      .column blockquote {
+        margin: 10px 0;
+        padding-left: 15px;
+        border-left: 2px solid #ccc;
+      }
+
+      .deadline-highlight {
+        border: 1.5px solid #e53935;
+        padding: 1px 12px;
+        margin: 2px 0;
+        display: inline-block;
+      }
+
+      .column strong {
+        font-weight: 600;
+      }
+
+      /* 語言快捷鍵（手機版） */
+      .application-button-lang-container {
+        display: none;
+      }
+
+      .application-button-lang {
+        display: inline-block;
+        padding: 5px 10px;
+        background: white;
+        border: 1px solid black;
+        font-size: 0.9rem;
+        text-decoration: none;
+        color: black;
+        text-align: center;
+        margin-right: 5px;
+      }
+
+      .application-button-lang:hover {
+        background-color: olive;
+        color: white;
+      }
+
+      .mobiledirection {
+        display: none;
+        height: 4rem;
+      }
+
+      .mobileline {
+        display: none;
+        border-top: 1px dashed black;
+        border-bottom: none;
+        margin: 20px 0;
+      }
+
+      /* 國籍選擇表單 - 固定在底部 */
+      .form-section {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: ghostwhite;
+        border-top: 1px solid black;
+        padding: 20px;
+        z-index: 100;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-wrapper {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+      }
+
+      .selection-form {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex: 1;
+        max-width: 600px;
+      }
+
+      .selection-form label {
+        font-size: 14px;
+        color: black;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+
+      .selection-form select {
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #000;
+        background-color: white;
+        font-family: "Poppins", sans-serif;
+        cursor: pointer;
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .selection-form select:focus {
+        background-color: olive;
+        outline: none;
+        color: white;
+      }
+
+      .selection-form button {
+        padding: 10px 30px;
+        background-color: black;
+        color: white;
+        border: none;
+        text-align: center;
+        cursor: pointer;
+        letter-spacing: 1px;
+        font-size: 14px;
+        font-family: "Poppins", sans-serif;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+      }
+
+      .selection-form button:hover {
+        color: palegreen;
+        background-color: olive;
+      }
+
+      .back {
+        font-size: 0.9rem;
+        font-family: "Inclusive Sans", sans-serif;
+        overflow: hidden;
+        color: black;
+        background-color: white;
+        white-space: nowrap;
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        padding: 5px;
+        text-align: center;
+        font-weight: 500;
+        cursor: pointer;
+        border: 1px solid black;
+        z-index: 1000;
+      }
+
+      ::selection {
+        color: palegreen;
+        background-color: olive;
+      }
+
+      /* 手機版樣式 */
+      @media screen and (max-width: 768px) {
+        body {
+          padding-bottom: 180px;
+        }
+
+        .opencall-container {
+          width: 95vw;
+          padding: 4vh 5vw;
+        }
+
+        .textcolumn {
+          display: block;
+          gap: 4vw;
+        }
+
+        .column {
+          font-size: 16px;
+          line-height: 1.6rem;
+          padding: 1.5rem;
+          max-height: none;
+          margin-bottom: 20px;
+        }
+
+        .column h2 {
+          font-size: 1.5rem;
+        }
+
+        .column h3 {
+          font-size: 1.3rem;
+        }
+
+        .column p,
+        .column small {
+          font-size: 16px;
+          line-height: 1.6rem;
+        }
+
+        .column li {
+          font-size: 16px;
+          line-height: 1.6rem;
+        }
+
+        .application-button-lang-container {
+          display: block;
+          position: fixed;
+          top: 50px;
+          left: 20px;
+          z-index: 20;
+        }
+
+        .mobiledirection {
+          display: block;
+        }
+
+        .mobileline {
+          display: block;
+        }
+
+        .form-section {
+          padding: 15px;
+        }
+
+        .form-wrapper {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .selection-form {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 10px;
+        }
+
+        .selection-form label {
+          font-size: 16px;
+        }
+
+        .selection-form select {
+          font-size: 16px;
+          padding: 12px;
+        }
+
+        .selection-form button {
+          font-size: 16px;
+          padding: 12px;
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a href="index.html"><div class="back">回主頁 Back</div></a>
+
+    <!-- 語言快捷鍵（手機版） -->
+    <div class="application-button-lang-container">
+      <a href="#zh" class="application-button-lang" rel="history">中文</a>
+      <a href="#en" class="application-button-lang" rel="history">English</a>
+    </div>
+
+    <div class="opencall-container">
+      <div class="textcolumn">
+        <!-- 中文欄 -->
+        <div class="mobiledirection" id="zh"></div>
+        <div class="column zh">
+          <marquee><h2>歡迎來到 2026 草率季</h2></marquee>
+          <p>
+            感謝您對草率季-台北藝術書展的支持，2026草率季十週年徵件開始，在您繼續提交申請前，請耐心閱讀以下參展條件，申請即表示您已閱讀、了解並同意並接受。
+          </p>
+          <br />
+          <h3>書展資訊</h3>
+          <div>
+            <span>時間: </span>3月6日（五）13:00–21:00<br />
+            <span style="visibility: hidden">時間: </span>3月7日（六）13:00–21:00<br />
+            <span style="visibility: hidden">時間: </span>3月8日（日）13:00–21:00
+          </div>
+          <p>
+            地點：台北表演藝術中心<br />
+            <small
+              ><a href="https://share.google/72JR110LbdETo7zw2" target="_blank"
+                >(https://share.google/72JR110LbdETo7zw2)</a
+              ></small
+            >
+          </p>
+          <br />
+          <h3>聲明</h3>
+          <p>
+            本表單適用於欲擁有桌位或空地展示／販售出版品、藝術品或裝置的參展者。當我們收到大量申請資料時，主辦單位保留依填表內容篩選、拒絕之權利。
+          </p>
+          <br />
+          <h3>申請時程</h3>
+          <p>
+            申請截止：12月2日（二）24:00<br />
+            審核通知：12月30日（一）12:00<br />
+            &nbsp;&nbsp;&nbsp; &bull; 通過者須於 7月13日（日）24:00 前付款<br />
+            備取名單通知：7月16日（三）24:00<br />
+            &nbsp;&nbsp;&nbsp; &bull; 備取者須於 7月22日（二）24:00 前付款<br />
+          </p>
+          <br />
+          <h3>在展會上</h3>
+          <p>
+            &bull;
+            主辦單位將依整體展場佈局統一安排攤位位置，為公平起見，平面圖完成前後皆不接受位置偏好申請，並於展會前一天公布最終配置。<br />
+            &bull; 我們將於 9 月提供攤位樣式示意圖。<br />
+            &bull; 立面展示因場地空間限制隨機分配，且可能與其他單位共用。
+          </p>
+          <br /><br />
+          <h3>展位類型</h3>
+          <p>
+            錄取參展單位將獲得資格於2025年草率簿中露出個人宣傳一頁，並獲得 2025 草率簿一本。
+          </p>
+          <br />
+          <p><strong>ㄧ般書攤 ｜5,000 元（含稅）</strong></p>
+          <p>
+            針對以書本為主要創作／販售的參展單位，申請時需提出三本以上已出版刊物及審查資料。
+            &bull; 基礎設備：桌面（120*60cm) 1 個、椅子 2 張、工作證 2 張、草率簿 1 本（含露出一面）
+          </p>
+          <br />
+
+          <p><strong>創作攤｜8,000 元（含稅）</strong></p>
+          <p>
+            針對以各類商品為主要創作／販售的參展單位。 &bull;
+            基礎設備：桌面（120*60cm) 1 個、椅子 2 張、工作證 2 張、草率簿 1 本（含露出一面）
+          </p>
+          <br />
+
+          <p><strong>裝置攤｜10,000 元（含稅）</strong></p>
+          <p>
+            針對大型裝置或空間創作為主的參展單位。 &bull;
+            基礎設備：1.5M*1.5M空地、工作證 2 張、草率簿 1 本（含露出一面）
+          </p>
+          <br />
+
+          <p><strong>食物酒水攤｜13,000 元（含稅）</strong></p>
+          <p>
+            針對以食物或飲品為主要販售類型的單位。 &bull;
+            基礎設備：桌面（180*60cm) 1 個、椅子 2 張、工作證 2 張、草率簿 1 本（含露出一面）
+          </p>
+          <blockquote>
+            <small
+              >*每單位於繳費階段可加購1張工作證，工作證僅限持證人本人使用，不得轉讓或借用；因場地空間有限，攤位人數超過3人者請另行申請攤位。如需臨時輪班，可於購票階段購買「親友票」。
+            </small>
+          </blockquote>
+          <br />
+          
+          <h3>聯繫</h3>
+          <p>
+            <a href="mailto:hooroo@double-grass.com">hooroo@double-grass.com</a>
+          </p>
+        </div>
+        <hr class="mobileline" />
+        <!-- 英文欄 -->
+        <div class="mobiledirection" id="en"></div>
+        <div class="column en">
+          <marquee><h2>Welcome to the 2025 9th Annual Taipei Art Book Fair -Soft POW!</h2></marquee>
+          <p>
+            Thank you for your support—welcome aboard! Before you submit your
+            application, please read the following terms carefully. By applying, you
+            agree to abide by them.
+          </p>
+          <div>
+            <span>Dates & Times: </span>Nov 21 (Fri) 13:00–21:00<br />
+            <span style="visibility: hidden">Dates & Times: </span>Nov 22 (Sat)
+            11:00–20:00<br />
+            <span style="visibility: hidden">Dates & Times: </span>Nov 23 (Sun)
+            11:00–18:00
+          </div>
+          <p>
+            Location: Huashan 1914 Creative Park, East 2 ABCD Halls<br /><small
+              ><a href="https://g.co/kgs/mVt7cw6" target="_blank"
+                >(https://g.co/kgs/mVt7cw6)</a
+              ></small
+            >
+          </p>
+          <br />
+          <h3>About the participation</h3>
+          <p>
+            This form is for participants who wish to reserve a table or booth to
+            display/sell publications, artworks, or installations. If we receive more
+            applications than we can accommodate, the organizers reserve the right to
+            screen or decline applications based on submitted information.
+          </p>
+          <br />
+          <h3>Deadline</h3>
+          <p>
+                Deadline to Apply: <i>December 2, 2025 (Tue) 24:00</i><br
+            Acceptance Notices: <i>June 30, 2025 (Mon) 12:00</i><br />
+            &nbsp;&nbsp;&nbsp; &bull; Successful applicants complete the payment by
+            <i>July 13 (Sun) 24:00</i><br />
+            Waitlist Notices: <i>July 16, 2025 (Wed) 24:00</i><br />
+            &nbsp;&nbsp;&nbsp; &bull; Waitlisted applicants must complete the payment
+            by <i>July 22 (Tue) 24:00</i><br />
+          </p>
+          <br />
+          <h3>At the Fair</h3>
+          <p>
+            &bull; Booth locations will be assigned by the organizers according to the
+            overall floor plan; preferences cannot be accommodated before or after
+            layout finalization; final floor plan will be published one day before
+            opening.
+            <br />
+            &bull; In September we'll share booth-style mockups<br />
+            &bull; Wall displays are allocated at random and may be shared with
+            neighboring booths.
+          </p>
+          <br />
+          <h3>Booth Types</h3>
+          <p>
+            Starting from 2025, we will issue TPABF Catalog that includes all
+            exhibitors' promotion pages each year. And the admitted exhibitor can
+            recieve one free copy.
+          </p>
+          <br />
+          <p><strong>One Regular Booth USD$165 incl. tax</strong></p>
+          <p>
+            &bull; Includes: 120 × 60 cm table ×1, chairs ×2, passes ×2, TPABF
+            Catalog ×1 (one page featured)
+          </p>
+          <br />
+          <p><strong>Two Regular Booth USD$330 incl. tax</strong></p>
+          <p>
+            &bull; Includes: 120 × 60 cm table ×2, chairs ×4, passes ×4, TPABF
+            Catalog ×1 (one page featured)
+          </p>
+          <br />
+          <p><strong>Curation Booth USD$780 incl. tax</strong></p>
+          <p>
+            &bull; Includes: 3M*3M space, 120 × 60 cm table ×2, chairs ×4, passes ×3,
+            TPABF Catalog ×1 (one page featured)
+          </p>
+
+          <blockquote>
+            <small
+              >* Each unit may purchase 1 additional pass during payment. Passes are
+              non-transferable and for the named holder only; no "sharing." For
+              occasional shift-swaps, you may purchase a "Friend Ticket" during
+              ticketing.
+            </small>
+          </blockquote>
+          <br />
+         
+          <h3>Last Year's Highlights</h3>
+          <p>
+            &bull; 450 exhibiting units (200 international, 250 local) from 30+
+            countries/regions<br />
+            &bull; 12,000 paid visitors
+          </p>
+
+          <br />
+          <h3>Contact</h3>
+          <p>
+            <a href="mailto:hooroo@double-grass.com">hooroo@double-grass.com</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 國籍選擇表單 - 固定在底部 -->
+    <div class="form-section">
+      <div class="form-wrapper">
+        <form id="nationality-form" class="selection-form">
+          <label for="nationality">國籍 (Nationality):</label>
+          <select name="nationality" id="nationality" required>
+            <option value="">請選擇 Please select</option>
+            <option value="Taiwan">台灣 Taiwan</option>
+            <option value="China">中國 China</option>
+            <option value="Hong Kong">香港 Hong Kong</option>
+            <option value="Macau">澳門 Macau</option>
+            <option value="Japan">日本 Japan</option>
+            <option value="South Korea">韓國 South Korea</option>
+            <option value="Singapore">新加坡 Singapore</option>
+            <option value="Malaysia">馬來西亞 Malaysia</option>
+            <option value="Thailand">泰國 Thailand</option>
+            <option value="Philippines">菲律賓 Philippines</option>
+            <option value="Indonesia">印尼 Indonesia</option>
+            <option value="Vietnam">越南 Vietnam</option>
+            <option value="United States">美國 United States</option>
+            <option value="Canada">加拿大 Canada</option>
+            <option value="United Kingdom">英國 United Kingdom</option>
+            <option value="Australia">澳洲 Australia</option>
+            <option value="New Zealand">紐西蘭 New Zealand</option>
+            <option value="Germany">德國 Germany</option>
+            <option value="France">法國 France</option>
+            <option value="Italy">義大利 Italy</option>
+            <option value="Spain">西班牙 Spain</option>
+            <option value="Netherlands">荷蘭 Netherlands</option>
+            <option value="Belgium">比利時 Belgium</option>
+            <option value="Switzerland">瑞士 Switzerland</option>
+            <option value="Austria">奧地利 Austria</option>
+            <option value="Sweden">瑞典 Sweden</option>
+            <option value="Norway">挪威 Norway</option>
+            <option value="Denmark">丹麥 Denmark</option>
+            <option value="Finland">芬蘭 Finland</option>
+            <option value="Poland">波蘭 Poland</option>
+            <option value="Czech Republic">捷克 Czech Republic</option>
+            <option value="Russia">俄羅斯 Russia</option>
+            <option value="Brazil">巴西 Brazil</option>
+            <option value="Argentina">阿根廷 Argentina</option>
+            <option value="Mexico">墨西哥 Mexico</option>
+            <option value="India">印度 India</option>
+            <option value="Other">其他 Other</option>
+          </select>
+          <button type="submit">繼續 Continue</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("nationality-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const nationality = document.getElementById("nationality").value;
+
+          if (!nationality) {
+            alert("請選擇地區/國籍 Please select a region/nationality");
+            return;
+          }
+
+          // 如果選擇台灣，導向本地申請頁面
+          if (nationality === "Taiwan") {
+            window.location.href = "localapplication.html";
+          } else {
+            // 其他所有選項導向海外申請頁面
+            window.location.href = "overseaapplication.html";
+          }
+        });
+
+      // 語言快捷鍵功能
+      document.querySelectorAll(".application-button-lang").forEach((link) => {
+        link.addEventListener("click", function (e) {
+          e.preventDefault();
+          const targetId = this.getAttribute("href").substring(1);
+          const targetElement = document.getElementById(targetId);
+          if (targetElement) {
+            targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

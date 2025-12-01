@@ -2,13 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- <meta
+    <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; 
-             script-src 'self' 'unsafe-inline' https://www.google.com https://www.gstatic.com https://code.jquery.com https://www.googletagmanager.com; 
-             style-src 'self' 'unsafe-inline'; 
-             connect-src https://www.google-analytics.com https://script.google.com https://script.googleusercontent.com/;
-             frame-src https://www.google.com;
+             script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com https://www.gstatic.com https://code.jquery.com https://www.googletagmanager.com; 
+             style-src 'self' 'unsafe-inline' https://www.google.com https://www.gstatic.com; 
+             connect-src https://www.google-analytics.com https://script.google.com https://script.googleusercontent.com/ https://www.google.com https://www.gstatic.com;
+             frame-src https://www.google.com https://www.gstatic.com;
+             img-src 'self' data: https://www.google.com https://www.gstatic.com;
              form-action 'self' https://docs.google.com;"
     />
     <meta
@@ -57,7 +58,7 @@
 
     <meta name="format-detection" content="telephone=no" />
 
-    <link rel="apple-touch-icon" href="image/icon-1.ico" /> -->
+    <link rel="apple-touch-icon" href="image/icon-1.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>本地申請 - 草率季Taipei Art Book Fair</title>
@@ -112,26 +113,177 @@
         海外申請請移駕至 → <a href="overseaapplication.html">Oversea Panel</a>
       </div> -->
       <br /><br />
-      <span class="description-header">Exhibitor's Name</span>
+      <span class="description-header">Exhibitor's Info</span>
       <div class="module-form layout-form-columnized">
         <!--Exhibitor Name-->
         <div class="column">
-          <span class="from-header">攤商品牌名稱</span>
-          輸入內容將公開顯示於官網目錄及標籤上。
+          <span class="from-header">攤商品牌名稱（中文）</span>
+          輸入內容將公開顯示於官網目錄及標籤上供參觀者搜尋。
         </div>
         <div class="column layout-form-column-grid-1">
           <span class="from-description-header-ness">必填問題</span>
           <input
             class="form-input"
             name="entry.1159390039"
-            placeholder="品牌名稱"
+            placeholder="品牌名稱（中文）"
             maxlength="150"
             required
             pattern="^[\p{L}\p{N}\s!&quot;#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]+$"
             title="請勿輸入特殊符號"
           />
         </div>
+        <div class="column">
+          <span class="from-header">攤商品牌名稱（英文）</span>
+          輸入內容將公開顯示於官網目錄及標籤上供參觀者搜尋。
+        </div>
+        <div class="column layout-form-column-grid-1">
+          <span class="from-description-header-ness">必填問題</span>
+          <input
+            class="form-input"
+            name="entry.805335264"
+            placeholder="品牌名稱（英文）"
+            maxlength="150"
+            required
+            pattern="^[\p{L}\p{N}\s!&quot;#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]+$"
+            title="請勿輸入特殊符號"
+          />
+        </div>
+        <!--Bio-->
+        <div class="column">
+          <span class="from-header">品牌介紹</span>
+          輸入內容將公開顯示於官網目錄及標籤上供參觀者搜尋。
+        </div>
+        <div class="column layout-form-column-grid-1">
+          <span class="from-description-header-ness"
+            >必填問題、300 個字元內</span
+          >
+          <textarea
+            class="form-input-textarea"
+            name="entry.1877870250"
+            placeholder="品牌介紹"
+            maxlength="1000"
+            required
+          ></textarea>
+        </div>
+        <!--Social Media-->
+        <div class="column">
+          <span class="from-header">社群媒體</span>
+          請附上社群媒體供評選參考。輸入內容將公開顯示於官網目錄及標籤上供參觀者搜尋。
+        </div>
+        <div class="column layout-form-column-grid-2">
+          <span class="from-description-header-ness-no">非必填問題</span>
+          <input
+            type="url"
+            class="form-input"
+            name="entry.1361490241"
+            placeholder="Facebook。 https://facebook.com/"
+            maxlength="1500"
+          />
+          <input
+            type="url"
+            class="form-input"
+            name="entry.138567696"
+            placeholder="Instagram。 https://instagram.com/"
+            maxlength="1500"
+          />
+          <input
+            type="url"
+            class="form-input"
+            name="entry.699732974"
+            placeholder="網站。 https://"
+            maxlength="3000"
+          />
+          <input
+            type="url"
+            class="form-input"
+            name="entry.2050899252"
+            placeholder="其他。 https://"
+            maxlength="3000"
+          />
+          <input
+            type="url"
+            class="form-input"
+            name="entry.830227276"
+            placeholder="其他。 https://"
+            maxlength="3000"
+          />
+        </div>
+        <!--Promotion Content-->
+        <div class="column">
+          <span class="from-header">行銷資料蒐集與使用</span>
+          若錄取此屆攤商，您是否同意將以上提供之內容資料，供主辦單位用於本屆攤商介紹、網路媒體與貼文宣傳及活動資料使用？
+        </div>
+        <div class="column layout-form-column-grid-2">
+          <span class="from-description-header-ness">必填問題</span>
+          <input
+            type="radio"
+            class="form-input-radio"
+            name="entry.7322984"
+            id="PromotionContent_Agree"
+            value="同意"
+            required
+          />
+          <label for="PromotionContent_Agree" class="form-label">
+            <span class="from-label-header">同意</span>
+            <span class="from-label-description-header"
+              >同意使用請選擇此選項</span
+            >
+          </label>
+          <input
+            type="radio"
+            class="form-input-radio"
+            name="entry.7322984"
+            id="PromotionContent_Disagree"
+            value="不同意"
+            required
+          />
+          <label for="PromotionContent_Disagree" class="form-label">
+            <span class="from-label-header">不同意</span>
+            <span class="from-label-description-header"
+              >不同意使用請選擇此選項</span
+            >
+          </label>
+        </div>
+
+        <!--Insufficient Information-->
+        <div class="column question-InsufficientInformation">
+          <span class="from-sub-header">當攤商行銷資料不足時</span>
+          您否同意草率季團隊使用、分享您所提供之
+          Instagram、Facebook、網站⋯⋯等內容用於本屆攤商介紹、網路媒體與貼文宣傳及活動資料使用？
+        </div>
+        <div
+          class="column layout-form-column-grid-2 question-InsufficientInformation"
+        >
+          <span class="from-description-header-ness">必填問題</span>
+          <input
+            type="radio"
+            class="form-input-radio"
+            name="entry.1214650515"
+            id="InsufficientInformation_Agree"
+            value="同意"
+          />
+          <label for="InsufficientInformation_Agree" class="form-label">
+            <span class="from-label-header">同意</span>
+            <span class="from-label-description-header"
+              >同意使用請選擇此選項</span
+            >
+          </label>
+          <input
+            type="radio"
+            class="form-input-radio"
+            name="entry.1214650515"
+            id="InsufficientInformation_Disagree"
+            value="不同意"
+          />
+          <label for="InsufficientInformation_Disagree" class="form-label">
+            <span class="from-label-header">不同意</span>
+            <span class="from-label-description-header"
+              >不同意使用請選擇此選項</span
+            >
+          </label>
+        </div>
       </div>
+
       <span class="description-header">Participating in a record survey</span>
       <div class="module-form layout-form-columnized">
         <!--Participated In-->
@@ -370,7 +522,7 @@
         <!--Role-->
         <div class="column">
           <span class="from-header">身份類別</span>
-          輸入內容將公開顯示於官網目錄及標籤上。
+          請選擇您的身份類別供評選參考。
         </div>
         <div class="column layout-form-column-grid-1">
           <span class="from-description-header-ness">必填問題</span>
@@ -401,7 +553,7 @@
         <!--Nationality-->
         <div class="column">
           <span class="from-header">主要創作據點</span>
-          輸入內容將公開顯示於官網目錄及標籤上。
+          請附上主要創作據點供評選參考。
         </div>
         <div class="column layout-form-column-grid-1">
           <span class="from-description-header-ness">必填問題</span>
@@ -414,28 +566,12 @@
           />
         </div>
 
-        <!--Bio-->
-        <div class="column">
-          <span class="from-header">品牌介紹</span>
-          輸入內容將公開顯示於官網目錄及標籤上。
-        </div>
-        <div class="column layout-form-column-grid-1">
-          <span class="from-description-header-ness"
-            >必填問題、300 個字元內</span
-          >
-          <textarea
-            class="form-input-textarea"
-            name="entry.1877870250"
-            placeholder="品牌介紹"
-            maxlength="1000"
-            required
-          ></textarea>
-        </div>
+        
 
         <!-- 作品類別 -->
         <div class="column" id="workcat">
           <span class="from-header">作品類別</span>
-          <span style="color: red"></span>輸入內容將公開顯示於官網目錄及標籤上。
+          請選擇您的作品類別供評選參考。
         </div>
         <div class="column layout-form-column-grid-1" id="workcat2">
           <span class="from-description-header-ness" style="display: block"
@@ -543,125 +679,6 @@
           </div>
         </div>
 
-        <!--Social Media-->
-        <div class="column">
-          <span class="from-header">社群媒體</span>
-          請附上社群媒體供評選參考。輸入內容將公開顯示於官網目錄及標籤上。
-        </div>
-        <div class="column layout-form-column-grid-2">
-          <span class="from-description-header-ness-no">非必填問題</span>
-          <input
-            type="url"
-            class="form-input"
-            name="entry.1361490241"
-            placeholder="Facebook。 https://facebook.com/"
-            maxlength="1500"
-          />
-          <input
-            type="url"
-            class="form-input"
-            name="entry.138567696"
-            placeholder="Instagram。 https://instagram.com/"
-            maxlength="1500"
-          />
-          <input
-            type="url"
-            class="form-input"
-            name="entry.699732974"
-            placeholder="網站。 https://"
-            maxlength="3000"
-          />
-          <input
-            type="url"
-            class="form-input"
-            name="entry.2050899252"
-            placeholder="其他。 https://"
-            maxlength="3000"
-          />
-          <input
-            type="url"
-            class="form-input"
-            name="entry.830227276"
-            placeholder="其他。 https://"
-            maxlength="3000"
-          />
-        </div>
-
-        <!--Promotion Content-->
-        <div class="column">
-          <span class="from-header">行銷資料蒐集與使用</span>
-          若錄取此屆攤商，您是否同意將以上提供之內容資料，供主辦單位用於本屆攤商介紹、網路媒體與貼文宣傳及活動資料使用？
-        </div>
-        <div class="column layout-form-column-grid-2">
-          <span class="from-description-header-ness">必填問題</span>
-          <input
-            type="radio"
-            class="form-input-radio"
-            name="entry.7322984"
-            id="PromotionContent_Agree"
-            value="同意"
-            required
-          />
-          <label for="PromotionContent_Agree" class="form-label">
-            <span class="from-label-header">同意</span>
-            <span class="from-label-description-header"
-              >同意使用請選擇此選項</span
-            >
-          </label>
-          <input
-            type="radio"
-            class="form-input-radio"
-            name="entry.7322984"
-            id="PromotionContent_Disagree"
-            value="不同意"
-            required
-          />
-          <label for="PromotionContent_Disagree" class="form-label">
-            <span class="from-label-header">不同意</span>
-            <span class="from-label-description-header"
-              >不同意使用請選擇此選項</span
-            >
-          </label>
-        </div>
-
-        <!--Insufficient Information-->
-        <div class="column question-InsufficientInformation">
-          <span class="from-sub-header">當攤商行銷資料不足時</span>
-          您否同意草率季團隊使用、分享您所提供之
-          Instagram、Facebook、網站⋯⋯等內容用於本屆攤商介紹、網路媒體與貼文宣傳及活動資料使用？
-        </div>
-        <div
-          class="column layout-form-column-grid-2 question-InsufficientInformation"
-        >
-          <span class="from-description-header-ness">必填問題</span>
-          <input
-            type="radio"
-            class="form-input-radio"
-            name="entry.1214650515"
-            id="InsufficientInformation_Agree"
-            value="同意"
-          />
-          <label for="InsufficientInformation_Agree" class="form-label">
-            <span class="from-label-header">同意</span>
-            <span class="from-label-description-header"
-              >同意使用請選擇此選項</span
-            >
-          </label>
-          <input
-            type="radio"
-            class="form-input-radio"
-            name="entry.1214650515"
-            id="InsufficientInformation_Disagree"
-            value="不同意"
-          />
-          <label for="InsufficientInformation_Disagree" class="form-label">
-            <span class="from-label-header">不同意</span>
-            <span class="from-label-description-header"
-              >不同意使用請選擇此選項</span
-            >
-          </label>
-        </div>
-
         <!--Workshop Proposal-->
         <div class="column">
           <span class="from-header">主題工作坊提案</span>
@@ -680,8 +697,8 @@
 
         <!-- 十年特場 -->
         <div class="column">
-          <span class="from-header">2026 春季草率十年特場！</span>
-          草率十年特場預計於 2026 年 3–4 月舉行，請勾選是否有參展意願。
+          <span class="from-header">是否有實體空間可以搭配放置海報？</span>
+          讓草率這裡也有、那裡也有，請勾選是否有實體空間可以幫助我們擴散海報。
         </div>
 
         <div class="column layout-form-column-grid-1">
@@ -691,11 +708,27 @@
             class="form-input-checkbox"
             name="entry.1381238601"
             id="early_signup_2026"
-            value="要報名"
+            value="有喔"
           />
-          <label for="early_signup_2026" class="form-label-10y">
-            我要搶先報名 2026 春季草率十年特場！
+          <label for="early_signup_2026" class="form-label">
+            有喔！
           </label>
+        </div>
+      
+
+        <!--Further Questions-->
+        <div class="column">
+          <span class="from-header">想對草率季說的話！</span>
+          如果您有其他問題與意見或有想對我們說的話，請在此留言。
+        </div>
+        <div class="column layout-form-column-grid-1">
+          <span class="from-description-header-ness-no">非必填問題</span>
+          <textarea
+            class="form-input-textarea"
+            name="entry.2019239800"
+            placeholder="留言"
+            maxlength="1000"
+          ></textarea>
         </div>
       </div>
 
@@ -802,20 +835,7 @@
           />
         </div>
 
-        <!--Further Questions-->
-        <div class="column">
-          <span class="from-header">想對草率季說的話！</span>
-          如果您有其他問題與意見或有想對我們說的話，請在此留言。
-        </div>
-        <div class="column layout-form-column-grid-1">
-          <span class="from-description-header-ness-no">非必填問題</span>
-          <textarea
-            class="form-input-textarea"
-            name="entry.2019239800"
-            placeholder="留言"
-            maxlength="1000"
-          ></textarea>
-        </div>
+        
       </div>
 
       <span class="description-header">Notice</span>
