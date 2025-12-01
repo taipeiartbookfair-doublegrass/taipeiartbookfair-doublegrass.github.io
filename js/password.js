@@ -107,10 +107,20 @@ window.onRecaptchaError = function () {
   document.getElementById("submitButton").disabled = true;
 };
 
-// 表單送出前再次檢查 reCAPTCHA
+// 表單送出前再次檢查 reCAPTCHA 並獲取 token
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("BoothApplication");
   if (form) {
+    // 創建隱藏欄位來存儲 reCAPTCHA token
+    let tokenInput = document.getElementById("recaptcha-token");
+    if (!tokenInput) {
+      tokenInput = document.createElement("input");
+      tokenInput.type = "hidden";
+      tokenInput.id = "recaptcha-token";
+      tokenInput.name = "recaptcha-token";
+      form.appendChild(tokenInput);
+    }
+
     form.addEventListener("submit", function (e) {
       // 確保 grecaptcha 已經加載
       if (typeof grecaptcha !== "undefined" && grecaptcha.getResponse) {
@@ -121,21 +131,33 @@ document.addEventListener("DOMContentLoaded", function () {
             "請完成驗證再提交表單！",
             "Please complete the verification before submitting."
           );
+          return false;
         }
+        // 獲取 token 並設置到隱藏欄位
+        tokenInput.value = response;
       } else {
         // 如果 reCAPTCHA 還沒加載，等待一下再檢查
+        e.preventDefault();
         setTimeout(function () {
           if (typeof grecaptcha !== "undefined" && grecaptcha.getResponse) {
             const response = grecaptcha.getResponse();
             if (!response) {
-              e.preventDefault();
               alertMessage(
                 "請完成驗證再提交表單！",
                 "Please complete the verification before submitting."
               );
+            } else {
+              tokenInput.value = response;
+              form.submit();
             }
+          } else {
+            alertMessage(
+              "reCAPTCHA 載入失敗，請重新整理頁面。",
+              "reCAPTCHA failed to load. Please refresh the page."
+            );
           }
         }, 1000);
+        return false;
       }
     });
   }

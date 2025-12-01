@@ -68,7 +68,7 @@
 
     <!-- 圖靈測驗 -->
     <script
-      src="https://www.google.com/recaptcha/api.js?hl=zh-TW"
+      src="https://www.google.com/recaptcha/enterprise.js?hl=zh-TW"
       async
       defer
     ></script>
@@ -422,6 +422,17 @@
             <span class="from-label-header">2024</span>
             <span class="from-label-description-header">沒有錯</span>
           </label>
+          <input
+            type="checkbox"
+            class="form-input-checkbox"
+            name="entry.1734398784"
+              id="ParticipatedYears_2025"
+            value="2025"
+          />
+          <label for="ParticipatedYears_2025" class="form-label">
+            <span class="from-label-header">2025</span>
+            <span class="from-label-description-header">Soft POW</span>
+          </label>
         </div>
       </div>
 
@@ -441,7 +452,7 @@
           <span class="from-description-header-ness">必填問題</span>
           <span class="from-description-header">
             書攤類．
-            針對以書本為主要創作／販售的參展單位，申請時需提出三本以上的書及審查資料。
+            針對以書本為主要創作／販售的參展單位，申請時需提出三本以上的書及審查資料。錄取後將同步開放桌子加購服務（每攤限加購一個）。
           </span>
           <input
             type="radio"
@@ -472,7 +483,7 @@
             required
           />
           <label for="PreferredBoothType_CreativeProducts" class="form-label">
-            <span class="from-label-header">創作攤</span>
+            <span class="from-label-header">策展攤</span>
             <span class="from-label-sub-header">8,000 元（含稅）</span><br />
             <span class="from-label-description-header">
               基礎設備：桌面（120*60cm) 1 個、椅子 2 張、工作證 2 張、草率簿 1
@@ -887,7 +898,8 @@
         <div class="column">
           <div
             class="g-recaptcha"
-            data-sitekey="6Ld5yzUrAAAAANxGXgmtKuR3reXVdstBSKRu-iOO"
+            data-sitekey="6Ldd3R0sAAAAALXBsRETxdknut46QXHphNYpJl2I"
+            data-action="APPLICATION"
             data-callback="onRecaptchaSuccess"
             data-expired-callback="onRecaptchaExpired"
             data-error-callback="onRecaptchaError"
