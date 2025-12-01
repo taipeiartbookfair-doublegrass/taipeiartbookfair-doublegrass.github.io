@@ -66,7 +66,7 @@
     <link rel="stylesheet" href="css/opencall.css" />
     <link rel="stylesheet" href="css/font.css" />
     <!-- 圖靈測驗 -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://www.google.com/recaptcha/enterprise.js" async defer></script>
 
     <!-- Google tag (gtag.js) -->
     <script
@@ -402,6 +402,17 @@
             <span class="from-label-header">2024</span>
             <span class="from-label-description-header">Groovy Quote</span>
           </label>
+          <input
+            type="checkbox"
+            class="form-input-checkbox"
+            name="entry.1734398784"
+            id="ParticipatedYears_2025"
+            value="2025"
+          />
+          <label for="ParticipatedYears_2025" class="form-label">
+            <span class="from-label-header">2025</span>
+            <span class="from-label-description-header">Soft POW</span>
+          </label>
         </div>
       </div>
 
@@ -411,33 +422,61 @@
         <div class="column">
           <span class="from-header">Select the type of booth</span>
           The organizer will allocate equipment, space, and location according
-          to the selected booth type. Once the application is submitted, changes
-          cannot be made. Please choose the booth type that best suits your
-          needs.
-          <u
-            >If modifications are required, you will need to resubmit the
-            registration form</u
-          >.
+          to the selected booth type. Booth locations will be assigned by the
+          organizer and no specific location requests can be accommodated. Please
+          carefully evaluate the appropriate booth type. Once submitted, no
+          modifications or adjustments can be made. If modifications are
+          required, please resubmit the registration form.
           <br />
           <br />
-          Details regarding table sizes and the option to purchase additional
-          work permits will be provided upon approval of your application.
+          Details regarding table sizes and specifics will be notified upon
+          acceptance. Accepted applicants must complete booth fee payment within
+          two weeks, otherwise participation will be automatically cancelled.
+          Please note: Additional work permit purchase service (one additional
+          permit per booth) will be available simultaneously after acceptance.
+          Please apply within the purchase period, no extensions.
         </div>
         <div class="column layout-form-column-grid-2">
           <span class="from-description-header-ness">Required Question</span>
+          <span class="from-description-header">
+            Book Booth. For exhibitors whose main creation/sales are books.
+            Applicants must provide three or more books and review materials
+            when applying. Additional table purchase (one additional table per booth) will be available simultaneously after acceptance. 
+          </span>
           <input
             type="radio"
             class="form-input-radio"
             name="entry.133172086"
-            id="PreferredBoothType_OneRegularBooth"
-            value="One Regular Booth"
+            id="PreferredBoothType_LargeBookStalls"
+            value="書攤"
             required
           />
-          <label for="PreferredBoothType_OneRegularBooth" class="form-label">
-            <span class="from-label-header">One Regular Booth</span>
+          <label for="PreferredBoothType_LargeBookStalls" class="form-label">
+            <span class="from-label-header">Regular Book Booth</span>
             <span class="from-label-sub-header">USD$165 incl. tax</span><br />
             <span class="from-label-description-header">
-              Includes: 120 × 60 cm table ×1, chairs ×2, passes ×2, 2025 TPABF
+              Includes: 120 × 60 cm table ×1, chairs ×2, passes ×2, TPABF
+              Catalog ×1 (one page featured)
+            </span>
+          </label>
+
+          <span class="from-description-header">
+            Curation Booth. For exhibitors whose main creation/sales are various
+            products.
+          </span>
+          <input
+            type="radio"
+            class="form-input-radio"
+            name="entry.133172086"
+            id="PreferredBoothType_CreativeProducts"
+            value="創作商品"
+            required
+          />
+          <label for="PreferredBoothType_CreativeProducts" class="form-label">
+            <span class="from-label-header">Curation Booth</span>
+            <span class="from-label-sub-header">USD$264 incl. tax</span><br />
+            <span class="from-label-description-header">
+              Includes: 120 × 60 cm table ×1, chairs ×2, passes ×2, TPABF
               Catalog ×1 (one page featured)
             </span>
           </label>
@@ -445,32 +484,37 @@
             type="radio"
             class="form-input-radio"
             name="entry.133172086"
-            id="PreferredBoothType_TwoRegularBooth"
-            value="Two Regular Booth"
+            id="PreferredBoothType_FoodBeverages"
+            value="食物酒水"
             required
           />
-          <label for="PreferredBoothType_TwoRegularBooth" class="form-label">
-            <span class="from-label-header">Two Regular Booths</span>
+          <label for="PreferredBoothType_FoodBeverages" class="form-label">
+            <span class="from-label-header">Food & Beverage Booth</span>
+            <span class="from-label-sub-header">USD$429 incl. tax</span><br />
+            <span class="from-label-description-header">
+              Includes: 180 × 60 cm table ×1, chairs ×2, passes ×2, TPABF
+              Catalog ×1 (one page featured)
+            </span>
+          </label>
+
+          <span class="from-description-header">
+            Installation Booth. For exhibitors whose main focus is large-scale
+            installations or spatial creations.
+          </span>
+          <input
+            type="radio"
+            class="form-input-radio"
+            name="entry.133172086"
+            id="PreferredBoothType_Curation"
+            value="裝置類"
+            required
+          />
+          <label for="PreferredBoothType_Curation" class="form-label">
+            <span class="from-label-header">Installation Booth</span>
             <span class="from-label-sub-header">USD$330 incl. tax</span><br />
             <span class="from-label-description-header">
-              Includes: 120 × 60 cm table ×2, chairs ×4, passes ×4, 2025 TPABF
-              Catalog ×1 (one page featured)
-            </span>
-          </label>
-          <input
-            type="radio"
-            class="form-input-radio"
-            name="entry.133172086"
-            id="PreferredBoothType_CurationBooth"
-            value="Curation Booth"
-            required
-          />
-          <label for="PreferredBoothType_CurationBooth" class="form-label">
-            <span class="from-label-header">Curation Booth</span>
-            <span class="from-label-sub-header">USD$780 incl. tax</span><br />
-            <span class="from-label-description-header">
-              Includes: 3M*3M space, 120 × 60 cm table ×2, chairs ×4, passes ×3,
-              2025 TPABF Catalog ×1 (one page featured)
+              Includes: 1.5M × 1.5M space, passes ×2, TPABF Catalog ×1 (one
+              page featured)
             </span>
           </label>
         </div>
@@ -884,7 +928,8 @@
         <div class="column">
           <div
             class="g-recaptcha"
-            data-sitekey="6Ld5yzUrAAAAANxGXgmtKuR3reXVdstBSKRu-iOO"
+            data-sitekey="6Ldd3R0sAAAAALXBsRETxdknut46QXHphNYpJl2I"
+            data-action="APPLICATION"
             data-callback="onRecaptchaSuccess"
             data-expired-callback="onRecaptchaExpired"
             data-error-callback="onRecaptchaError"

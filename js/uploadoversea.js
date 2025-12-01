@@ -68,6 +68,17 @@ form.addEventListener("submit", async function (e) {
   submitButton.disabled = true;
   submitButton.innerText = "Submitting...";
 
+  // 簡單的前端 reCAPTCHA 檢查
+  if (typeof grecaptcha !== "undefined" && grecaptcha.getResponse) {
+    const response = grecaptcha.getResponse();
+    if (!response) {
+      alert("Please complete the verification before submitting.");
+      submitButton.disabled = false;
+      submitButton.innerText = "Submit";
+      return;
+    }
+  }
+
   const selectedBoothType = document.querySelector(
     'input[name="entry.133172086"]:checked'
   );
