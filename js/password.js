@@ -108,15 +108,35 @@ window.onRecaptchaError = function () {
 };
 
 // 表單送出前再次檢查 reCAPTCHA
-document
-  .getElementById("BoothApplication")
-  .addEventListener("submit", function (e) {
-    const response = grecaptcha.getResponse();
-    if (!response) {
-      e.preventDefault();
-      alertMessage(
-        "請完成驗證再提交表單！",
-        "Please complete the verification before submitting."
-      );
-    }
-  });
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("BoothApplication");
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      // 確保 grecaptcha 已經加載
+      if (typeof grecaptcha !== "undefined" && grecaptcha.getResponse) {
+        const response = grecaptcha.getResponse();
+        if (!response) {
+          e.preventDefault();
+          alertMessage(
+            "請完成驗證再提交表單！",
+            "Please complete the verification before submitting."
+          );
+        }
+      } else {
+        // 如果 reCAPTCHA 還沒加載，等待一下再檢查
+        setTimeout(function () {
+          if (typeof grecaptcha !== "undefined" && grecaptcha.getResponse) {
+            const response = grecaptcha.getResponse();
+            if (!response) {
+              e.preventDefault();
+              alertMessage(
+                "請完成驗證再提交表單！",
+                "Please complete the verification before submitting."
+              );
+            }
+          }
+        }, 1000);
+      }
+    });
+  }
+});
