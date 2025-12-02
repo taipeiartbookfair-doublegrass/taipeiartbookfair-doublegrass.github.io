@@ -9,7 +9,14 @@ document.addEventListener("DOMContentLoaded", function () {
   const productLinkl = document.getElementById("productLink-l");
   const artworkUpload = document.getElementById("uploadArtwork");
   const artworkUploadl = document.getElementById("uploadArtwork-l");
+  const curationLink = document.getElementById("curationLink");
+  const curationLinkl = document.getElementById("curationLink-l");
   //const portdescription = document.getElementById("port-description");
+  
+  // 如果元素不存在（某些頁面可能沒有），則設為 null
+  if (!proposalLink || !proposalLinkl || !productLink || !productLinkl || !artworkUpload || !artworkUploadl) {
+    return; // 如果必要的元素不存在，直接返回
+  }
 
   // 根據選擇的攤位類型顯示或隱藏元素
   function updateFormDisplay() {
@@ -28,6 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
         proposalLinkl.style.display = "block";
         productLinkl.style.display = "none";
         artworkUploadl.style.display = "none";
+        if (curationLink) curationLink.style.display = "none";
+        if (curationLinkl) curationLinkl.style.display = "none";
         //portdescription.style.display = "none";
       } else if (boothValue === "書攤") {
         proposalLink.style.display = "none";
@@ -36,6 +45,8 @@ document.addEventListener("DOMContentLoaded", function () {
         proposalLinkl.style.display = "none";
         productLinkl.style.display = "block";
         artworkUploadl.style.display = "block";
+        if (curationLink) curationLink.style.display = "none";
+        if (curationLinkl) curationLinkl.style.display = "none";
         //portdescription.style.display = "block";
       } else if (boothValue === "創作商品" || boothValue === "食物酒水") {
         proposalLink.style.display = "none";
@@ -44,7 +55,18 @@ document.addEventListener("DOMContentLoaded", function () {
         proposalLinkl.style.display = "none";
         productLinkl.style.display = "block";
         artworkUploadl.style.display = "block";
+        if (curationLink) curationLink.style.display = "none";
+        if (curationLinkl) curationLinkl.style.display = "none";
         //portdescription.style.display = "none";
+      } else if (boothValue === "策展攤") {
+        proposalLink.style.display = "none";
+        productLink.style.display = "none";
+        artworkUpload.style.display = "none";
+        proposalLinkl.style.display = "none";
+        productLinkl.style.display = "none";
+        artworkUploadl.style.display = "none";
+        if (curationLink) curationLink.style.display = "block";
+        if (curationLinkl) curationLinkl.style.display = "block";
       } else {
         // 預設隱藏
         proposalLink.style.display = "none";
@@ -53,6 +75,8 @@ document.addEventListener("DOMContentLoaded", function () {
         proposalLinkl.style.display = "none";
         productLinkl.style.display = "none";
         artworkUploadl.style.display = "none";
+        if (curationLink) curationLink.style.display = "none";
+        if (curationLinkl) curationLinkl.style.display = "none";
       }
     }
   }

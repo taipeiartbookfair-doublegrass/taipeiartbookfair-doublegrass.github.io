@@ -16,9 +16,9 @@ if (agreeCheckbox && submitButton) {
 
 // Consolidate Captcha logic and shared functionality
 const handleFileUpload = async (fileInput, form, submitButton, uploadUrl) => {
+  // 如果沒有檔案輸入框或沒有選擇檔案，返回 true（允許繼續提交）
   if (!fileInput || !fileInput.files || !fileInput.files.length) {
-    alert("Please select a file first.");
-    return false;
+    return true;
   }
 
   const file = fileInput.files[0];
@@ -77,11 +77,6 @@ const handleFileUpload = async (fileInput, form, submitButton, uploadUrl) => {
 };
 
 form.addEventListener("submit", async function (e) {
-  e.preventDefault();
-  submitButton.disabled = true;
-  submitButton.innerText = "Submitting...";
-
-
   const selectedBoothType = document.querySelector(
     'input[name="entry.133172086"]:checked'
   );
@@ -96,32 +91,50 @@ form.addEventListener("submit", async function (e) {
     } else if (["創作商品", "食物酒水", "書攤"].includes(boothValue)) {
       fileInput = document.getElementById("fileInput");
       needsUpload = true;
+    } else if (boothValue === "策展攤") {
+      fileInput = document.getElementById("fileInput3");
+      needsUpload = true;
     }
-    // 策展攤不需要上傳檔案
   }
 
   // 如果需要上傳檔案，先處理上傳
   if (needsUpload && fileInput) {
-    const uploadSuccess = await handleFileUpload(
-      fileInput,
-      form,
-      submitButton,
-      "https://script.google.com/macros/s/AKfycbzDAdWlQzwUInG1tLQWjI-GE54ZzJEjpvUwhP_MXzewEwPsfG2Gon7HsDw2C_eKwJsa/exec"
-    );
+    // 檢查是否有選擇檔案
+    if (fileInput.files && fileInput.files.length > 0) {
+      e.preventDefault(); // 只有需要上傳時才阻止預設提交
+      submitButton.disabled = true;
+      submitButton.innerText = "Submitting...";
 
-    if (!uploadSuccess) {
-      // 上傳失敗，恢復按鈕
-      submitButton.disabled = false;
-      submitButton.innerText = "Submit";
+      const uploadSuccess = await handleFileUpload(
+        fileInput,
+        form,
+        submitButton,
+        "https://script.google.com/macros/s/AKfycbzDAdWlQzwUInG1tLQWjI-GE54ZzJEjpvUwhP_MXzewEwPsfG2Gon7HsDw2C_eKwJsa/exec"
+      );
+
+      if (!uploadSuccess) {
+        // 上傳失敗，恢復按鈕
+        submitButton.disabled = false;
+        submitButton.innerText = "Submit";
+        return;
+      }
+
+      // 上傳成功，提交表單
+      submitButton.disabled = true;
+      form.submit();
+      setTimeout(() => {
+        window.location.href = "../application-received.html";
+      }, 3000);
+    } else {
+      // 需要上傳但沒有選擇檔案，阻止提交並提示
+      e.preventDefault();
+      alert("Please select a file first.");
       return;
     }
+  } else {
+    // 不需要上傳檔案，讓表單正常提交
+    submitButton.disabled = true;
+    submitButton.innerText = "Submitting...";
+    // 不阻止預設提交行為，讓表單直接提交到 Google Forms
   }
-
-  // 上傳成功或不需要上傳，提交表單
-  form.submit();
-  // 防止重複提交
-  submitButton.disabled = true;
-  setTimeout(() => {
-    window.location.href = "../application-received.html";
-  }, 3000);
 });
