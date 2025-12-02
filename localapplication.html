@@ -117,37 +117,22 @@
       <div class="module-form layout-form-columnized">
         <!--Exhibitor Name-->
         <div class="column">
-          <span class="from-header">攤商品牌名稱（中文）</span>
+          <span class="from-header">品牌名稱</span>
           輸入內容將公開顯示於官網目錄及標籤上供參觀者搜尋。
         </div>
         <div class="column layout-form-column-grid-1">
-          <span class="from-description-header-ness">必填問題</span>
+          <span class="from-description-header-ness">必填問題、25字元以內</span>
           <input
             class="form-input"
             name="entry.1159390039"
-            placeholder="品牌名稱（中文）"
-            maxlength="150"
+            placeholder="品牌名稱"
+            maxlength="25"
             required
             pattern="^[\p{L}\p{N}\s!&quot;#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]+$"
             title="請勿輸入特殊符號"
           />
         </div>
-        <div class="column">
-          <span class="from-header">攤商品牌名稱（英文）</span>
-          輸入內容將公開顯示於官網目錄及標籤上供參觀者搜尋。
-        </div>
-        <div class="column layout-form-column-grid-1">
-          <span class="from-description-header-ness">必填問題</span>
-          <input
-            class="form-input"
-            name="entry.805335264"
-            placeholder="品牌名稱（英文）"
-            maxlength="150"
-            required
-            pattern="^[\p{L}\p{N}\s!&quot;#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]+$"
-            title="請勿輸入特殊符號"
-          />
-        </div>
+        
         <!--Bio-->
         <div class="column">
           <span class="from-header">品牌介紹</span>
@@ -168,7 +153,7 @@
         <!--Social Media-->
         <div class="column">
           <span class="from-header">社群媒體</span>
-          請附上社群媒體供評選參考。輸入內容將公開顯示於官網目錄及標籤上供參觀者搜尋。
+          請附上社群媒體供評選參考。輸入內容將公開顯示於官網目錄及標籤上供參觀者搜尋。如為多個品牌併攤報名，僅以露出一個品牌社群為主。
         </div>
         <div class="column layout-form-column-grid-2">
           <span class="from-description-header-ness-no">非必填問題</span>
@@ -303,6 +288,7 @@
           />
           <label for="participatedin_Yes" class="form-label">
             <span class="from-label-header">是，我參與過</span>
+            我曾以攤主身份參與
             <span class="from-label-description-header">
             </span>
           </label>
@@ -316,6 +302,7 @@
           />
           <label for="participatedin_Firsttime" class="form-label">
             <span class="from-label-header">否，我第一次</span>
+            我第一次當攤主
             <span class="from-label-description-header">
             </span>
           </label>
@@ -463,8 +450,7 @@
             <span class="from-label-header">ㄧ般書攤</span>
             <span class="from-label-sub-header">5,000 元（含稅）</span><br />
             <span class="from-label-description-header">
-              基礎設備：桌面（120*60cm) 1 個、椅子 2 張、工作證 2 張、草率簿 1
-              本（含露出一面）
+              • 基礎設備：桌面（120*60cm) 1 個、椅子 2 張、工作證 2 張、草率簿 1 本（含露出一面）
             </span>
           </label>
 
@@ -483,8 +469,7 @@
             <span class="from-label-header">非書（創作）攤</span>
             <span class="from-label-sub-header">8,000 元（含稅）</span><br />
             <span class="from-label-description-header">
-              基礎設備：桌面（120*60cm) 1 個、椅子 2 張、工作證 2 張、草率簿 1
-              本（含露出一面）
+              • 基礎設備：桌面（120*60cm) 1 個、椅子 2 張、工作證 2 張、草率簿 1 本（含露出一面）
             </span>
           </label>
 
@@ -501,9 +486,9 @@
           />
           <label for="PreferredBoothType_Curation" class="form-label">
             <span class="from-label-header">裝置攤</span>
-            <span class="from-label-sub-header">10,000 元（含稅） </span><br />
+            <span class="from-label-sub-header">10,000 元（含稅）</span><br />
             <span class="from-label-description-header">
-              基礎設備：1.5M*1.5M空地、工作證 2 張、草率簿 1 本（含露出一面）
+              • 基礎設備：1.5M*1.5M空地、工作證 2 張、草率簿 1 本（含露出一面）
             </span>
           </label>
 
@@ -522,10 +507,13 @@
             <span class="from-label-header">策展攤</span>
             <span class="from-label-sub-header">50,000 元（含稅）</span><br />
             <span class="from-label-description-header">
-              基礎設備：3M*3M空間、桌面（120*60cm) 2 個、椅子 4 張、工作證 6 張、草率簿 1 本（含露出一面）
+              • 基礎設備：3M*3M空間、桌面（120*60cm) 2 個、椅子 4 張、工作證 6 張、草率簿 1 本（含露出一面）
             </span>
           </label>
 
+          <span class="from-description-header">
+            食物酒水攤．針對以食物或飲品為主要販售類型的單位。
+          </span>
           <input
             type="radio"
             class="form-input-radio"
@@ -538,8 +526,7 @@
             <span class="from-label-header">食物酒水攤</span>
             <span class="from-label-sub-header">13,000 元（含稅）</span><br />
             <span class="from-label-description-header">
-              基礎設備：桌面（180*60cm) 1 個、椅子 2 張、工作證 2 張、草率簿 1
-              本（含露出一面）
+              • 基礎設備：桌面（180*60cm) 1 個、椅子 2 張、工作證 2 張、草率簿 1 本（含露出一面）
             </span>
           </label>
         </div>
@@ -547,6 +534,26 @@
 
       <span class="description-header">Submission Info</span>
       <div class="module-form layout-form-columnized">
+        <!-- 作品類別 -->
+        <div class="column" id="workcat">
+          <span class="from-header">作品類別</span>
+          請選擇您的作品類別供評選參考。
+        </div>
+        <div class="column layout-form-column-grid-1" id="workcat2">
+          <span class="from-description-header-ness" style="display: block"
+            >必填問題</span
+          >
+          <select
+            id="sub-category"
+            name="entry.1482635628"
+            required
+            disabled
+            style="color: grey; max-width: 65%"
+          >
+            <option value="" disabled selected hidden>請先選擇攤種</option>
+          </select>
+        </div>
+
         <!--Role-->
         <div class="column">
           <span class="from-header">身份類別</span>
@@ -594,27 +601,6 @@
           />
         </div>
 
-        
-
-        <!-- 作品類別 -->
-        <div class="column" id="workcat">
-          <span class="from-header">作品類別</span>
-          請選擇您的作品類別供評選參考。
-        </div>
-        <div class="column layout-form-column-grid-1" id="workcat2">
-          <span class="from-description-header-ness" style="display: block"
-            >必填問題</span
-          >
-          <select
-            id="sub-category"
-            name="entry.1482635628"
-            required
-            disabled
-            style="color: grey; max-width: 65%"
-          >
-            <option value="" disabled selected hidden>請先選擇攤種</option>
-          </select>
-        </div>
 
         <!--Product Links-->
         <div
@@ -725,8 +711,8 @@
 
         <!-- 十年特場 -->
         <div class="column">
-          <span class="from-header">是否有實體空間可以搭配放置海報？</span>
-          讓草率這裡也有、那裡也有，請勾選是否有實體空間可以幫助我們擴散海報。
+          <span class="from-header">是否有公開實體空間可以張貼海報？</span>
+          請填上收件資訊並附上 Google Map 網址，我們將會加入至草率季友好地圖。我們將於寄送本屆海報至您的空間，協助一起擴散草率季:)
         </div>
 
         <div class="column layout-form-column-grid-1">
@@ -807,7 +793,7 @@
         <!--Password-->
         <div class="column">
           <span class="from-header">登錄密碼</span>
-          此登錄密碼將作為日後註冊、查詢帳號之使用，<strong>一旦提交將不提供修改及調整，</strong>若重複報名將後輸入密碼為主。
+          此登錄密碼將作為日後註冊、查詢帳號之使用，<strong>一旦提交將不提供修改及調整，</strong>
         </div>
         <div class="column layout-form-column-grid-1">
           <span class="from-description-header-ness">必填問題</span>
