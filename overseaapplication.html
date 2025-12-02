@@ -65,8 +65,6 @@
     <link rel="shortcut icon" href="image/icon-1.ico" />
     <link rel="stylesheet" href="css/opencall.css" />
     <link rel="stylesheet" href="css/font.css" />
-    <!-- 圖靈測驗 -->
-    <script src="https://www.google.com/recaptcha/enterprise.js" async defer></script>
 
     <!-- Google tag (gtag.js) -->
     <script
@@ -948,16 +946,12 @@
 
         <div class="column layout-form-column-grid-1">
           <span class="from-description-header-ness-no">Optional</span>
-          <input
-            type="checkbox"
-            class="form-input-checkbox"
+          <textarea
+            class="form-input-textarea"
             name="entry.1381238601"
-            id="poster_space_2026"
-            value="Yes"
-          />
-          <label for="poster_space_2026" class="form-label">
-            Yes!
-          </label>
+            placeholder="Please fill in your receiving information and include the Google Maps link"
+            maxlength="1000"
+          ></textarea>
         </div>
 
         <!--Further Questions-->
@@ -1168,24 +1162,11 @@
           </span>
         </div>
         <div class="column">
-          <div
-            class="g-recaptcha"
-            data-sitekey="6Ldd3R0sAAAAALXBsRETxdknut46QXHphNYpJl2I"
-            data-action="APPLICATION"
-            data-callback="onRecaptchaSuccess"
-            data-expired-callback="onRecaptchaExpired"
-            data-error-callback="onRecaptchaError"
-          ></div>
-          <div
-            id="form-error"
-            style="display: none; color: plum; margin-top: 1em"
-          ></div>
           <button
             type="submit"
             class="button-from-submit"
             id="submitButton"
             value="submit"
-            disabled
           >
             Submit
           </button>

@@ -66,12 +66,6 @@
     <link rel="stylesheet" href="css/opencall.css" />
     <link rel="stylesheet" href="css/font.css" />
 
-    <!-- 圖靈測驗 -->
-    <script
-      src="https://www.google.com/recaptcha/enterprise.js?hl=zh-TW"
-      async
-      defer
-    ></script>
     <!-- Google tag (gtag.js) -->
     <script
       async
@@ -717,16 +711,12 @@
 
         <div class="column layout-form-column-grid-1">
           <span class="from-description-header-ness-no">非必填問題</span>
-          <input
-            type="checkbox"
-            class="form-input-checkbox"
+          <textarea
+            class="form-input-textarea"
             name="entry.1381238601"
-            id="early_signup_2026"
-            value="有喔"
-          />
-          <label for="early_signup_2026" class="form-label">
-            有喔！
-          </label>
+            placeholder="請填上收件資訊並附上 Google Map 網址"
+            maxlength="1000"
+          ></textarea>
         </div>
       
 
@@ -899,24 +889,11 @@
           </span>
         </div>
         <div class="column">
-          <div
-            class="g-recaptcha"
-            data-sitekey="6Ldd3R0sAAAAALXBsRETxdknut46QXHphNYpJl2I"
-            data-action="APPLICATION"
-            data-callback="onRecaptchaSuccess"
-            data-expired-callback="onRecaptchaExpired"
-            data-error-callback="onRecaptchaError"
-          ></div>
-          <div
-            id="form-error"
-            style="display: none; color: plum; margin-top: 1em"
-          ></div>
           <button
             type="submit"
             class="button-from-submit"
             id="submitButton"
             value="submit"
-            disabled
           >
             提交
           </button>
