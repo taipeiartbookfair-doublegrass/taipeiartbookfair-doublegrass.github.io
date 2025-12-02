@@ -88,7 +88,7 @@ form.addEventListener("submit", async function (e) {
     if (boothValue === "裝置類") {
       fileInput = document.getElementById("fileInput2");
       needsUpload = true;
-    } else if (["創作商品", "食物酒水", "書攤"].includes(boothValue)) {
+    } else if (["創作商品", "書攤"].includes(boothValue)) {
       fileInput = document.getElementById("fileInput");
       needsUpload = true;
     } else if (boothValue === "策展攤") {
