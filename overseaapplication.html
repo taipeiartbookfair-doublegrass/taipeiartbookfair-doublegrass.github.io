@@ -118,12 +118,12 @@
           The information you provide will be officially displayed on the website, in search tags, and in the catalog.
         </div>
         <div class="column layout-form-column-grid-1">
-          <span class="from-description-header-ness">Required Question</span>
+          <span class="from-description-header-ness">Required Question, Max. 30 characters</span>
           <input
             class="form-input"
             name="entry.1159390039"
             placeholder="Exhibitor's Name"
-            maxlength="150"
+            maxlength="39"
             required
             pattern="^[\p{L}\p{N}\s!&quot;#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]+$"
             title="Please do not enter special characters."
@@ -149,7 +149,7 @@
         <!--Social Media-->
         <div class="column">
           <span class="from-header">Social Media</span>
-          The information you provide will be officially displayed on the website, in search tags, and in the catalog.
+          The information you provide will be officially displayed on the website, in search tags, and in the catalog. If multiple brands apply under a shared booth, only one brand’s social media will be highlighted.
         </div>
         <div class="column layout-form-column-grid-2">
           <span class="from-description-header-ness-no">Optional</span>
@@ -192,7 +192,7 @@
         <!--Promotion Content-->
         <div class="column">
           <span class="from-header">Promotion Content</span>
-          Do you agree to the use of your provided content and information for promotional purposes by the 2025 Taipei Art Book Fair team?
+          Do you agree to the use of your provided content and information for promotional purposes by the 2026 Taipei Art Book Fair team?
         </div>
         <div class="column layout-form-column-grid-2">
           <span class="from-description-header-ness">Required Question</span>
@@ -435,7 +435,7 @@
         <div class="column layout-form-column-grid-1">
           <span class="from-description-header-ness">Required Question</span>
           <span class="from-description-header">
-            Book Booth. For exhibitors whose primary practice or sales focus on books.
+            Regular Book Booth. For exhibitors whose primary practice or sales focus on books.
             Applicants must submit at least three previously published titles and relevant review materials.
           </span>
           <input
@@ -450,8 +450,7 @@
             <span class="from-label-header">Regular Book Booth</span>
             <span class="from-label-sub-header" style="font-weight: 200">&nbsp; NTD$5,000 incl. tax</span><br />
             <span class="from-label-description-header">
-              Includes: 120 × 60 cm table ×1, chairs ×2, passes ×2, TPABF
-              Catalog ×1 (one page featured)
+              Includes: 120 × 60 cm table ×1, chairs ×2, passes ×2, TPABF Catalog ×1 (one page featured)
             </span>
           </label>
 
@@ -513,61 +512,11 @@
               Includes: 3m*3m space, 120 × 60 cm table ×2, chairs ×4, passes ×6, TPABF Catalog ×1 (one page featured)
             </span>
           </label>
-
-          <input
-            type="radio"
-            class="form-input-radio"
-            name="entry.133172086"
-            id="PreferredBoothType_FoodBeverages"
-            value="食物酒水"
-            required
-          />
-          <label for="PreferredBoothType_FoodBeverages" class="form-label">
-            <span class="from-label-header">Food & Beverage Booth</span>
-            <span class="from-label-sub-header" style="font-weight: 200">&nbsp; NTD$13,000 incl. tax</span><br />
-            <span class="from-label-description-header">
-              Includes: 180 × 60 cm table ×1, chairs ×2, passes ×2, TPABF
-              Catalog ×1 (one page featured)
-            </span>
-          </label>
         </div>
       </div>
 
       <span class="description-header">Submission Info</span>
       <div class="module-form layout-form-columnized">
-        <!--Role-->
-        <div class="column">
-          <span class="from-header">Role</span>
-          Please select your role for selection reference.
-        </div>
-        <div class="column layout-form-column-grid-1">
-          <span class="from-description-header-ness">Required Question</span>
-          <select
-            class="form-input"
-            name="entry.2022316464"
-            required
-            style="color: grey"
-            onchange="this.style.color = this.value ? 'black' : 'grey';"
-          >
-            <option value="" disabled selected hidden>
-              Please select your role
-            </option>
-            <option value="a0 Creator">a0 Creator 創作者</option>
-            <option value="a1 Bookstore">a1 Bookstore 書店</option>
-            <option value="a2 Publisher/Press">
-              a2 Publisher/Press 出版商
-            </option>
-            <option value="a3 Printing/Paper">
-              a3 Printing/Paper 印刷廠/紙廠
-            </option>
-            <option value="a4 Cultural Institution">
-              a4 Cultural Institution 文化機構
-            </option>
-            <option value="a5 Select Shop">a5 Select Shop 選品店</option>
-            <option value="a6 Group/Structure">a6 Group/Structure 團體</option>
-          </select>
-        </div>
-        <!--Nationality/Base Location-->
         <!--Nationality-->
         <div class="column">
           <span class="from-header">Nationality</span>
@@ -812,7 +761,56 @@
             <option value="ZW">Zimbabwe (ZW)</option>
           </select>
         </div>
-      
+
+        <!--Base Location-->
+        <div class="column">
+          <span class="from-header">Base Location</span>
+          Please indicate your base location of your creative practice.        
+        </div>
+        <div class="column layout-form-column-grid-1">
+          <span class="from-description-header-ness">Required Question</span>
+          <input
+            class="form-input"
+            name="entry.1232010148"
+            placeholder="Base Location. e.g., Taipei"
+            maxlength="100"
+            required
+          />
+        </div>
+
+        <!--Role-->
+        <div class="column">
+          <span class="from-header">Role</span>
+          Please select your role for selection reference.
+        </div>
+        <div class="column layout-form-column-grid-1">
+          <span class="from-description-header-ness">Required Question</span>
+          <select
+            class="form-input"
+            name="entry.2022316464"
+            required
+            style="color: grey"
+            onchange="this.style.color = this.value ? 'black' : 'grey';"
+          >
+            <option value="" disabled selected hidden>
+              Please select your role
+            </option>
+            <option value="a0 Creator">a0 Creator 創作者</option>
+            <option value="a1 Bookstore">a1 Bookstore 書店</option>
+            <option value="a2 Publisher/Press">
+              a2 Publisher/Press 出版商
+            </option>
+            <option value="a3 Printing/Paper">
+              a3 Printing/Paper 印刷廠/紙廠
+            </option>
+            <option value="a4 Cultural Institution">
+              a4 Cultural Institution 文化機構
+            </option>
+            <option value="a5 Select Shop">a5 Select Shop 選品店</option>
+            <option value="a6 Group/Structure">a6 Group/Structure 團體</option>
+          </select>
+        </div>
+
 
         <!-- 作品類別 -->
         <div class="column" id="workcat">
@@ -944,8 +942,8 @@
 
         <!-- Poster Space -->
         <div class="column">
-          <span class="from-header">Do you have physical space to help us display posters?</span>
-          Let TPABF be everywhere! Please check if you have physical space to help us spread posters.
+          <span class="from-header">Do you have a public space available for poster display?</span>
+          Please fill in your receiving information and include the Google Maps link. We will add your location to the TPABF Poster Map. We’ll send this year’s TPABF posters to your space so we can spread the word together :)
         </div>
 
         <div class="column layout-form-column-grid-1">
