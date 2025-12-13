@@ -212,10 +212,11 @@ document.addEventListener("DOMContentLoaded", async function () {
   function getBoothTypeFromNumber(applicationNumber) {
     if (applicationNumber.includes("LB")) return "書攤";
     if (applicationNumber.includes("LM")) return "創作商品攤";
-    if (applicationNumber.includes("LI")) return "裝置攤";
+    if (applicationNumber.includes("LC")) return "策展攤";
     if (applicationNumber.includes("LF")) return "食物酒水攤";
-    if (applicationNumber.includes("IO")) return "One Regular Booth";
-    if (applicationNumber.includes("IT")) return "Two Regular Booth";
+    if (applicationNumber.includes("IB")) return "Regular Book Booth";
+    if (applicationNumber.includes("IN")) return "Regular Non-Book Booth";
+    if (applicationNumber.includes("II")) return "Installation Booth";
     if (applicationNumber.includes("IC")) return "Curation Booth";
     return "";
   }
