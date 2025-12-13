@@ -198,26 +198,34 @@ document.addEventListener("DOMContentLoaded", async function () {
   setSocialText("yearlyanswer", apiData["當屆問答"]);
   setSocialText("electricity-answer", apiData["電力需求"]);
 
-  document.getElementById("application-number").textContent =
-    apiData["報名編號"] || "";
-
+  const applicationNumberEl = document.getElementById("application-number");
+  if (applicationNumberEl) {
+    applicationNumberEl.textContent = apiData["報名編號"] || "";
+  }
+  const paymentStatusEl = document.getElementById("payment-status");
+  if (paymentStatusEl) {
+    paymentStatusEl.textContent = apiData["匯款備註"] || "";
+  }
+  const declarationStatusEl = document.getElementById("declaration-status");
+  if (declarationStatusEl) {
+    declarationStatusEl.textContent = apiData["同意書狀態"] || "";
+  }
   // 取得報名編號與 boothType
   function getBoothTypeFromNumber(applicationNumber) {
     if (applicationNumber.includes("LB")) return "書攤";
     if (applicationNumber.includes("LM")) return "創作商品攤";
-    if (applicationNumber.includes("LI")) return "裝置攤";
+    if (applicationNumber.includes("LC")) return "策展攤";
     if (applicationNumber.includes("LF")) return "食物酒水攤";
-    if (applicationNumber.includes("IO")) return "One Regular Booth";
-    if (applicationNumber.includes("IT")) return "Two Regular Booth";
+    if (applicationNumber.includes("IB")) return "Regular Book Booth";
+    if (applicationNumber.includes("IN")) return "Regular Non-Book Booth";
+    if (applicationNumber.includes("II")) return "Installation Booth";
     if (applicationNumber.includes("IC")) return "Curation Booth";
     return "";
   }
-  const applicationNumber = document
-    .getElementById("application-number")
-    .textContent.trim();
+  const applicationNumber = applicationNumberEl ? applicationNumberEl.textContent.trim() : "";
   const boothType = getBoothTypeFromNumber(applicationNumber);
   const boothTypeEl = document.getElementById("booth-type");
-  if (boothType) {
+  if (boothType && boothTypeEl) {
     boothTypeEl.textContent = boothType;
     if (/^[A-Za-z\s]+$/.test(boothType)) {
       boothTypeEl.classList.add("booth-type-en");
@@ -225,6 +233,8 @@ document.addEventListener("DOMContentLoaded", async function () {
       boothTypeEl.classList.remove("booth-type-en");
     }
   }
+
+  
 
   // 錄取狀態顯示
   function getApplicationResultText(raw, boothType) {
@@ -321,9 +331,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     return qualifiedStatuses.includes(resultText);
   }
 
-  // 控制條碼顯示
+  // 控制條碼顯示（需要錄取狀態、匯款和同意書都完成）
   const barcodeRow = document.getElementById("barcode-row");
-  const shouldShowBarcode = hasExhibitionQualification(resultText);
+  const hasQualifiedStatus = hasExhibitionQualification(resultText);
+  const paymentChecked = !!apiData["已匯款"];
+  const declarationChecked = !!apiData["同意書"];
+  const shouldShowBarcode = hasQualifiedStatus && paymentChecked && declarationChecked;
   
   if (barcodeRow) {
     if (shouldShowBarcode) {
