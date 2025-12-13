@@ -198,8 +198,15 @@ document.addEventListener("DOMContentLoaded", async function () {
   setSocialText("yearlyanswer", apiData["當屆問答"]);
   setSocialText("electricity-answer", apiData["電力需求"]);
 
-  document.getElementById("application-number").textContent =
-    apiData["報名編號"] || "";
+  const applicationNumberEl = document.getElementById("application-number");
+  if (applicationNumberEl) {
+    applicationNumberEl.textContent = apiData["報名編號"] || "";
+  }
+  const paymentStatusEl = document.getElementById("payment-status");
+  if (paymentStatusEl) {
+    paymentStatusEl.textContent = apiData["匯款備註"] || "";
+  }
+  const declarationStatusEl = document.getElementById("declaration-status");
 
   // 取得報名編號與 boothType
   function getBoothTypeFromNumber(applicationNumber) {
@@ -212,17 +219,30 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (applicationNumber.includes("IC")) return "Curation Booth";
     return "";
   }
-  const applicationNumber = document
-    .getElementById("application-number")
-    .textContent.trim();
+  const applicationNumber = applicationNumberEl ? applicationNumberEl.textContent.trim() : "";
   const boothType = getBoothTypeFromNumber(applicationNumber);
   const boothTypeEl = document.getElementById("booth-type");
-  if (boothType) {
+  if (boothType && boothTypeEl) {
     boothTypeEl.textContent = boothType;
     if (/^[A-Za-z\s]+$/.test(boothType)) {
       boothTypeEl.classList.add("booth-type-en");
     } else {
       boothTypeEl.classList.remove("booth-type-en");
+    }
+  }
+
+  // 設置同意書狀態（在 boothType 確定後）
+  if (declarationStatusEl) {
+    const declarationStatus = apiData["同意書"];
+    const isEnglish = boothType && /^[A-Za-z\s]+$/.test(boothType);
+    
+    if (declarationStatus === true || declarationStatus === "true" || declarationStatus === "是") {
+      declarationStatusEl.textContent = isEnglish ? "Completed" : "已完成";
+    } else if (declarationStatus === false || declarationStatus === "false" || declarationStatus === "否") {
+      declarationStatusEl.textContent = isEnglish ? "Unfulfilled" : "未完成";
+    } else {
+      // 如果有備註，顯示備註；否則顯示空字串
+      declarationStatusEl.textContent = apiData["同意書備註"] || "";
     }
   }
 
