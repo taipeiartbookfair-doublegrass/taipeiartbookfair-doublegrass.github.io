@@ -207,7 +207,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     paymentStatusEl.textContent = apiData["匯款備註"] || "";
   }
   const declarationStatusEl = document.getElementById("declaration-status");
-
+  if (declarationStatusEl) {
+    declarationStatusEl.textContent = apiData["同意書狀態"] || "";
+  }
   // 取得報名編號與 boothType
   function getBoothTypeFromNumber(applicationNumber) {
     if (applicationNumber.includes("LB")) return "書攤";
@@ -232,20 +234,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
 
-  // 設置同意書狀態（在 boothType 確定後）
-  if (declarationStatusEl) {
-    const declarationStatus = apiData["同意書"];
-    const isEnglish = boothType && /^[A-Za-z\s]+$/.test(boothType);
-    
-    if (declarationStatus === true || declarationStatus === "true" || declarationStatus === "是") {
-      declarationStatusEl.textContent = isEnglish ? "Completed" : "已完成";
-    } else if (declarationStatus === false || declarationStatus === "false" || declarationStatus === "否") {
-      declarationStatusEl.textContent = isEnglish ? "Unfulfilled" : "未完成";
-    } else {
-      // 如果有備註，顯示備註；否則顯示空字串
-      declarationStatusEl.textContent = apiData["同意書備註"] || "";
-    }
-  }
+  
 
   // 錄取狀態顯示
   function getApplicationResultText(raw, boothType) {
@@ -342,9 +331,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     return qualifiedStatuses.includes(resultText);
   }
 
-  // 控制條碼顯示
+  // 控制條碼顯示（需要錄取狀態、匯款和同意書都完成）
   const barcodeRow = document.getElementById("barcode-row");
-  const shouldShowBarcode = hasExhibitionQualification(resultText);
+  const hasQualifiedStatus = hasExhibitionQualification(resultText);
+  const paymentChecked = !!apiData["已匯款"];
+  const declarationChecked = !!apiData["同意書"];
+  const shouldShowBarcode = hasQualifiedStatus && paymentChecked && declarationChecked;
   
   if (barcodeRow) {
     if (shouldShowBarcode) {
