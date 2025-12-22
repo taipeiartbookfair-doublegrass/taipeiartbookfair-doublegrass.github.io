@@ -204,11 +204,11 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
   const paymentStatusEl = document.getElementById("payment-status");
   if (paymentStatusEl) {
-    paymentStatusEl.textContent = apiData["匯款備註"] || "";
+    paymentStatusEl.textContent = apiData["匯款備註"] || "（人工審核塞車中）";
   }
   const declarationStatusEl = document.getElementById("declaration-status");
   if (declarationStatusEl) {
-    declarationStatusEl.textContent = apiData["同意書狀態"] || "";
+    declarationStatusEl.textContent = apiData["同意書狀態"] || "（人工審核塞車中）";
   }
   // 取得報名編號與 boothType
   function getBoothTypeFromNumber(applicationNumber) {
@@ -459,15 +459,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         price1 = "";
     }
 
-    // 方案一價錢顯示，方案二自動加錢
+    // 價錢顯示
     if (price1) {
       document.getElementById("billing1-price").innerHTML =
         price1 + "元 <small>(含稅)</small>";
-      const price2 = (
-        parseInt(price1.replace(/,/g, "")) + 500
-      ).toLocaleString();
-      document.getElementById("billing2-price").innerHTML =
-        price2 + "元 <small>(含稅)</small>";
     } else if (
       boothType === "One Regular Booth" ||
       boothType === "Two Regular Booth" ||
@@ -480,87 +475,48 @@ document.addEventListener("DOMContentLoaded", async function () {
       document.getElementById(
         "billing1-price"
       ).innerHTML = `USD$${usd1} <span style="font-size:1.3rem;">incl. tax</span>`;
-      document.getElementById("billing2-price").innerHTML = `USD$${
-        usd1 + 20
-      } <span style="font-size:1.3rem;">incl. tax</span>`;
     }
 
     // 商品名稱與金額
-    let productName1 = "",
-      productName2 = "",
-      amount1 = "",
-      amount2 = "";
+    let amount1 = "";
     const isOversea =
       boothType === "One Regular Booth" ||
       boothType === "Two Regular Booth" ||
       boothType === "Curation Booth";
     if (isOversea) {
       if (boothType === "One Regular Booth") {
-        productName1 = "Basic Fee";
-        productName2 = "Basic Fee + Extra Pass";
         amount1 = "165";
-        amount2 = "185";
       } else if (boothType === "Two Regular Booth") {
-        productName1 = "Basic Fee";
-        productName2 = "Basic Fee + Extra Pass";
         amount1 = "330";
-        amount2 = "350";
       } else if (boothType === "Curation Booth") {
-        productName1 = "Basic Fee";
-        productName2 = "Basic Fee + Extra Pass";
         amount1 = "780";
-        amount2 = "800";
-      }
-    } else {
-      if (boothType === "書攤") {
-        productName1 = "基礎攤費";
-        productName2 = "基礎攤費-工作證一張";
-      } else if (boothType === "創作商品攤") {
-        productName1 = "基礎攤費";
-        productName2 = "基礎攤費-工作證一張";
-      } else if (boothType === "裝置攤") {
-        productName1 = "基礎攤費";
-        productName2 = "基礎攤費-工作證一張";
-      } else if (boothType === "食物酒水攤") {
-        productName1 = "基礎攤費";
-        productName2 = "基礎攤費-工作證一張";
       }
     }
 
     // 產生連結
-    let payLink1 = "#",
-      payLink2 = "#";
+    let payLink1 = "#";
     if (isOversea) {
       payLink1 = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=hooroo@double-grass.com&item_name=${encodeURIComponent(
-        applicationNumber + " - " + productName1
+        applicationNumber + " - Basic Fee"
       )}&amount=${amount1}&currency_code=USD&custom=${applicationNumber}`;
-      payLink2 = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=hooroo@double-grass.com&item_name=${encodeURIComponent(
-        applicationNumber + " - " + productName2
-      )}&amount=${amount2}&currency_code=USD&custom=${applicationNumber}`;
     } else {
-      payLink1 = toProductUrl(applicationNumber, productName1);
-      payLink2 = toProductUrl(applicationNumber, productName2);
+      payLink1 = toProductUrl(applicationNumber);
     }
 
-    // 分別設定 pay1/pay2 按鈕
+    // 設定 pay1 按鈕
     const payBtn1 = document.getElementById("pay1");
-    const payBtn2 = document.getElementById("pay2");
     if (payBtn1) {
       payBtn1.onclick = () => window.open(payLink1, "_blank");
-      payBtn1.textContent = isOversea ? "Pay (Plan 1)" : "付款（方案一）";
-    }
-    if (payBtn2) {
-      payBtn2.onclick = () => window.open(payLink2, "_blank");
-      payBtn2.textContent = isOversea ? "Pay (Plan 2)" : "付款（方案二）";
+      payBtn1.textContent = isOversea ? "Pay" : "付款 Pay";
     }
 
     // 產生產品連結
-    function toProductUrl(applicationNumber, productName) {
+    function toProductUrl(applicationNumber) {
+      // 格式：25-{applicationNumber}-booth-fee2026
       return (
-        "https://nmhw.taipeiartbookfair.com/products/" +
-        (applicationNumber + "-" + productName)
-          .replace(/\s+/g, "")
-          .toLowerCase()
+        "https://nmhw.taipeiartbookfair.com/products/25-" +
+        applicationNumber.toLowerCase() +
+        "-booth-fee2026"
       );
     }
 
@@ -604,18 +560,11 @@ document.addEventListener("DOMContentLoaded", async function () {
       boothType === "Curation Booth";
     document.querySelector("span[for-billing1-title]").innerHTML =
       isEnglishBooth
-        ? "<strong>Plan 1</strong>: Basic Fee"
-        : "<strong>方案一</strong>：基礎攤費";
+        ? "<strong>Basic Fee</strong>"
+        : "<strong>基礎攤費</strong>";
     document.querySelector("span[for-billing1-desc]").innerHTML = isEnglishBooth
-      ? "Basic plan only"
-      : "僅基礎方案";
-    document.querySelector("span[for-billing2-title]").innerHTML =
-      isEnglishBooth
-        ? "<strong>Plan 2</strong>: Basic Fee + Extra Pass"
-        : "<strong>方案二</strong>：基礎攤費+工作證一張";
-    document.querySelector("span[for-billing2-desc]").innerHTML = isEnglishBooth
-      ? "For those who shift-swaps"
-      : "適合有輪班擺攤需求之攤主";
+      ? "Can purchase tables and staff badges at the payment link"
+      : "可於付款連結加購桌子以及工作證";
   }
   setBillingInfoLanguage(boothType);
 
@@ -651,14 +600,13 @@ document.addEventListener("DOMContentLoaded", async function () {
     var yesdesc = document.getElementById("registration-status-desc");
     var boothnumberdesc = document.getElementById("booth-number-desc");
     var billingnote1 = document.getElementById("billing-note1");
-    var billingnote2 = document.getElementById("billing-note2");
 
     // 判斷期限
-    let deadline = "7 月 13 日";
-    let deadlineEn = "July 13, 2025 at 11:59 PM (UTC+8)";
+    let deadline = "1 月 2 日";
+    let deadlineEn = "January 2, 2026 at 11:59 PM (UTC+8)";
     if (rawResult === "2-是-2波") {
-      deadline = "7 月 22 日";
-      deadlineEn = "July 22, 2025 at 11:59 PM (UTC+8)";
+      deadline = "1 月 2 日";
+      deadlineEn = "January 2, 2026 at 11:59 PM (UTC+8)";
     }
 
     if (boothType && yesdesc && boothnumberdesc) {
@@ -668,17 +616,19 @@ document.addEventListener("DOMContentLoaded", async function () {
         boothText === "Two Regular Booth" ||
         boothText === "Curation Booth"
       ) {
-        yesdesc.innerHTML = `Please complete your payment and upload the signed agreement by <b><mark>${deadlineEn}</mark></b>. Late submissions will be considered a forfeiture of your participation. <br><br>Our team will manually verify all payment and agreement uploads by July 15.<br>If you have already completed the process, please keep a screenshot of your payment or upload confirmation. If your status hasn’t been updated after July 15, feel free to contact us again.`;
+        yesdesc.innerHTML = `Please complete your payment and upload the signed agreement by <b><mark>${deadlineEn}</mark></b>. Late submissions will be considered a forfeiture of your participation. <br><br>Our team will manually verify all payment and agreement uploads by January 5.<br>If you have already completed the process, please keep a screenshot of your payment or upload confirmation. If your status hasn't been updated after January 5, feel free to contact us again.`;
         boothnumberdesc.innerHTML =
-          "Booth numbers and the floor plan will be announced on <b>November 20</b>, the check-in day.";
-        billingnote1.innerHTML = `Payment Deadline: ${deadlineEn}`;
-        billingnote2.innerHTML = `Payment Deadline: ${deadlineEn}`;
+          "Booth numbers and the floor plan will be announced on <b>February 28th</b>, the check-in day.";
+        if (billingnote1) {
+          billingnote1.innerHTML = `Payment Deadline: ${deadlineEn}`;
+        }
       } else {
-        yesdesc.innerHTML = `請於<b><mark>${deadline}</mark></b>前完成繳費與同意書上傳，逾期將視同放棄參展資格。<br><br>團隊將於 7 月 15 日前 逐一人工確認繳費與同意書的上傳狀態。<br>如您已完成繳交，請先保留相關繳費或上傳截圖；若狀態在 7 月 15 日後仍未更新，請與我們聯繫。`;
+        yesdesc.innerHTML = `請於<b><mark>${deadline}</mark></b>前完成繳費與同意書上傳，逾期將視同放棄參展資格。<br><br>團隊將於 1 月 5 日前 逐一人工確認繳費與同意書的上傳狀態。<br>如您已完成繳交，請先保留相關繳費或上傳截圖；若狀態在 1 月 5 日後仍未更新，請與我們聯繫。`;
         boothnumberdesc.innerHTML =
-          "攤位編號與攤位地圖將於報到當天（11/20）公布，屆時請留意公告。";
-        billingnote1.innerHTML = `付款期限: ${deadline}`;
-        billingnote2.innerHTML = `付款期限: ${deadline}`;
+          "攤位編號與攤位地圖將於 2/28 公布，屆時請留意公告。";
+        if (billingnote1) {
+          billingnote1.innerHTML = `付款期限: ${deadline}`;
+        }
       }
     }
   }
@@ -1094,6 +1044,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
   updateRegistrationStatusAndChecks();
 
+  // 動態切換加購工作證區塊語言
   function extraPass() {
     const paymentChecked = !!apiData["證"];
     const extrapasstxt = document.getElementById("extrapasstxt");
@@ -1117,9 +1068,77 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
   extraPass();
 
+  // 動態更新桌子數量
+  function extraTable() {
+    const tableCount = apiData["桌"];
+    const equipmentTable = document.getElementById("equipment-table");
+
+    if (!equipmentTable) return; // 防呆
+
+    // 如果沒有加購桌子，保持原本的顯示
+    if (!tableCount || tableCount === "" || tableCount === "None") {
+      return;
+    }
+
+    // 將 tableCount 轉換為數字
+    let count = null;
+    const tableCountStr = String(tableCount).trim();
+    
+    // 檢查中文數字
+    if (tableCountStr.includes("一") || tableCountStr === "1") {
+      count = 1;
+    } else if (tableCountStr.includes("二") || tableCountStr === "2") {
+      count = 2;
+    } else {
+      // 嘗試解析為數字
+      count = parseInt(tableCountStr, 10);
+    }
+    
+    // 如果無法解析為有效數字，保持原本的顯示
+    if (!count || isNaN(count) || count < 1) {
+      return;
+    }
+
+    // 獲取現有的內容
+    let currentContent = equipmentTable.innerHTML;
+
+    // 提取桌面尺寸資訊（例如：120×60cm 或 180×60cm）
+    // 匹配格式：桌面<small>(120×60cm)</small> 或 Table<small>(120×60cm)</small>
+    const sizeMatch = currentContent.match(/<small>\(([^)]+)\)<\/small>/);
+    const size = sizeMatch ? sizeMatch[1] : "";
+
+    // 判斷是否為英文攤位
+    const isEnglishBooth =
+      boothType === "One Regular Booth" ||
+      boothType === "Two Regular Booth" ||
+      boothType === "Curation Booth";
+
+    // 構建新的內容
+    let newContent = "";
+    if (isEnglishBooth) {
+      // 英文格式：– Table<small>(120×60cm)</small> ×{count}
+      newContent = `– Table${size ? `<small>(${size})</small>` : ""} ×${count}`;
+    } else {
+      // 中文格式：– 桌面<small>(120×60cm)</small> ×{count}
+      newContent = `– 桌面${size ? `<small>(${size})</small>` : ""} ×${count}`;
+    }
+
+    // 更新內容
+    equipmentTable.innerHTML = newContent;
+
+    // 如果數量是 2，設置顏色為紅色
+    if (count === 2) {
+      equipmentTable.style.color = "red";
+    } else {
+      equipmentTable.style.color = ""; // 恢復預設顏色
+    }
+  }
+  extraTable();
+
   // 社群欄位顯示
   function setSocialText(id, value) {
     const el = document.getElementById(id);
+    if (!el) return; // 如果元素不存在，直接返回
     if (!value || value === "None") {
       el.textContent = "None";
       el.style.color = "lightgrey";
