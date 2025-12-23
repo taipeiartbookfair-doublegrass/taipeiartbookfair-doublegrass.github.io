@@ -1210,7 +1210,8 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
     
     let additionalBadges = 0;
     
-    // 解析桌子數量
+    // 解析桌子數量（apiData["桌"] 返回的是總桌子數量）
+    // 基礎已有1張桌子，只有當總數為2時才加通行憑證
     if (tableCount && tableCount !== "" && tableCount !== "None") {
       const tableCountStr = String(tableCount).trim();
       let tableNum = 0;
@@ -1223,8 +1224,10 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
         tableNum = parseInt(tableCountStr, 10) || 0;
       }
       
-      // 每張桌子 +2 通行憑證
-      additionalBadges += tableNum * 2;
+      // 只有當總桌子數量為2時（基礎1張+加購1張），才加2張通行憑證
+      if (tableNum === 2) {
+        additionalBadges += 2;
+      }
     }
     
     // 檢查是否加購通行憑證
