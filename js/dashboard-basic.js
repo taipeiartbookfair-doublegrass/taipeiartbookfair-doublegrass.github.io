@@ -1089,30 +1089,7 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
   }
   updateRegistrationStatusAndChecks();
 
-  // 動態切換加購通行憑證區塊語言
-  function extraPass() {
-    const paymentChecked = !!apiData["證"];
-    const extrapasstxt = document.getElementById("extrapasstxt");
-
-    if (!extrapasstxt) return; // 防呆
-
-    if (paymentChecked) {
-      extrapasstxt.style.display = "block"; // ← 這裡要加 .style
-      if (
-        boothType === "One Regular Booth" ||
-        boothType === "Two Regular Booth" ||
-        boothType === "Curation Booth"
-      ) {
-        extrapasstxt.textContent = "- Access Pass x1";
-      } else {
-        extrapasstxt.textContent = "- 加購通行憑證 x1";
-      }
-    } else {
-      extrapasstxt.style.display = "none"; // 沒有加購就隱藏
-    }
-  }
-  extraPass();
-
+ㄍㄠ
   // 動態更新桌子數量
   function extraTable() {
     const tableCount = apiData["桌"];
@@ -1180,12 +1157,14 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
   }
   extraTable();
 
-  // 動態更新通行憑證數量（根據桌子和通行憑證加購情況）
+  // 動態更新通行憑證顯示（基礎數量 + 加購顯示）
   function updateBadgeCount() {
     const equipmentBadge = document.getElementById("equipment-badge");
+    const extrapasstxt = document.getElementById("extrapasstxt");
+    
     if (!equipmentBadge) return; // 防呆
 
-    // 基礎通行憑證數量
+    // 基礎通行憑證數量（不含加購）
     let baseBadgeCount = 2;
     
     // 判斷是否為英文攤位
@@ -1205,9 +1184,6 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
       case "Curation Booth":
         baseBadgeCount = 6;
         break;
-      case "Two Regular Booth":
-        baseBadgeCount = 4;
-        break;
       case "書攤":
       case "創作商品攤":
       case "裝置攤":
@@ -1221,7 +1197,14 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
         break;
     }
 
-    // 檢查加購情況
+    // 只顯示基礎數量
+    if (isEnglishBooth) {
+      equipmentBadge.innerHTML = `– Access Pass ×${baseBadgeCount}`;
+    } else {
+      equipmentBadge.innerHTML = `– 通行憑證 ×${baseBadgeCount}`;
+    }
+
+    // 檢查加購情況並顯示加購的通行憑證
     const tableCount = apiData["桌"];
     const passCount = apiData["證"];
     
@@ -1250,14 +1233,18 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
       additionalBadges += 1;
     }
     
-    // 計算總數
-    const totalBadgeCount = baseBadgeCount + additionalBadges;
-    
-    // 更新顯示
-    if (isEnglishBooth) {
-      equipmentBadge.innerHTML = `– Access Pass ×${totalBadgeCount}`;
-    } else {
-      equipmentBadge.innerHTML = `– 通行憑證 ×${totalBadgeCount}`;
+    // 如果有加購，顯示加購的通行憑證
+    if (extrapasstxt) {
+      if (additionalBadges > 0) {
+        extrapasstxt.style.display = "block";
+        if (isEnglishBooth) {
+          extrapasstxt.textContent = `- Access Pass +${additionalBadges}`;
+        } else {
+          extrapasstxt.textContent = `- 加購通行憑證 +${additionalBadges}`;
+        }
+      } else {
+        extrapasstxt.style.display = "none";
+      }
     }
   }
   updateBadgeCount();
