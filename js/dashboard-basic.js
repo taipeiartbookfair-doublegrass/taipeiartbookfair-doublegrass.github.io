@@ -579,10 +579,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 <strong>Payment Method:</strong> If selecting "Bank Transfer", this method is only available until Dec. 28 (Sun) 24:00 (GMT+8).<br><br>
 Payments made after the deadline may result in cancellation without refund.<br><br>
 <strong>Access Pass Add-on:</strong><br>
-Each booth may select <b>1–2 tables</b>; each table includes <b>2 daily access passes per day</b>.<br>
-Each booth may purchase up to <b>1 additional pass</b> (allowing <b>1 extra person per day</b>).<br>
-If daily entry exceeds the available passes, <b>general admission tickets must be purchased</b>.<br>
-This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
+Each booth may select <u>1–2 tables</u>; each table includes <u>2 daily access passes per day</u>.<br>
+Each booth may purchase up to <u>1 additional pass</u> (allowing <u>1 extra person per day</u>).<br>
+If daily entry exceeds the available passes, <u>general admission tickets must be purchased</u>.<br>
+This is the only pass add-on period. <u>No changes after payment</u>.<br><br>
 <strong>Refund:</strong> Refund requests due to force majeure must be submitted by Jan. 15. A 10% handling fee applies. No refunds after the deadline.`
          : `<strong>送貨方式：</strong>請務必選擇「攤位費專屬」結帳。若誤選其他方式並被系統收取運費，恕不退款。<br><br>
 <strong>付款方式：</strong>如選擇「銀行轉帳」，此方式 僅開放至 12/28（日）24:00（GMT+8），即使付款連結仍可操作，若超過繳費期限付款，主辦單位有權取消資格，並不予退款。<br><br>
@@ -1107,7 +1107,7 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
 
     // 只顯示基礎數量
     if (isEnglishBooth) {
-      equipmentBadge.innerHTML = `– Access Pass ×${baseBadgeCount}`;
+      equipmentBadge.innerHTML = `– Access Pass Add-on ×${baseBadgeCount}`;
     } else {
       equipmentBadge.innerHTML = `– 通行憑證 ×${baseBadgeCount}`;
     }
