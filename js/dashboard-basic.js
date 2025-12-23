@@ -531,7 +531,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     function toProductUrl(applicationNumber) {
       // 格式：25-{applicationNumber}-booth-fee2026
       return (
-        "https://nmhw.taipeiartbookfair.com/products/26-" +
+        "https://nmhw.taipeiartbookfair.com/products/" +
         applicationNumber.toLowerCase() +
         "-booth-fee2026"
       );
