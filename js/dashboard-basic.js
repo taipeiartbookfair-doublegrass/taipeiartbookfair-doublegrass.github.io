@@ -1107,7 +1107,7 @@ This is the only pass add-on period. <u>No changes after payment</u>.<br><br>
 
     // 只顯示基礎數量
     if (isEnglishBooth) {
-      equipmentBadge.innerHTML = `– Access Pass Add-on ×${baseBadgeCount}`;
+      equipmentBadge.innerHTML = `– Access Pass ×${baseBadgeCount}`;
     } else {
       equipmentBadge.innerHTML = `– 通行憑證 ×${baseBadgeCount}`;
     }
@@ -1149,7 +1149,7 @@ This is the only pass add-on period. <u>No changes after payment</u>.<br><br>
       if (additionalBadges > 0) {
         extrapasstxt.style.display = "block";
         if (isEnglishBooth) {
-          extrapasstxt.textContent = `- Access Pass +${additionalBadges}`;
+          extrapasstxt.textContent = `- Access Pass Add-on +${additionalBadges}`;
         } else {
           extrapasstxt.textContent = `- 加購通行憑證 +${additionalBadges}`;
         }
