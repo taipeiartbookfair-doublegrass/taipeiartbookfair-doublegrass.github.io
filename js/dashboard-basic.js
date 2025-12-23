@@ -1117,7 +1117,7 @@ This is the only pass add-on period. <u>No changes after payment</u>.<br><br>
     const passCount = apiData["證"];
     
     let additionalBadges = 0;
-    c
+    
     // 解析桌子數量（apiData["桌"] 返回的是總桌子數量）
     // 基礎已有1張桌子，只有當總數為2時才加通行憑證
     if (tableCount && tableCount !== "" && tableCount !== "None") {
