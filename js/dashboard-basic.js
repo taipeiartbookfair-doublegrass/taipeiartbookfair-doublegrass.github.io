@@ -656,11 +656,11 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
     var billingnote1 = document.getElementById("billing-note1");
 
     // 判斷期限
-    let deadline = "1 月 2 日";
-    let deadlineEn = "January 2, 2026 at 11:59 PM (UTC+8)";
+    let deadline = "12 月 31 日";
+    let deadlineEn = "December 31, 2025 at 11:59 PM (UTC+8)";
     if (rawResult === "2-是-2波") {
-      deadline = "1 月 2 日";
-      deadlineEn = "January 2, 2026 at 11:59 PM (UTC+8)";
+      deadline = "12 月 31 日";
+      deadlineEn = "December 31, 2025 at 11:59 PM (UTC+8)";
     }
 
     if (boothType && yesdesc && boothnumberdesc) {
