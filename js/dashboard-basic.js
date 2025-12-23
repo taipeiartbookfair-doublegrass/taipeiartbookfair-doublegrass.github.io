@@ -365,7 +365,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         equipment = [
           "– 桌面<small>(120×60cm)</small> ×1",
           "– 椅子 ×2",
-          "– 工作證 ×2",
+          "– 通行憑證 ×2",
           "– 草率簿 ×1<small> (含露出一面)</small>",
         ];
         break;
@@ -374,7 +374,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         equipment = [
           "– 桌面<small>(120×60cm)</small> ×1",
           "– 椅子 ×2",
-          "– 工作證 ×2",
+          "– 通行憑證 ×2",
           "– 草率簿 ×1<small> (含露出一面)</small>",
         ];
         break;
@@ -382,7 +382,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         price = "10,000 元 <small>(含稅)</small>";
         equipment = [
           "– 1.5M × 1.5M 空地",
-          "– 工作證 ×2",
+          "– 通行憑證 ×2",
           "– 草率簿 ×1<small> (含露出一面)</small>",
         ];
         break;
@@ -391,8 +391,26 @@ document.addEventListener("DOMContentLoaded", async function () {
         equipment = [
           "– 桌面<small>(180×60cm)</small> ×1",
           "– 椅子 ×2",
-          "– 工作證 ×2",
+          "– 通行憑證 ×2",
           "– 草率簿 ×1<small> (含露出一面)</small>",
+        ];
+        break;
+      case "策展攤":
+        price = "50,000 元 <small>(含稅)</small>";
+        equipment = [
+          "– 3M × 3M 空間",
+          "",
+          "– 通行憑證 ×6",
+          "– 草率簿 ×1<small> (含露出一面)</small>",
+        ];
+        break;
+      case "Regular Book Booth":
+        price = 'USD$165 <span style="font-size:1.3rem;">incl. tax</span>';
+        equipment = [
+          "– Table<small>(120×60cm)</small> ×1",
+          "– Chairs ×2",
+          "– Access Pass ×2",
+          "– TPABF Catalog ×1 <small>(one page featured)</small>",
         ];
         break;
       case "One Regular Booth":
@@ -400,7 +418,25 @@ document.addEventListener("DOMContentLoaded", async function () {
         equipment = [
           "– Table<small>(120×60cm)</small> ×1",
           "– Chairs ×2",
-          "– Passes ×2",
+          "– Access Pass ×2",
+          "– TPABF Catalog ×1 <small>(one page featured)</small>",
+        ];
+        break;
+      case "Regular Non-Book Booth":
+        price = 'USD$165 <span style="font-size:1.3rem;">incl. tax</span>';
+        equipment = [
+          "– Table<small>(120×60cm)</small> ×1",
+          "– Chairs ×2",
+          "– Access Pass ×2",
+          "– TPABF Catalog ×1 <small>(one page featured)</small>",
+        ];
+        break;
+      case "Installation Booth":
+        price = 'USD$165 <span style="font-size:1.3rem;">incl. tax</span>';
+        equipment = [
+          "– 3M × 3M space",
+          "",
+          "– Access Pass ×2",
           "– TPABF Catalog ×1 <small>(one page featured)</small>",
         ];
         break;
@@ -409,7 +445,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         equipment = [
           "– Table<small>(120×60cm)</small> ×2",
           "– Chairs ×4",
-          "– Passes ×4",
+          "– Access Pass ×4",
           "– TPABF Catalog ×1 <small>(one page featured)</small>",
         ];
         break;
@@ -419,7 +455,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           "– 3M × 3M space",
           "– Table<small>(120×60cm)</small> ×2",
           "– Chairs ×4",
-          "– Passes ×3",
+          "– Access Pass ×6",
           "– TPABF Catalog ×1 <small>(one page featured)</small>",
         ];
         break;
@@ -562,9 +598,27 @@ document.addEventListener("DOMContentLoaded", async function () {
       isEnglishBooth
         ? "<strong>Basic Fee</strong>"
         : "<strong>基礎攤費</strong>";
-    document.querySelector("span[for-billing1-desc]").innerHTML = isEnglishBooth
-      ? "Can purchase tables and staff badges at the payment link"
-      : "可於付款連結加購桌子以及工作證";
+    const billing1Desc = document.querySelector("div[for-billing1-desc]") || document.querySelector("span[for-billing1-desc]");
+    if (billing1Desc) {
+      billing1Desc.innerHTML = isEnglishBooth
+        ? `<strong>Shipping Method:</strong> Please select "Booth Fee – Exclusive Checkout" when making payment. Shipping fees charged due to incorrect selection will not be refunded.<br><br>
+<strong>Payment Method:</strong> If selecting "Bank Transfer", this method is only available until Dec. 28 (Sun) 24:00 (GMT+8).<br><br>
+Payments made after the deadline may result in cancellation without refund.<br><br>
+<strong>Access Pass Add-on:</strong><br>
+Each booth may select <b>1–2 tables</b>; each table includes <b>2 daily access passes per day</b>.<br>
+Each booth may purchase up to <b>1 additional pass</b> (allowing <b>1 extra person per day</b>).<br>
+If daily entry exceeds the available passes, <b>general admission tickets must be purchased</b>.<br>
+This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
+<strong>Refund:</strong> Refund requests due to force majeure must be submitted by Jan. 15. A 10% handling fee applies. No refunds after the deadline.`
+         : `<strong>送貨方式：</strong>請務必選擇「攤位費專屬」結帳。若誤選其他方式並被系統收取運費，恕不退款。<br><br>
+<strong>付款方式：</strong>如選擇「銀行轉帳」，此方式 僅開放至 12/28（日）24:00（GMT+8），即使付款連結仍可操作，若超過繳費期限付款，主辦單位有權取消資格，並不予退款。<br><br>
+<strong>通行憑證加購：</strong><br>
+每攤位可選擇 1–2 桌，每桌每日皆附贈 2 張當日通行憑證。<br>
+&nbsp;&nbsp;&nbsp;&nbsp;• 每攤位最多可加購 1 張通行憑證（每日可額外增加 1 位進場人員）。<br>
+&nbsp;&nbsp;&nbsp;&nbsp;• 若單日進場人數超過通行憑證可使用數量，請依實際活動天數與人數，另行購買入場票券。<br>
+&nbsp;&nbsp;&nbsp;&nbsp;• 本階段為唯一的通行憑證加購申請時段，完成繳費後恕不接受任何變更。<br><br>
+<strong>退款：</strong>若因不可抗因素需放棄參展，請於 1/15（四）前 通知主辦單位，並辦理退款（將酌收10%手續費）。逾期恕不受理退款。`;
+    }
   }
   setBillingInfoLanguage(boothType);
 
@@ -645,10 +699,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         boothText === "Curation Booth"
       ) {
         billingNoticedesc.innerHTML =
-          "<li>Please assess your payment requirements before proceeding. Once payment is made, we will not accept changes to your application options.</li><li>Each booth may purchase only one additional staff badge. If you need more, please purchase a regular ticket for entry.</li><li>Please keep your invoice after payment for your own records.</li><li>Even if the payment link remains accessible, any payment made after the deadline may result in disqualification at the organizer’s discretion, and no refund will be issued.</li>";
+          "Please complete all payments in accordance with the instructions above. If payment is incorrect, late, or made via non-designated methods, the Organizer reserves the right to <b>cancel participation without refund</b>.<br><br>For all matters related to registration, payment, and participation, <b>TPABF reserves the final right of review, adjustment, and interpretation.</b><br><br>In the event of cancellation due to force majeure (including natural disasters, pandemics, or policy changes), the Organizer will announce further arrangements separately.";
       } else {
         billingNoticedesc.innerHTML =
-          "<li>請自行評估需求繳費，繳款後我們不再提供更改申請選項。</li><li>每攤<u>限加購 1張工作證</u>，如需更多數量請買當日票入場。</li><li>付款之後請自行留存發票。</li><li>即使付款連結仍可操作，若超過繳費期限付款，主辦單位有權取消資格，並不予退款。</li>";
+          "請務必依繳費說明完成付款流程。如未依規定完成付款（如繳納錯誤金額、超過期限、未依指定方式匯款等），主辦單位將不保留參展資格，亦不提供退款。<br><br>所有報名、繳費及參展相關事宜，草率季保留最終審核、調整及解釋之權利。<br><br>若因不可抗力（如天災、疫情、政策變動等）導致活動取消，主辦單位將另行公告後續處理方式。";
       }
     }
   }
@@ -1035,7 +1089,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
   updateRegistrationStatusAndChecks();
 
-  // 動態切換加購工作證區塊語言
+  // 動態切換加購通行憑證區塊語言
   function extraPass() {
     const paymentChecked = !!apiData["證"];
     const extrapasstxt = document.getElementById("extrapasstxt");
@@ -1049,9 +1103,9 @@ document.addEventListener("DOMContentLoaded", async function () {
         boothType === "Two Regular Booth" ||
         boothType === "Curation Booth"
       ) {
-        extrapasstxt.textContent = "- Extra Pass x1";
+        extrapasstxt.textContent = "- Access Pass x1";
       } else {
-        extrapasstxt.textContent = "- 加購工作證 x1";
+        extrapasstxt.textContent = "- 加購通行憑證 x1";
       }
     } else {
       extrapasstxt.style.display = "none"; // 沒有加購就隱藏
@@ -1081,7 +1135,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     } else if (tableCountStr.includes("二") || tableCountStr === "2") {
       count = 2;
     } else {
-      // 嘗試解析為數字
+     // 嘗試解析為數字
       count = parseInt(tableCountStr, 10);
     }
     
@@ -1125,6 +1179,88 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
   extraTable();
+
+  // 動態更新通行憑證數量（根據桌子和通行憑證加購情況）
+  function updateBadgeCount() {
+    const equipmentBadge = document.getElementById("equipment-badge");
+    if (!equipmentBadge) return; // 防呆
+
+    // 基礎通行憑證數量
+    let baseBadgeCount = 2;
+    
+    // 判斷是否為英文攤位
+    const isEnglishBooth =
+      boothType === "One Regular Booth" ||
+      boothType === "Two Regular Booth" ||
+      boothType === "Curation Booth" ||
+      boothType === "Regular Book Booth" ||
+      boothType === "Regular Non-Book Booth" ||
+      boothType === "Installation Booth";
+
+    // 根據不同攤位類型設定基礎數量
+    switch (boothType) {
+      case "策展攤":
+        baseBadgeCount = 6;
+        break;
+      case "Curation Booth":
+        baseBadgeCount = 6;
+        break;
+      case "Two Regular Booth":
+        baseBadgeCount = 4;
+        break;
+      case "書攤":
+      case "創作商品攤":
+      case "裝置攤":
+      case "食物酒水攤":
+      case "Regular Book Booth":
+      case "Regular Non-Book Booth":
+      case "Installation Booth":
+      case "One Regular Booth":
+      default:
+        baseBadgeCount = 2;
+        break;
+    }
+
+    // 檢查加購情況
+    const tableCount = apiData["桌"];
+    const passCount = apiData["證"];
+    
+    let additionalBadges = 0;
+    
+    // 解析桌子數量
+    if (tableCount && tableCount !== "" && tableCount !== "None") {
+      const tableCountStr = String(tableCount).trim();
+      let tableNum = 0;
+      
+      if (tableCountStr.includes("一") || tableCountStr === "1") {
+        tableNum = 1;
+      } else if (tableCountStr.includes("二") || tableCountStr === "2") {
+        tableNum = 2;
+      } else {
+        tableNum = parseInt(tableCountStr, 10) || 0;
+      }
+      
+      // 每張桌子 +2 通行憑證
+      additionalBadges += tableNum * 2;
+    }
+    
+    // 檢查是否加購通行憑證
+    if (passCount && passCount !== "" && passCount !== "None") {
+      // 加購1張通行憑證 +1
+      additionalBadges += 1;
+    }
+    
+    // 計算總數
+    const totalBadgeCount = baseBadgeCount + additionalBadges;
+    
+    // 更新顯示
+    if (isEnglishBooth) {
+      equipmentBadge.innerHTML = `– Access Pass ×${totalBadgeCount}`;
+    } else {
+      equipmentBadge.innerHTML = `– 通行憑證 ×${totalBadgeCount}`;
+    }
+  }
+  updateBadgeCount();
 
   // 社群欄位顯示
   function setSocialText(id, value) {
