@@ -7,7 +7,7 @@ if (!account || !region) {
 }
 
 const apiUrl =
-  "https://script.google.com/macros/s/AKfycbwNWgPsLK_ldHUIvoIg5a9k3PNIlmjvJeTgbCZ5CZsvKFQ7e1DoxbMsAawi4nI3Rea4DA/exec";
+  "https://script.google.com/macros/s/AKfycbxOxo-ZzjkkDlkIyCNlmFgYfPhpLOHQr3278Mv36PJrM_jdb_RsaG42hwM23Cp7b7onBw/exec";
 const publishApiUrl =
   "https://script.google.com/macros/s/AKfycbxJkcTqW6xJfhCSVFdI-Mk9SFSGTdQnCB2-_-8sluqgTHul2wjNS6jV9wJZMPtIdSy3Pw/exec";
 
@@ -550,7 +550,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     function toProductUrl(applicationNumber) {
       // 格式：25-{applicationNumber}-booth-fee2026
       return (
-        "https://nmhw.taipeiartbookfair.com/products/25-" +
+        "https://nmhw.taipeiartbookfair.com/products/26-" +
         applicationNumber.toLowerCase() +
         "-booth-fee2026"
       );
