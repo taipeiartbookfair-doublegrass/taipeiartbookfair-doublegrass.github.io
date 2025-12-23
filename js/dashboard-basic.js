@@ -856,7 +856,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   const conditionalyes = document.getElementById("booth-type-tooltip");
   const foreignShipping = document.getElementById("foreign-shipping");
   const visaCN = document.getElementById("visaCN");
-  const overseavisa = document.getElementById("overseasvisa");
   const familyticket = document.getElementById("familyticket");
   const manualBoothappearance = document.getElementById(
     "manual-boothappearance"
@@ -899,7 +898,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (liveEventSection) liveEventSection.style.display = "none";
     foreignShipping.style.display = "none";
     if (visaCN) visaCN.style.display = "none";
-    overseavisa.style.display = "none";
     familyticket.style.display = "none";
     manualBoothappearance.style.display = "none";
     registrationStatus.style.display = "none";
@@ -970,10 +968,9 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
       if (nationality === "CN") {
         visaCN.style.display = "block";
-      } else if (nationality !== "TW" && nationality !== "CN") {
-        overseavisa.style.display = "block";
       }
-    } else if (rawResult === "0") {
+    } else if (!rawResult || rawResult === "" || rawResult === "0") {
+      // 錄取結果為空時，右側內容都隱藏
       registrationStatusEl.textContent = "-";
     } else if (
       rawResult === "6-1-繳費後取消-已退費" ||
@@ -997,8 +994,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         boothnumber.style.display = "block";
         if (nationality === "CN") {
           visaCN.style.display = "block";
-        } else if (nationality !== "TW" && nationality !== "CN") {
-          overseavisa.style.display = "block";
         }
         // boothappearance.style.display = "block";
       } else {
@@ -1008,8 +1003,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         boothnumber.style.display = "block";
         if (nationality === "CN") {
           visaCN.style.display = "block";
-        } else if (nationality !== "TW" && nationality !== "CN") {
-          overseavisa.style.display = "block";
         }
       }
     } else if (rawResult === "3-猶豫") {
@@ -1026,8 +1019,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
         if (nationality === "CN") {
           visaCN.style.display = "block";
-        } else if (nationality !== "TW" && nationality !== "CN") {
-          overseavisa.style.display = "block";
         }
         familyticket.style.display = "block";
         manualBoothappearance.style.display = "block";
