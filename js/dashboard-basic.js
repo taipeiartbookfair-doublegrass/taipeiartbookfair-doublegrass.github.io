@@ -212,14 +212,23 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
   // 取得報名編號與 boothType
   function getBoothTypeFromNumber(applicationNumber) {
-    if (applicationNumber.includes("LB")) return "書攤";
-    if (applicationNumber.includes("LM")) return "創作商品攤";
-    if (applicationNumber.includes("LC")) return "策展攤";
-    if (applicationNumber.includes("LF")) return "食物酒水攤";
-    if (applicationNumber.includes("IB")) return "Regular Book Booth";
-    if (applicationNumber.includes("IN")) return "Regular Non-Book Booth";
-    if (applicationNumber.includes("II")) return "Installation Booth";
-    if (applicationNumber.includes("IC")) return "Curation Booth";
+    const map = {
+      LB: "書攤",
+      LM: "創作商品攤",
+      LF: "食物酒水攤",
+      LI: "裝置攤",
+      LC: "策展攤",
+      IB: "Regular Book Booth",
+      IN: "Regular Non-Book Booth",
+      II: "Installation Booth",
+      IC: "Curation Booth",
+    };
+    
+    for (const [code, type] of Object.entries(map)) {
+      if (applicationNumber.includes(code)) {
+        return type;
+      }
+    }
     return "";
   }
   const applicationNumber = applicationNumberEl ? applicationNumberEl.textContent.trim() : "";
@@ -234,14 +243,19 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
 
-  
+  // 判斷是否為英文攤位
+  function isEnglishBoothType(boothType) {
+    return (
+      boothType === "Regular Book Booth" ||
+      boothType === "Regular Non-Book Booth" ||
+      boothType === "Installation Booth" ||
+      boothType === "Curation Booth"
+    );
+  }
 
   // 錄取狀態顯示
   function getApplicationResultText(raw, boothType) {
-    const isEnglishBooth =
-      boothType === "One Regular Booth" ||
-      boothType === "Two Regular Booth" ||
-      boothType === "Curation Booth";
+    const isEnglishBooth = isEnglishBoothType(boothType);
     if (!raw) return "";
     if (isEnglishBooth) {
       if (raw === "4-是-條件式錄取") return "Conditionally Accepted";
@@ -413,15 +427,6 @@ document.addEventListener("DOMContentLoaded", async function () {
           "– TPABF Catalog ×1 <small>(one page featured)</small>",
         ];
         break;
-      case "One Regular Booth":
-        price = 'USD$165 <span style="font-size:1.3rem;">incl. tax</span>';
-        equipment = [
-          "– Table<small>(120×60cm)</small> ×1",
-          "– Chairs ×2",
-          "– Access Pass ×2",
-          "– TPABF Catalog ×1 <small>(one page featured)</small>",
-        ];
-        break;
       case "Regular Non-Book Booth":
         price = 'USD$165 <span style="font-size:1.3rem;">incl. tax</span>';
         equipment = [
@@ -437,15 +442,6 @@ document.addEventListener("DOMContentLoaded", async function () {
           "– 3M × 3M space",
           "",
           "– Access Pass ×2",
-          "– TPABF Catalog ×1 <small>(one page featured)</small>",
-        ];
-        break;
-      case "Two Regular Booth":
-        price = 'USD$330 <span style="font-size:1.3rem;">incl. tax</span>';
-        equipment = [
-          "– Table<small>(120×60cm)</small> ×2",
-          "– Chairs ×4",
-          "– Access Pass ×4",
           "– TPABF Catalog ×1 <small>(one page featured)</small>",
         ];
         break;
@@ -499,31 +495,26 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (price1) {
       document.getElementById("billing1-price").innerHTML =
         price1 + "元 <small>(含稅)</small>";
-    } else if (
-      boothType === "One Regular Booth" ||
-      boothType === "Two Regular Booth" ||
-      boothType === "Curation Booth"
-    ) {
+    } else if (isEnglishBoothType(boothType)) {
       let usd1 = 0;
-      if (boothType === "One Regular Booth") usd1 = 165;
-      if (boothType === "Two Regular Booth") usd1 = 330;
-      if (boothType === "Curation Booth") usd1 = 780;
-      document.getElementById(
-        "billing1-price"
-      ).innerHTML = `USD$${usd1} <span style="font-size:1.3rem;">incl. tax</span>`;
+      if (boothType === "Regular Book Booth" || boothType === "Regular Non-Book Booth" || boothType === "Installation Booth") {
+        usd1 = 165;
+      } else if (boothType === "Curation Booth") {
+        usd1 = 780;
+      }
+      if (usd1 > 0) {
+        document.getElementById(
+          "billing1-price"
+        ).innerHTML = `USD$${usd1} <span style="font-size:1.3rem;">incl. tax</span>`;
+      }
     }
 
     // 商品名稱與金額
     let amount1 = "";
-    const isOversea =
-      boothType === "One Regular Booth" ||
-      boothType === "Two Regular Booth" ||
-      boothType === "Curation Booth";
+    const isOversea = isEnglishBoothType(boothType);
     if (isOversea) {
-      if (boothType === "One Regular Booth") {
+      if (boothType === "Regular Book Booth" || boothType === "Regular Non-Book Booth" || boothType === "Installation Booth") {
         amount1 = "165";
-      } else if (boothType === "Two Regular Booth") {
-        amount1 = "330";
       } else if (boothType === "Curation Booth") {
         amount1 = "780";
       }
@@ -578,11 +569,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   // 設備標題
   const equipmentTitleEl = document.getElementById("equipment-title");
-  if (
-    boothType === "One Regular Booth" ||
-    boothType === "Two Regular Booth" ||
-    boothType === "Curation Booth"
-  ) {
+  if (isEnglishBoothType(boothType)) {
     equipmentTitleEl.textContent = "Equipments:";
   } else {
     equipmentTitleEl.textContent = "基礎設備：";
@@ -590,10 +577,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   // 付款方案標題/說明動態切換
   function setBillingInfoLanguage(boothType) {
-    const isEnglishBooth =
-      boothType === "One Regular Booth" ||
-      boothType === "Two Regular Booth" ||
-      boothType === "Curation Booth";
+    const isEnglishBooth = isEnglishBoothType(boothType);
     document.querySelector("span[for-billing1-title]").innerHTML =
       isEnglishBooth
         ? "<strong>Basic Fee</strong>"
@@ -631,12 +615,7 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
     console.log("boothType:", boothType);
     console.log("declarationdesc:", declarationdesc);
     if (boothType && declardownloadLink && declarationdesc) {
-      var boothText = boothType.trim();
-      if (
-        boothText === "One Regular Booth" ||
-        boothText === "Two Regular Booth" ||
-        boothText === "Curation Booth"
-      ) {
+      if (isEnglishBoothType(boothType)) {
         declardownloadLink.innerHTML = "Download Exhibitor Declaration";
         declarationdesc.innerHTML =
           "Please download and sign the exhibitor declaration, then upload the signed file below.";
@@ -664,12 +643,7 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
     }
 
     if (boothType && yesdesc && boothnumberdesc) {
-      var boothText = boothType.trim();
-      if (
-        boothText === "One Regular Booth" ||
-        boothText === "Two Regular Booth" ||
-        boothText === "Curation Booth"
-      ) {
+      if (isEnglishBoothType(boothType)) {
         yesdesc.innerHTML = `Please complete your payment and upload the signed agreement by <b><mark>${deadlineEn}</mark></b>. Late submissions will be considered a forfeiture of your participation. <br><br>Our team will manually verify all payment and agreement uploads by January 5.<br>If you have already completed the process, please keep a screenshot of your payment or upload confirmation. If your status hasn't been updated after January 5, feel free to contact us again.`;
         boothnumberdesc.innerHTML =
           "Booth numbers and the floor plan will be announced on <b>February 28th</b>, the check-in day.";
@@ -692,12 +666,7 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
   function setBillingNoticeLanguage(boothType) {
     var billingNoticedesc = document.getElementById("billing-notice");
     if (boothType && billingNoticedesc) {
-      var boothText = boothType.trim();
-      if (
-        boothText === "One Regular Booth" ||
-        boothText === "Two Regular Booth" ||
-        boothText === "Curation Booth"
-      ) {
+      if (isEnglishBoothType(boothType)) {
         billingNoticedesc.innerHTML =
           "-  Please complete all payments in accordance with the instructions above. If payment is incorrect, late, or made via non-designated methods, the Organizer reserves the right to <b>cancel participation without refund</b>.<br>- For all matters related to registration, payment, and participation, <b>TPABF reserves the final right of review, adjustment, and interpretation.</b><br>- In the event of cancellation due to force majeure (including natural disasters, pandemics, or policy changes), the Organizer will announce further arrangements separately.";
       } else {
@@ -712,12 +681,7 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
   function setConditionalAcceptence(boothType) {
     var tooltip = document.getElementById("tooltip-text");
     if (boothType && tooltip) {
-      var boothText = boothType.trim();
-      if (
-        boothText === "One Regular Booth" ||
-        boothText === "Two Regular Booth" ||
-        boothText === "Curation Booth"
-      ) {
+      if (isEnglishBoothType(boothType)) {
         tooltip.innerHTML =
           "Your application did not fully meet the criteria for your originally selected booth type. However, we truly appreciate your work and proposal, and hope to see you at the fair. If you are willing to accept an adjustment to your booth category, we will be happy to reserve your participation.";
       } else {
@@ -733,15 +697,10 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
     var catalogdownloadLink = document.getElementById("catalog-download-link");
     var catalogdesc = document.getElementById("catalog-desc");
     if (boothType && catalogdownloadLink && catalogdesc) {
-      var boothText = boothType.trim();
-      if (
-        boothText === "One Regular Booth" ||
-        boothText === "Two Regular Booth" ||
-        boothText === "Curation Booth"
-      ) {
+      if (isEnglishBoothType(boothType)) {
         catalogdownloadLink.innerHTML = "Template Download";
         catalogdesc.innerHTML =
-          "Each exhibitor is entitled to a one-page feature in this year’s <i>TPABF Catalog</i>. Late submissions will be considered as forfeiting the opportunity.<br /><br />📌 Submission requirements: <br />1. <b>Image file</b>: PDF format, final size <b>120 × 195 mm</b>, with <b>5 mm bleed</b>. Please use <b>black and white</b> only.<br />2. <b>Text content</b>: Please edit and complete the information on the left side of the exhibitor info sheet.<br />";
+          "Each exhibitor is entitled to a one-page feature in this year's <i>TPABF Catalog</i>. Late submissions will be considered as forfeiting the opportunity.<br /><br />📌 Submission requirements: <br />1. <b>Image file</b>: PDF format, final size <b>120 × 195 mm</b>, with <b>5 mm bleed</b>. Please use <b>black and white</b> only.<br />2. <b>Text content</b>: Please edit and complete the information on the left side of the exhibitor info sheet.<br />";
       } else {
         catalogdownloadLink.innerHTML = "公版下載";
         catalogdesc.innerHTML =
@@ -756,12 +715,7 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
     var ticketlink = document.getElementById("ticket-link");
     var familyticketdesc = document.getElementById("familyticket-desc");
     if (boothType && ticketlink && familyticketdesc) {
-      var boothText = boothType.trim();
-      if (
-        boothText === "One Regular Booth" ||
-        boothText === "Two Regular Booth" ||
-        boothText === "Curation Booth"
-      ) {
+      if (isEnglishBoothType(boothType)) {
         ticketlink.innerHTML = "Ticket Link";
         familyticketdesc.innerHTML =
           "◆ Friends & Family Pre-sale Ticket ｜ Starts 9/8 ｜ NT$350 ｜ Limited to 800 tickets<br>◆ Friends & Family Fast Track Ticket ｜ 11/21 – 11/23 ｜ NT$400<br>(For detailed instructions, please refer to the ticketing website.)<br><br>Your exclusive discount code:<br>";
@@ -782,12 +736,7 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
       "live-event-schedule-desc"
     );
     if (boothType && liveEventLink && liveEventdesc) {
-      var boothText = boothType.trim();
-      if (
-        boothText === "One Regular Booth" ||
-        boothText === "Two Regular Booth" ||
-        boothText === "Curation Booth"
-      ) {
+      if (isEnglishBoothType(boothType)) {
         liveEventLink.innerHTML = "Sign Up Form";
         liveEventdesc.innerHTML =
           "Want to engage with visitors more directly? Propose on-site programs such as short talks, performances, or workshops!";
@@ -809,12 +758,7 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
     var manualdownloadLink = document.getElementById("manual-link");
     var manualdesc = document.getElementById("manual-desc");
     if (boothType && manualdownloadLink && manualdesc) {
-      var boothText = boothType.trim();
-      if (
-        boothText === "One Regular Booth" ||
-        boothText === "Two Regular Booth" ||
-        boothText === "Curation Booth"
-      ) {
+      if (isEnglishBoothType(boothType)) {
         manualdownloadLink.innerHTML = "Download Manual";
         manualdesc.innerHTML =
           "Please read it thoroughly and follow all instructions. It includes fair schedule, exhibitor regulations, and booth specifications, and the Venue Violation Handling and Penalty Manual. <br />";
@@ -834,12 +778,7 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
     var materialuploaddesc = document.getElementById("material-upload-desc");
 
     if (boothType && mediaziplink && mediamaterialdesc) {
-      var boothText = boothType.trim();
-      if (
-        boothText === "One Regular Booth" ||
-        boothText === "Two Regular Booth" ||
-        boothText === "Curation Booth"
-      ) {
+      if (isEnglishBoothType(boothType)) {
         mediaziplink.innerHTML = "Download";
         mediamaterialdesc.innerHTML =
           "<b>Media Kit:</b><br />You're welcome to use the 2025 TPABF key visual assets — click here to download.";
@@ -869,11 +808,7 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
       <li>不得使用大電器</li>
       <li>非每攤都有，需自備延長線與他人協調</li>
     `;
-    } else if (
-      boothType === "One Regular Booth" ||
-      boothType === "Two Regular Booth" ||
-      boothType === "Curation Booth"
-    ) {
+    } else if (isEnglishBoothType(boothType)) {
       electricityTitle.textContent = "Electricity:";
       electricityList.innerHTML = `
       <li>Standard 110v power supply</li>
@@ -931,10 +866,7 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
     if (checkPayment) checkPayment.checked = paymentChecked;
     if (checkDeclaration) checkDeclaration.checked = declarationChecked;
 
-    const isEnglishBooth =
-      boothType === "One Regular Booth" ||
-      boothType === "Two Regular Booth" ||
-      boothType === "Curation Booth";
+    const isEnglishBooth = isEnglishBoothType(boothType);
     function getStatusText(confirmed) {
       if (isEnglishBooth) {
         return confirmed ? "Confirmed" : "Unfulfilled";
@@ -1131,9 +1063,7 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
 
     // 判斷是否為英文攤位
     const isEnglishBooth =
-      boothType === "One Regular Booth" ||
-      boothType === "Two Regular Booth" ||
-      boothType === "Curation Booth";
+      isEnglishBoothType(boothType);
 
     // 構建新的內容
     let newContent = "";
@@ -1168,13 +1098,7 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
     let baseBadgeCount = 2;
     
     // 判斷是否為英文攤位
-    const isEnglishBooth =
-      boothType === "One Regular Booth" ||
-      boothType === "Two Regular Booth" ||
-      boothType === "Curation Booth" ||
-      boothType === "Regular Book Booth" ||
-      boothType === "Regular Non-Book Booth" ||
-      boothType === "Installation Booth";
+    const isEnglishBooth = isEnglishBoothType(boothType);
 
     // 根據不同攤位類型設定基礎數量
     switch (boothType) {
@@ -1191,7 +1115,6 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
       case "Regular Book Booth":
       case "Regular Non-Book Booth":
       case "Installation Booth":
-      case "One Regular Booth":
       default:
         baseBadgeCount = 2;
         break;
@@ -1345,10 +1268,7 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
     const ddlDiv = document.getElementById("ddl-" + sectionId);
     if (ddlDiv && deadline) {
       // 判斷語言
-      const isEnglishBooth =
-        boothType === "One Regular Booth" ||
-        boothType === "Two Regular Booth" ||
-        boothType === "Curation Booth";
+      const isEnglishBooth = isEnglishBoothType(boothType);
       // 格式化日期
       const deadlineStr = deadlineTime
         ? `${deadlineTime.getFullYear()}-${(deadlineTime.getMonth() + 1)
