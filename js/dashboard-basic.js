@@ -1089,7 +1089,7 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
   }
   updateRegistrationStatusAndChecks();
 
-ㄍㄠ
+
   // 動態更新桌子數量
   function extraTable() {
     const tableCount = apiData["桌"];
