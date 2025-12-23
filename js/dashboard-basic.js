@@ -419,7 +419,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         ];
         break;
       case "Regular Book Booth":
-        price = 'USD$165 <span style="font-size:1.3rem;">incl. tax</span>';
+        price = 'NTD$5,000 <span style="font-size:1.3rem;">incl. tax</span>';
         equipment = [
           "– Table<small>(120×60cm)</small> ×1",
           "– Chairs ×2",
@@ -428,7 +428,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         ];
         break;
       case "Regular Non-Book Booth":
-        price = 'USD$165 <span style="font-size:1.3rem;">incl. tax</span>';
+        price = 'NTD$8,000 <span style="font-size:1.3rem;">incl. tax</span>';
         equipment = [
           "– Table<small>(120×60cm)</small> ×1",
           "– Chairs ×2",
@@ -437,7 +437,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         ];
         break;
       case "Installation Booth":
-        price = 'USD$165 <span style="font-size:1.3rem;">incl. tax</span>';
+        price = 'NTD$10,000 <span style="font-size:1.3rem;">incl. tax</span>';
         equipment = [
           "– 3M × 3M space",
           "",
@@ -446,7 +446,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         ];
         break;
       case "Curation Booth":
-        price = 'USD$780 <span style="font-size:1.3rem;">incl. tax</span>';
+        price = 'NTD$50,000 <span style="font-size:1.3rem;">incl. tax</span>';
         equipment = [
           "– 3M × 3M space",
           "– Table<small>(120×60cm)</small> ×2",
@@ -487,54 +487,44 @@ document.addEventListener("DOMContentLoaded", async function () {
       case "食物酒水攤":
         price1 = "13,000";
         break;
+      case "策展攤":
+        price1 = "50,000";
+        break;
+      case "Regular Book Booth":
+        price1 = "5,000";
+        break;
+      case "Regular Non-Book Booth":
+        price1 = "8,000";
+        break;
+      case "Installation Booth":
+        price1 = "10,000";
+        break;
+      case "Curation Booth":
+        price1 = "50,000";
+        break;
       default:
         price1 = "";
     }
 
     // 價錢顯示
     if (price1) {
-      document.getElementById("billing1-price").innerHTML =
-        price1 + "元 <small>(含稅)</small>";
-    } else if (isEnglishBoothType(boothType)) {
-      let usd1 = 0;
-      if (boothType === "Regular Book Booth" || boothType === "Regular Non-Book Booth" || boothType === "Installation Booth") {
-        usd1 = 165;
-      } else if (boothType === "Curation Booth") {
-        usd1 = 780;
-      }
-      if (usd1 > 0) {
-        document.getElementById(
-          "billing1-price"
-        ).innerHTML = `USD$${usd1} <span style="font-size:1.3rem;">incl. tax</span>`;
+      if (isEnglishBoothType(boothType)) {
+        document.getElementById("billing1-price").innerHTML =
+          `NTD$${price1} <span style="font-size:1.3rem;">incl. tax</span>`;
+      } else {
+        document.getElementById("billing1-price").innerHTML =
+          price1 + "元 <small>(含稅)</small>";
       }
     }
 
-    // 商品名稱與金額
-    let amount1 = "";
-    const isOversea = isEnglishBoothType(boothType);
-    if (isOversea) {
-      if (boothType === "Regular Book Booth" || boothType === "Regular Non-Book Booth" || boothType === "Installation Booth") {
-        amount1 = "165";
-      } else if (boothType === "Curation Booth") {
-        amount1 = "780";
-      }
-    }
-
-    // 產生連結
-    let payLink1 = "#";
-    if (isOversea) {
-      payLink1 = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=hooroo@double-grass.com&item_name=${encodeURIComponent(
-        applicationNumber + " - Basic Fee"
-      )}&amount=${amount1}&currency_code=USD&custom=${applicationNumber}`;
-    } else {
-      payLink1 = toProductUrl(applicationNumber);
-    }
+    // 產生連結（現在所有攤種都用台灣付款方式）
+    let payLink1 = toProductUrl(applicationNumber);
 
     // 設定 pay1 按鈕
     const payBtn1 = document.getElementById("pay1");
     if (payBtn1) {
       payBtn1.onclick = () => window.open(payLink1, "_blank");
-      payBtn1.textContent = isOversea ? "Pay" : "付款 Pay";
+      payBtn1.textContent = "付款 Pay";
     }
 
     // 產生產品連結
@@ -631,7 +621,6 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
   // 動態勾勾區塊語言還有攤商編號說明搭便車
   function setYesLanguage(boothType, rawResult) {
     var yesdesc = document.getElementById("registration-status-desc");
-    var boothnumberdesc = document.getElementById("booth-number-desc");
     var billingnote1 = document.getElementById("billing-note1");
 
     // 判斷期限
@@ -642,18 +631,14 @@ This is the only pass add-on period. <b>No changes after payment</b>.<br><br>
       deadlineEn = "December 31, 2025 at 11:59 PM (UTC+8)";
     }
 
-    if (boothType && yesdesc && boothnumberdesc) {
+    if (boothType && yesdesc) {
       if (isEnglishBoothType(boothType)) {
-        yesdesc.innerHTML = `Please complete your payment and upload the signed agreement by <b><mark>${deadlineEn}</mark></b>. Late submissions will be considered a forfeiture of your participation. <br><br>Our team will manually verify all payment and agreement uploads by January 5.<br>If you have already completed the process, please keep a screenshot of your payment or upload confirmation. If your status hasn't been updated after January 5, feel free to contact us again.`;
-        boothnumberdesc.innerHTML =
-          "Booth numbers and the floor plan will be announced on <b>February 28th</b>, the check-in day.";
+        yesdesc.innerHTML = `Please complete your payment and upload the signed agreement by <b><mark>${deadlineEn}</mark></b>. Late submissions will be considered a forfeiture of your participation. Our team will manually verify all payment and agreement uploads by <mark>January 5</mark>. If you have already completed the process, please keep a screenshot of your payment or upload confirmation. If your status hasn't been updated after <mark>January 5</mark>, feel free to contact us again.`;
         if (billingnote1) {
           billingnote1.innerHTML = `Payment Deadline: ${deadlineEn}`;
         }
       } else {
-        yesdesc.innerHTML = `請於<b><mark>${deadline}</mark></b>前完成繳費與同意書上傳，逾期將視同放棄參展資格。<br><br>團隊將於 1 月 5 日前 逐一人工確認繳費與同意書的上傳狀態。<br>如您已完成繳交，請先保留相關繳費或上傳截圖；若狀態在 1 月 5 日後仍未更新，請與我們聯繫。`;
-        boothnumberdesc.innerHTML =
-          "攤位編號與攤位地圖將於 2/28 公布，屆時請留意公告。";
+        yesdesc.innerHTML = `請於<b><mark>${deadline}</mark></b>前完成繳費與同意書上傳，逾期將視同放棄參展資格。團隊將於<mark> 1月5日前 </mark>逐一人工確認繳費與同意書的上傳狀態。如您已完成繳交，請先保留相關繳費或上傳截圖；若狀態在 <mark>1月5日</mark> 後仍未更新，請與我們聯繫。`;
         if (billingnote1) {
           billingnote1.innerHTML = `付款期限: ${deadline}`;
         }
