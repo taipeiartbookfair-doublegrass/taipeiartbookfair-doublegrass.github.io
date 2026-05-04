@@ -1,4 +1,3 @@
-
 // 先檢查 cookie
 const account = getCookie("account");
 const region = getCookie("region");
@@ -187,7 +186,8 @@ document.addEventListener("DOMContentLoaded", async function () {
   // 對應 id 填入資料
   document.getElementById("brand-name").textContent = apiData["品牌"] || "";
   const brandNameOriginalEl = document.getElementById("brand-name-original");
-  if (brandNameOriginalEl) brandNameOriginalEl.textContent = apiData["品牌原文"] || "";
+  if (brandNameOriginalEl)
+    brandNameOriginalEl.textContent = apiData["品牌原文"] || "";
   document.getElementById("bio").textContent = apiData["品牌簡介"] || "";
   const bioEnEl = document.getElementById("bio-en");
   if (bioEnEl) bioEnEl.textContent = apiData["品牌簡介EN"] || "";
@@ -203,7 +203,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   setSocialText("yearlyanswer", apiData["當屆問答"]);
   setSocialText("electricity-answer", apiData["電力需求"]);
   setSocialText("Booth-number", apiData["攤商編號"]);
-
 
   const applicationNumberEl = document.getElementById("application-number");
   if (applicationNumberEl) {
@@ -230,7 +229,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       II: "Installation Booth",
       IC: "Curation Booth",
     };
-    
+
     for (const [code, type] of Object.entries(map)) {
       if (applicationNumber.includes(code)) {
         return type;
@@ -238,7 +237,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
     return "";
   }
-  const applicationNumber = applicationNumberEl ? applicationNumberEl.textContent.trim() : "";
+  const applicationNumber = applicationNumberEl
+    ? applicationNumberEl.textContent.trim()
+    : "";
   const boothType = getBoothTypeFromNumber(applicationNumber);
   const boothTypeEl = document.getElementById("booth-type");
   if (boothType && boothTypeEl) {
@@ -298,7 +299,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
   function setApplicationResultStyle(el, resultText) {
     const applicationResultWrapper = document.getElementById(
-      "application-result-wrapper"
+      "application-result-wrapper",
     );
     el.style.backgroundColor = "";
     el.style.color = "";
@@ -347,7 +348,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       "Accepted",
       "條件式錄取",
       "Conditionally Accepted",
-      "NGO"
+      "NGO",
     ];
     return qualifiedStatuses.includes(resultText);
   }
@@ -357,8 +358,9 @@ document.addEventListener("DOMContentLoaded", async function () {
   const hasQualifiedStatus = hasExhibitionQualification(resultText);
   const paymentChecked = !!apiData["已匯款"];
   const declarationChecked = !!apiData["同意書"];
-  const shouldShowBarcode = hasQualifiedStatus && paymentChecked && declarationChecked;
-  
+  const shouldShowBarcode =
+    hasQualifiedStatus && paymentChecked && declarationChecked;
+
   if (barcodeRow) {
     if (shouldShowBarcode) {
       // 顯示條碼行
@@ -556,7 +558,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     // 控制電力需求顯示
     const electricityRow = document.getElementById("electricity-row");
     if (electricityRow) {
-      if (boothType === "食物酒水攤" || boothType === "裝置攤" || boothType === "策展攤") {
+      if (
+        boothType === "食物酒水攤" ||
+        boothType === "裝置攤" ||
+        boothType === "策展攤"
+      ) {
         electricityRow.style.display = "";
       } else {
         electricityRow.style.display = "none";
@@ -564,7 +570,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
     const editElectricityRow = document.getElementById("edit-electricity-row");
     if (editElectricityRow) {
-      if (boothType === "食物酒水攤" || boothType === "裝置攤" || boothType === "策展攤") {
+      if (
+        boothType === "食物酒水攤" ||
+        boothType === "裝置攤" ||
+        boothType === "策展攤"
+      ) {
         editElectricityRow.style.display = "";
       } else {
         editElectricityRow.style.display = "none";
@@ -588,7 +598,9 @@ document.addEventListener("DOMContentLoaded", async function () {
       isEnglishBooth
         ? "<strong>Basic Fee</strong>"
         : "<strong>基礎攤費</strong>";
-    const billing1Desc = document.querySelector("div[for-billing1-desc]") || document.querySelector("span[for-billing1-desc]");
+    const billing1Desc =
+      document.querySelector("div[for-billing1-desc]") ||
+      document.querySelector("span[for-billing1-desc]");
     if (billing1Desc) {
       billing1Desc.innerHTML = isEnglishBooth
         ? `<strong>Invoice: </strong> For overseas exhibitors who require an invoice, please fill out <a href=https://docs.google.com/forms/d/e/1FAIpQLScuHHfn3zhWd4RVrOCPLY72xf9XiNAf1Sb8De4WJaOCAHovDQ/viewform?usp=header" target="_blank">this form</a>. Once submitted, we will send the invoice to your email as soon as possible.<br><br>
@@ -601,7 +613,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 &nbsp;&nbsp;&nbsp;&nbsp;• If the number of people attending on a single day exceeds the available access passes, please purchase additional admission tickets according to the actual number of days and attendees. (Pre-sale friend & family tickets will be available Jan 26 – Feb 8; for additional tickets, please follow our IG posts.)<br><br>
 &nbsp;&nbsp;c. <strong>This is the only period for additional purchase applications. Once payment is completed, no changes will be accepted.</strong><br>
 &nbsp;&nbsp;d. Not sure what to add on? Enter your booth type, tables, and attendees—<a href=https://docs.google.com/spreadsheets/d/1A33pr06kXFJKgvln3-ie_YdIw-BeYaRm9ckBdDQZtyc/edit?usp=sharing" target="_blank">we’ll calculate it for you</a>.`
-         : `<strong>發票：</strong>台灣訂單網站將自動開立電子發票，請確認報名時所填Email。海外單位如需開立發票需填寫<a href=https://docs.google.com/forms/d/e/1FAIpQLScuHHfn3zhWd4RVrOCPLY72xf9XiNAf1Sb8De4WJaOCAHovDQ/viewform?usp=header" target="_blank">此表單</a>，提交後，我們將盡快寄送發票至您的電子郵件信箱。<br><br>
+        : `<strong>發票：</strong>台灣訂單網站將自動開立電子發票，請確認報名時所填Email。海外單位如需開立發票需填寫<a href=https://docs.google.com/forms/d/e/1FAIpQLScuHHfn3zhWd4RVrOCPLY72xf9XiNAf1Sb8De4WJaOCAHovDQ/viewform?usp=header" target="_blank">此表單</a>，提交後，我們將盡快寄送發票至您的電子郵件信箱。<br><br>
 <strong>退款：</strong>若因不可抗因素需放棄參展，請於<u> 1/15（四）前 </u>通知主辦單位，並辦理退款（將酌收10%手續費）。逾期恕不受理退款。<br><br>
 <strong>加購説明：</strong><br>
 &nbsp;&nbsp;a. 桌子數量：每攤位可選擇 1–2 桌，每桌皆附贈 2份 通行憑證。（裝置攤／策展攤除外）<br>
@@ -617,43 +629,50 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   // 動態切換同意書區塊語言
   function setDeclarationLanguage(boothType) {
-    var declardownloadLink = document.getElementById("declaration-download-link");
+    var declardownloadLink = document.getElementById(
+      "declaration-download-link",
+    );
     var declarationdesc = document.getElementById("declaration-desc");
-    var declarationAgreeText = document.getElementById("declaration-agree-text");
+    var declarationAgreeText = document.getElementById(
+      "declaration-agree-text",
+    );
     if (boothType && declardownloadLink && declarationdesc) {
       if (isEnglishBoothType(boothType)) {
-        declardownloadLink.innerHTML = "Read Exhibitor Declaration";
-        declarationdesc.innerHTML = "Please read the exhibitor declaration, then check the box to confirm your agreement.";
+        declardownloadLink.innerHTML = "Exhibitor Declaration";
+        declarationdesc.innerHTML =
+          "Click the checkbox below to open and confirm the declaration.";
         if (declarationAgreeText) {
-          declarationAgreeText.innerHTML = "I have read and agree to the Exhibitor Declaration";
+          declarationAgreeText.innerHTML =
+            "I have read and agree to the Exhibitor Declaration";
         }
         const confirmBtn = document.getElementById("confirmBtnDeclaration");
         if (confirmBtn) confirmBtn.textContent = "Confirm";
       } else {
-        declardownloadLink.innerHTML = "閱讀參展同意書";
-        declarationdesc.innerHTML = "請閱讀參展同意書後勾選同意。";
+        declardownloadLink.innerHTML = "參展同意書";
+        declarationdesc.innerHTML = "請點擊下方勾選框，閱讀並確認同意書。";
         if (declarationAgreeText) {
-          declarationAgreeText.innerHTML = "我已閱讀並同意參展同意書<br/>I have read and agree to the Exhibitor Declaration";
+          declarationAgreeText.innerHTML =
+            "我已閱讀並同意參展同意書<br/>I have read and agree to the Exhibitor Declaration";
         }
       }
     }
   }
   setDeclarationLanguage(boothType);
 
-    // 動態Billing Notice 區塊語言
-    function setBillingNoticeLanguage(boothType) {
-      var billingNoticedesc = document.getElementById("billing-notice");
-      if (boothType && billingNoticedesc) {
-        if (isEnglishBoothType(boothType)) {
-          billingNoticedesc.innerHTML =
-            "-  Please complete all payments in accordance with the instructions above. If payment is incorrect, late, or made via non-designated methods, the Organizer reserves the right to <b>cancel participation without refund.</b><br>- For all matters related to registration, payment, and participation, <b>TPABF reserves the final right of review, adjustment, and interpretation.</b><br>- In the event of cancellation due to force majeure (including natural disasters, pandemics, or policy changes), the Organizer will announce further arrangements separately.";
-        } else {
-          billingNoticedesc.innerHTML =
-            "- 請務必依繳費說明完成付款流程。如未依規定完成付款（如繳納錯誤金額、超過期限、未依指定方式匯款等），主辦單位將不保留參展資格，亦不提供退款。- 所有報名、繳費及參展相關事宜，草率季保留最終審核、調整及解釋之權利。<br>- 若因不可抗力（如天災、疫情、政策變動等）導致活動取消，主辦單位將另行公告後續處理方式。";
-        }
+  // 動態Billing Notice 區塊語言
+  function setBillingNoticeLanguage(boothType) {
+    var billingNoticedesc = document.getElementById("billing-notice");
+    if (boothType && billingNoticedesc) {
+      if (isEnglishBoothType(boothType)) {
+        billingNoticedesc.innerHTML =
+          "-  Please complete all payments in accordance with the instructions above. If payment is incorrect, late, or made via non-designated methods, the Organizer reserves the right to <b>cancel participation without refund.</b><br>- For all matters related to registration, payment, and participation, <b>TPABF reserves the final right of review, adjustment, and interpretation.</b><br>- In the event of cancellation due to force majeure (including natural disasters, pandemics, or policy changes), the Organizer will announce further arrangements separately.";
+      } else {
+        billingNoticedesc.innerHTML =
+          "- 請務必依繳費說明完成付款流程。如未依規定完成付款（如繳納錯誤金額、超過期限、未依指定方式匯款等），主辦單位將不保留參展資格，亦不提供退款。- 所有報名、繳費及參展相關事宜，草率季保留最終審核、調整及解釋之權利。<br>- 若因不可抗力（如天災、疫情、政策變動等）導致活動取消，主辦單位將另行公告後續處理方式。";
       }
     }
-    setBillingNoticeLanguage(boothType);
+  }
+  setBillingNoticeLanguage(boothType);
 
   // 動態勾勾區塊語言還有攤商編號說明搭便車
   function setYesLanguage(boothType, rawResult) {
@@ -740,7 +759,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     var liveEventLink = document.getElementById("live-event-signup-link");
     var liveEventdesc = document.getElementById("live-event-desc");
     var liveEventScheduledesc = document.getElementById(
-      "live-event-schedule-desc"
+      "live-event-schedule-desc",
     );
     if (boothType && liveEventLink && liveEventdesc) {
       if (isEnglishBoothType(boothType)) {
@@ -827,7 +846,10 @@ Please follow the instructions below to create your materials, and upload the co
 
     const isForeign = (region || "").trim().toUpperCase() !== "TW";
     const isInstallation =
-      boothType === "裝置攤" || boothType === "Installation Booth" || boothType === "策展攤" || boothType === "Curation Booth";
+      boothType === "裝置攤" ||
+      boothType === "Installation Booth" ||
+      boothType === "策展攤" ||
+      boothType === "Curation Booth";
     const isFood =
       boothType === "食物酒水攤" ||
       boothType === "Food & Beverage" ||
@@ -888,7 +910,7 @@ Please follow the instructions below to create your materials, and upload the co
         📌 Unregistered appliances are NOT permitted on site. Repeated violations will be subject to fines as specified in the Exhibitor’s Manual.<br />
         📌 If 220v is required, an additional fee of NT$1000 will be charged — please state this in the form.<br />
         📌 For safety, do not use transformers; the Organizer does not provide voltage conversion services.<br /><br />
-        🛒 <strong>220v Add-on:</strong> <a href="https://nmhw.taipeiartbookfair.com/products/electricity-220v-2026" target="_blank" style="color:#c00; font-weight:bold;">Purchase 220v Power on Shopline (NT$1,000)</a>
+        🛒 <strong>220v Add-on:</strong> <a href="https://nmhw.taipeiartbookfair.com/products/加購電力需求" target="_blank" style="color:#c00; font-weight:bold;">Purchase 220v Power on Shopline (NT$1,000)</a>
       `;
     } else if (isForeign) {
       // 其他國外攤位：簡短英文提示
@@ -898,7 +920,7 @@ Please follow the instructions below to create your materials, and upload the co
     } else {
       // 國內（中文）
       const shopline220vLink = isFood
-        ? `<br /><br />🛒 <strong>食物攤商 220v 加購：</strong><a href="https://nmhw.taipeiartbookfair.com/products/electricity-220v-2026" target="_blank" style="color:#c00; font-weight:bold;">點此前往 Shopline 加購 220v 用電（NT$1000）</a>`
+        ? `<br /><br />🛒 <strong>食物攤商 220v 加購：</strong><a href="https://nmhw.taipeiartbookfair.com/products/加購電力需求" target="_blank" style="color:#c00; font-weight:bold;">點此前往 Shopline 加購 220v 用電（NT$1000）</a>`
         : "";
       regulationHtml = `
         於右上角 <strong>編輯 Edit</strong> 做修改。請務必詳列設備名稱與瓦數，範例如下：<br />
@@ -919,7 +941,8 @@ Please follow the instructions below to create your materials, and upload the co
       (!isForeign && (isFood || isInstallation)) ||
       (isForeign && isInstallation);
     if (electricityRow) electricityRow.style.display = showForRow ? "" : "none";
-    if (editElectricityRow) editElectricityRow.style.display = showForRow ? "" : "none";
+    if (editElectricityRow)
+      editElectricityRow.style.display = showForRow ? "" : "none";
   }
   // initial call
   updateElectricityList(boothType);
@@ -929,38 +952,51 @@ Please follow the instructions below to create your materials, and upload the co
   const CATALOG_DEADLINE = new Date("2026-01-09T23:59:59+08:00");
   const now = new Date();
 
-  const electricityNotice = document.getElementById("electricity-edit-deadline-notice");
+  const electricityNotice = document.getElementById(
+    "electricity-edit-deadline-notice",
+  );
   const electricityEditField = document.getElementById("electricity-edit");
   if (electricityNotice && electricityEditField) {
     if (now > ELECTRICITY_DEADLINE) {
-      electricityNotice.textContent = "⚠️ 電力需求申報已截止（1/9）。如有緊急需求請直接聯絡主辦單位。Electricity declaration deadline has passed (Jan 9). Please contact us directly for urgent requests.";
+      electricityNotice.textContent =
+        "⚠️ 電力需求申報已截止（1/9）。如有緊急需求請直接聯絡主辦單位。Electricity declaration deadline has passed (Jan 9). Please contact us directly for urgent requests.";
       electricityEditField.disabled = true;
       electricityEditField.style.backgroundColor = "#f5f5f5";
       electricityEditField.style.color = "#999";
     } else {
-      const daysLeft = Math.ceil((ELECTRICITY_DEADLINE - now) / (1000 * 60 * 60 * 24));
+      const daysLeft = Math.ceil(
+        (ELECTRICITY_DEADLINE - now) / (1000 * 60 * 60 * 24),
+      );
       electricityNotice.textContent = `⏰ 申報截止：1/9（五）23:59（還剩 ${daysLeft} 天）Deadline: Jan 9 (Fri.) 23:59 (${daysLeft} day(s) left)`;
       electricityNotice.style.color = daysLeft <= 3 ? "#c00" : "#b87900";
     }
   }
 
-  const catalogDeadlineNotice = document.getElementById("ddl-catalog-upload-section");
+  const catalogDeadlineNotice = document.getElementById(
+    "ddl-catalog-upload-section",
+  );
   if (catalogDeadlineNotice) {
     if (now > CATALOG_DEADLINE) {
       catalogDeadlineNotice.innerHTML = `<span style="color:#c00; font-size:0.85em;">⚠️ 草率簿繳交已截止（1/9）。如有問題請聯絡主辦。Catalog submission deadline has passed (Jan 9).</span>`;
     } else {
-      const daysLeft = Math.ceil((CATALOG_DEADLINE - now) / (1000 * 60 * 60 * 24));
+      const daysLeft = Math.ceil(
+        (CATALOG_DEADLINE - now) / (1000 * 60 * 60 * 24),
+      );
       catalogDeadlineNotice.innerHTML = `<span style="color:#b87900; font-size:0.85em;">⏰ 草率簿截止：1/9（五）（還剩 ${daysLeft} 天）Catalog deadline: Jan 9 (Fri.) (${daysLeft} day(s) left)</span>`;
     }
   }
 
-  const marketingDeadlineNotice = document.getElementById("ddl-material-upload-section");
+  const marketingDeadlineNotice = document.getElementById(
+    "ddl-material-upload-section",
+  );
   if (marketingDeadlineNotice) {
     const MARKETING_DEADLINE = new Date("2026-01-23T23:59:59+08:00");
     if (now > MARKETING_DEADLINE) {
       marketingDeadlineNotice.innerHTML = `<span style="color:#c00; font-size:0.85em;">⚠️ 行銷素材上傳已截止（1/23）。Marketing material upload deadline has passed (Jan 23).</span>`;
     } else {
-      const daysLeft = Math.ceil((MARKETING_DEADLINE - now) / (1000 * 60 * 60 * 24));
+      const daysLeft = Math.ceil(
+        (MARKETING_DEADLINE - now) / (1000 * 60 * 60 * 24),
+      );
       marketingDeadlineNotice.innerHTML = `<span style="color:#b87900; font-size:0.85em;">⏰ 行銷素材截止：1/23（五）（還剩 ${daysLeft} 天）Marketing deadline: Jan 23 (Fri.) (${daysLeft} day(s) left)</span>`;
     }
   }
@@ -981,7 +1017,7 @@ Please follow the instructions below to create your materials, and upload the co
   const overseavisa = document.getElementById("overseasvisa");
   const familyticket = document.getElementById("familyticket");
   const manualBoothappearance = document.getElementById(
-    "manual-boothappearance"
+    "manual-boothappearance",
   );
   const mediaupload = document.getElementById("media-section");
   const catalogSection = document.getElementById("catalog-section");
@@ -1169,7 +1205,6 @@ Please follow the instructions below to create your materials, and upload the co
   }
   updateRegistrationStatusAndChecks();
 
-
   // 動態更新桌子數量
   function extraTable() {
     const tableCount = apiData["桌"];
@@ -1185,17 +1220,17 @@ Please follow the instructions below to create your materials, and upload the co
     // 將 tableCount 轉換為數字
     let count = null;
     const tableCountStr = String(tableCount).trim();
-    
+
     // 檢查中文數字
     if (tableCountStr.includes("一") || tableCountStr === "1") {
       count = 1;
     } else if (tableCountStr.includes("二") || tableCountStr === "2") {
       count = 2;
     } else {
-     // 嘗試解析為數字
+      // 嘗試解析為數字
       count = parseInt(tableCountStr, 10);
     }
-    
+
     // 如果無法解析為有效數字，保持原本的顯示
     if (!count || isNaN(count) || count < 1) {
       return;
@@ -1210,8 +1245,7 @@ Please follow the instructions below to create your materials, and upload the co
     const size = sizeMatch ? sizeMatch[1] : "";
 
     // 判斷是否為英文攤位
-    const isEnglishBooth =
-      isEnglishBoothType(boothType);
+    const isEnglishBooth = isEnglishBoothType(boothType);
 
     // 構建新的內容
     let newContent = "";
@@ -1239,12 +1273,12 @@ Please follow the instructions below to create your materials, and upload the co
   function updateBadgeCount() {
     const equipmentBadge = document.getElementById("equipment-badge");
     const extrapasstxt = document.getElementById("extrapasstxt");
-    
+
     if (!equipmentBadge) return; // 防呆
 
     // 基礎通行憑證數量（不含加購）
     let baseBadgeCount = 2;
-    
+
     // 判斷是否為英文攤位
     const isEnglishBooth = isEnglishBoothType(boothType);
 
@@ -1278,15 +1312,15 @@ Please follow the instructions below to create your materials, and upload the co
     // 檢查加購情況並顯示加購的通行憑證
     const tableCount = apiData["桌"];
     const passCount = apiData["證"];
-    
+
     let additionalBadges = 0;
-    
+
     // 解析桌子數量（apiData["桌"] 返回的是總桌子數量）
     // 基礎已有1張桌子，只有當總數為2時才加通行憑證
     if (tableCount && tableCount !== "" && tableCount !== "None") {
       const tableCountStr = String(tableCount).trim();
       let tableNum = 0;
-      
+
       if (tableCountStr.includes("一") || tableCountStr === "1") {
         tableNum = 1;
       } else if (tableCountStr.includes("二") || tableCountStr === "2") {
@@ -1294,19 +1328,19 @@ Please follow the instructions below to create your materials, and upload the co
       } else {
         tableNum = parseInt(tableCountStr, 10) || 0;
       }
-      
+
       // 只有當總桌子數量為2時（基礎1張+加購1張），才加2張通行憑證
       if (tableNum === 2) {
         additionalBadges += 2;
       }
     }
-    
+
     // 檢查是否加購通行憑證
     if (passCount && passCount !== "" && passCount !== "None") {
       // 加購1張通行憑證 +1
       additionalBadges += 1;
     }
-    
+
     // 如果有加購，顯示加購的通行憑證
     if (extrapasstxt) {
       if (additionalBadges > 0) {
@@ -1494,7 +1528,6 @@ Please follow the instructions below to create your materials, and upload the co
       if (oldOverlay) oldOverlay.remove();
     }
   });
-
 
   if (window.setLoading) window.setLoading(1);
   if (window.hideLoading) window.hideLoading();

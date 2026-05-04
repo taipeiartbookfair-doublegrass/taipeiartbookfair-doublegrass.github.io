@@ -1098,64 +1098,47 @@
                             <td
                               style="padding: 0.5em 0em 0em 0.5em; border: none"
                             >
-                              <a
-                                href="https://drive.google.com/drive/folders/1D4fSfNj9tBgT_nOR9cI8Qm0nKrSXkSdv"
-                                target="_blank"
+                              <span
                                 id="declaration-download-link"
+                                style="font-size: 0.85em; font-weight: bold; display: block; margin-bottom: 0.4em;"
                               >
-                                閱讀參展同意書
-                              </a>
-                              <br />
+                                參展同意書 Exhibitor Declaration
+                              </span>
                               <span
                                 style="
                                   font-size: 0.8em;
                                   line-height: 1.3rem;
                                   color: #888;
                                   display: block;
-                                  margin-top: 0.3em;
+                                  margin-top: 0.2em;
+                                  margin-bottom: 0.5em;
                                 "
                                 id="declaration-desc"
-                              >
-                                請閱讀參展同意書後勾選同意。</span
-                              >
-                              <label
-                                id="declaration-agree-label"
-                                style="
-                                  display: flex;
-                                  align-items: flex-start;
-                                  gap: 0.4em;
-                                  margin-top: 0.5em;
-                                  cursor: pointer;
-                                  font-size: 0.85em;
-                                  line-height: 1.4;
-                                "
-                              >
-                                <input
-                                  type="checkbox"
-                                  id="declaration-agree-checkbox"
-                                  style="margin-top: 0.15em; flex-shrink: 0;"
-                                />
-                                <span id="declaration-agree-text">我已閱讀並同意參展同意書<br/>I have read and agree to the Exhibitor Declaration</span>
-                              </label>
+                              >請點擊下方按鈕，閱讀並確認同意書。</span>
+                              <!-- 開啟 modal 的按鈕，確認後自動隱藏 -->
                               <button
-                                id="confirmBtnDeclaration"
+                                id="declaration-open-modal-btn"
                                 type="button"
                                 style="
-                                  margin-top: 0.4em;
-                                  padding: 0.3em 1.2em;
+                                  padding: 0.35em 1.1em;
                                   background: #000;
                                   color: #fff;
                                   border: none;
                                   border-radius: 3px;
                                   cursor: pointer;
-                                  display: none;
+                                  font-size: 0.82em;
                                 "
-                              >
-                                確認同意 Confirm</button
-                              ><br />
+                              >閱讀並確認 Read &amp; Confirm →</button>
+                              <!-- 隱藏 checkbox，供 loadUploadStatusFromAPI 狀態偵測用 -->
+                              <input
+                                type="checkbox"
+                                id="declaration-agree-checkbox"
+                                style="display: none;"
+                              />
+                              <button id="confirmBtnDeclaration" type="button" style="display:none;">確認同意</button>
                               <span
                                 id="declaration-upload-status"
-                                style="color: green"
+                                style="color: green; font-size: 0.8em; display: block; margin-top: 0.3em;"
                               ></span>
                             </td>
                           </tr>
@@ -3424,6 +3407,79 @@
         </td>
       </tr>
     </table>
+    <!-- ── Clickwrap Consent Modal ── -->
+    <div id="consent-modal" role="dialog" aria-modal="true" style="
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.65);
+      z-index: 9999;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    ">
+      <div style="
+        background: #fff;
+        max-width: 700px;
+        margin: 4vh auto 4vh;
+        border: 1px solid #000;
+        position: relative;
+        font-family: inherit;
+      ">
+        <!-- Modal header -->
+        <div style="background:#000; color:#fff; padding:8px 12px; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:0.85rem; font-weight:bold;">參展同意書 Exhibitor Declaration</span>
+          <button id="consent-modal-close-btn" type="button" style="background:none; border:none; color:#fff; font-size:1.3rem; cursor:pointer; line-height:1; padding:0 2px;">✕</button>
+        </div>
+        <!-- PDF viewer -->
+        <div style="padding:0.8em 0.8em 0;">
+          <iframe
+            src="agreement/exhibitor-declaration.pdf"
+            width="100%"
+            height="480"
+            style="border:1px solid #ddd; display:block;"
+          ></iframe>
+        </div>
+        <!-- Identity + agree section -->
+        <div style="padding:0.8em 1em 1.2em; border-top:1px solid #eee; margin-top:0.8em;">
+          <p style="font-size:0.78rem; color:#777; margin:0 0 0.7em;">
+            以下資料來自您的登入帳號，不可修改。<br>The following information is from your account and cannot be modified.
+            <span style="margin-left:1em; color:#aaa;">條款版本 Version: <span id="consent-modal-version" style="font-family:monospace;"></span></span>
+          </p>
+          <div style="display:flex; gap:1em; flex-wrap:wrap; margin-bottom:0.9em;">
+            <div style="flex:1; min-width:140px;">
+              <label style="font-size:0.75rem; color:#888; display:block; margin-bottom:3px;">姓名 Name</label>
+              <input id="consent-modal-name" type="text" readonly tabindex="-1"
+                style="width:100%; border:1px solid #ccc; padding:5px 7px; background:#f5f5f5; font-size:0.85rem; box-sizing:border-box; cursor:default;">
+            </div>
+            <div style="flex:2; min-width:180px;">
+              <label style="font-size:0.75rem; color:#888; display:block; margin-bottom:3px;">Email</label>
+              <input id="consent-modal-email" type="text" readonly tabindex="-1"
+                style="width:100%; border:1px solid #ccc; padding:5px 7px; background:#f5f5f5; font-size:0.85rem; box-sizing:border-box; cursor:default;">
+            </div>
+          </div>
+          <label id="consent-modal-agree-label" style="display:flex; align-items:flex-start; gap:0.5em; cursor:pointer; font-size:0.85rem; line-height:1.5; margin-bottom:0.9em; user-select:none;">
+            <input type="checkbox" id="consent-modal-checkbox" style="margin-top:0.2em; flex-shrink:0; cursor:pointer;">
+            <span>我已閱讀上述同意書全文，並同意遵守其中所有條款。<br>I have read the full Exhibitor Declaration above and agree to all its terms.</span>
+          </label>
+          <div style="display:flex; align-items:center; gap:1em; flex-wrap:wrap;">
+            <button id="consent-modal-confirm-btn" type="button" disabled style="
+              padding:0.4em 1.8em;
+              background:#ccc;
+              color:#fff;
+              border:none;
+              border-radius:3px;
+              font-size:0.9rem;
+              cursor:not-allowed;
+              transition:background 0.15s, cursor 0.15s;
+            ">確認同意 Confirm</button>
+            <span id="consent-modal-status" style="font-size:0.8rem; color:#c00;"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ── /Clickwrap Consent Modal ── -->
+
     <script src="js/dashboardupload/upload_dashboard.js"></script>
     <script src="js/dashboard-body.js"></script>
     <script src="js/oxox.js"></script>
