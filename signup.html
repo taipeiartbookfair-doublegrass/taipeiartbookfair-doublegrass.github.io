@@ -324,111 +324,79 @@
     </a>
 
     <script>
-      const apiUrl =
-        "https://script.google.com/macros/s/AKfycbzyiuox2Y8C3jcrVV5NnlFtF-2grSUnEOx4DFoSGt_BXLqaovDOChB2no7aa18o7l5i/exec";
+    const apiUrl =
+      "https://script.google.com/macros/s/AKfycbzyiuox2Y8C3jcrVV5NnlFtF-2grSUnEOx4DFoSGt_BXLqaovDOChB2no7aa18o7l5i/exec";
 
-      const signupForm = document.getElementById("signup-form");
-      const submitBtn = document.getElementById("submit-btn");
-      const statusBox = document.getElementById("status");
+    const signupForm = document.getElementById("signup-form");
+    const submitBtn = document.getElementById("submit-btn");
+    const statusBox = document.getElementById("status");
 
-      function showStatus(message) {
-        statusBox.style.display = "block";
-        statusBox.textContent = message;
+    function showStatus(message) {
+      statusBox.style.display = "block";
+      statusBox.textContent = message;
+    }
+
+    function resetButton() {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "註冊 Sign Up";
+    }
+
+    signupForm.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const account = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const phone = document.getElementById("phone").value.trim();
+      const name = document.getElementById("name").value.trim();
+      const region = document.getElementById("region").value;
+
+      if (!account || !password || !phone || !name || !region) {
+        alert("請完整填寫所有欄位");
+        return;
       }
 
-      function resetButton() {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "註冊 Sign Up";
+      if (password.length < 6) {
+        alert("密碼至少需要 6 碼");
+        return;
       }
 
-      signupForm.addEventListener("submit", async function (e) {
-        e.preventDefault();
+      const body = new URLSearchParams({
+        action: "register",
+        account: account,
+        password: password,
+        phone: phone,
+        name: name,
+        region: region,
+      });
 
-        const account = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value;
-        const phone = document.getElementById("phone").value.trim();
-        const name = document.getElementById("name").value.trim();
-        const region = document.getElementById("region").value;
+      submitBtn.disabled = true;
+      submitBtn.textContent = "註冊中...";
+      showStatus("資料送出中，請稍候...");
 
-        if (!account || !password || !phone || !name || !region) {
-          alert("請完整填寫所有欄位");
-          return;
-        }
-
-        if (password.length < 6) {
-          alert("密碼至少需要 6 碼");
-          return;
-        }
-
-        const body = new URLSearchParams({
-          action: "register",
-          account: account,
-          password: password,
-          phone: phone,
-          name: name,
-          region: region,
+      try {
+        await fetch(apiUrl, {
+          method: "POST",
+          mode: "no-cors",
+          body: body,
         });
 
-        submitBtn.disabled = true;
-        submitBtn.textContent = "註冊中...";
-        showStatus("資料送出中，請稍候...");
+        showStatus(
+          "資料已送出。\n如果資料正確，Users 工作表會新增一筆資料。"
+        );
 
-        try {
-          const res = await fetch(apiUrl, {
-            method: "POST",
-            body: body,
-          });
+        alert("註冊資料已送出");
 
-          const text = await res.text();
-
-          console.log("HTTP 狀態：", res.status);
-          console.log("API 原始回應：", text);
-
-          let data;
-
-          try {
-            data = JSON.parse(text);
-          } catch (jsonErr) {
-            console.error("JSON 解析錯誤：", jsonErr);
-
-            showStatus(
-              "API 回傳不是 JSON。\n\n原始回應：\n" + text
-            );
-
-            alert("API 回傳不是 JSON，請檢查 Apps Script doPost 是否回傳 JSON。");
-            resetButton();
-            return;
-          }
-
-          if (data.success) {
-            try {
-              localStorage.setItem("token", data.token);
-            } catch (err) {}
-
-            showStatus(
-              "註冊成功\napplication_id：" + data.user.application_id
-            );
-
-            alert("註冊成功");
-            window.location.href = "login.html";
-          } else {
-            showStatus(data.message || "註冊失敗");
-            alert(data.message || "註冊失敗");
-            resetButton();
-          }
-        } catch (err) {
-          console.error("註冊 API 錯誤：", err);
-
-          showStatus(
-            "系統錯誤：" +
-              err.message +
-              "\n\n請確認：\n1. API URL 是否正確\n2. Apps Script 是否部署為「任何人」可存取\n3. 後端是否已重新部署新版\n4. 是否被瀏覽器 CORS 擋住"
-          );
-
-          alert("系統錯誤：" + err.message);
-          resetButton();
-        }
-      });
-    </script>
+        // 先延遲 1 秒再跳登入頁，避免使用者看不到提示
+        setTimeout(function () {
+          window.location.href = "login.html";
+        }, 1000);
+      } catch (err) {
+        console.error("註冊 API 錯誤：", err);
+        showStatus("系統錯誤：" + err.message);
+        alert("系統錯誤：" + err.message);
+        resetButton();
+      }
+    });
+  </script>
   </body>
 </html>
