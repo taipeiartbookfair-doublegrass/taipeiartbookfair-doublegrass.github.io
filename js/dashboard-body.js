@@ -119,7 +119,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // 自動填入現有資料
     const fields = [
       ["brand-name", "brandName-edit"],
+      ["brand-name-original", "brandName-original-edit"],
       ["bio", "bio-edit"],
+      ["bio-en", "bio-edit-en"],
       ["role", "role-edit"],
       ["category", "category-edit"],
       ["attendedYears", "attendedYears-edit"],
@@ -138,6 +140,26 @@ document.addEventListener("DOMContentLoaded", function () {
         toEl.value = fromEl.textContent.trim();
       }
     });
+
+    // 初始化字數計數器
+    const bioEdit = document.getElementById("bio-edit");
+    const bioCounter = document.getElementById("bio-edit-counter");
+    if (bioEdit && bioCounter) {
+      bioCounter.textContent = bioEdit.value.length;
+      bioEdit.addEventListener("input", () => {
+        bioCounter.textContent = bioEdit.value.length;
+        bioCounter.style.color = bioEdit.value.length >= 80 ? "#c00" : "#888";
+      });
+    }
+    const bioEditEn = document.getElementById("bio-edit-en");
+    const bioCounterEn = document.getElementById("bio-edit-en-counter");
+    if (bioEditEn && bioCounterEn) {
+      bioCounterEn.textContent = bioEditEn.value.length;
+      bioEditEn.addEventListener("input", () => {
+        bioCounterEn.textContent = bioEditEn.value.length;
+        bioCounterEn.style.color = bioEditEn.value.length >= 100 ? "#c00" : "#888";
+      });
+    }
 
     // 控制編輯頁電力需求顯示
     const boothType = document.getElementById("booth-type")?.textContent.trim();

@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   const apiUrl =
-    "https://script.google.com/macros/s/AKfycbwNWgPsLK_ldHUIvoIg5a9k3PNIlmjvJeTgbCZ5CZsvKFQ7e1DoxbMsAawi4nI3Rea4DA/exec";
+    "https://script.google.com/macros/s/AKfycbxOxo-ZzjkkDlkIyCNlmFgYfPhpLOHQr3278Mv36PJrM_jdb_RsaG42hwM23Cp7b7onBw/exec";
 
   // 編輯品牌資料
   const branch_summit_btn = document.getElementById("submit-edit-brand");
@@ -18,7 +18,9 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       const brandName = document.getElementById("brandName-edit").value.trim();
+      const brandNameOriginal = (document.getElementById("brandName-original-edit")?.value || "").trim();
       const bio = document.getElementById("bio-edit").value.trim();
+      const bioEn = (document.getElementById("bio-edit-en")?.value || "").trim();
       const role = document.getElementById("role-edit").value;
       const website = document.getElementById("website-edit").value.trim();
       const facebook = document.getElementById("facebook-edit").value.trim();
@@ -41,7 +43,9 @@ document.addEventListener("DOMContentLoaded", function () {
         action: "update_dashboard_info",
         account: account,
         品牌: brandName,
+        品牌原文: brandNameOriginal,
         品牌簡介: bio,
+        品牌簡介EN: bioEn,
         身分類別: role,
         website: website,
         facebook: facebook,

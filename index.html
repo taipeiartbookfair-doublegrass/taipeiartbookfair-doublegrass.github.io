@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="css/mainpage.css" />
     <link rel="stylesheet" href="css/font.css" />
     <link rel="stylesheet" href="css/exhibitors.css" />
-    <script src="js/exhibitors-list.js"></script>
 
      <!-- Store Modal -->
     <div id="storeModal" class="store-modal">
@@ -116,12 +115,12 @@
           <!-- 按鈕區域 - 左右並排 -->
           <div class="poster-buttons-container">
             <div class="ticket-button-container">
-              <a href="opencall.html" class="ticket-button">
-                OPEN CALL 徵件啟動！
+              <a href="ticketvisit.html" class="ticket-button" id="ticket-button">
+                購票參觀｜TICKETS & VISIT
               </a>
             </div>
             <div class="flip-button-container">
-              <a href="opencall.html" style="text-decoration: none;">
+              <a href="ticketvisit.html" style="text-decoration: none;">
               <button class="flip-button">
                 <span class="flip-text" >👆</span>
               </button>
@@ -131,14 +130,13 @@
           
           <!-- 按鈕功能說明文字 -->
           <div class="button-explanation">
+            <div class="explanation-text" style="color:rgb(60,60,60)" id="button-explanation-text">     
+              左側的按鈕可供您購買票券，並同時了解展覽的開放時間地點、票價資訊、參展名單、完整節目表、展覽常見問及參觀須知；可以點按翻轉海報，查看背面的快速資訊。 The button on the left allows you to purchase tickets and learn more about visiting information, including opening hours, ticket prices, and visitor guidelines. Click the post to flip the poster to in order to read the back side, revealing additional details. 
+            </div>
             <!-- <div class="explanation-text" style="color:rgb(60,60,60)">     
-              左側的按鈕可供您購買票券，並同時了解展覽的開放時間地點、票價資訊、參展名單、完整節目表、展覽常見問及參觀須知；右側的按鈕則能讓您翻轉海報，查看背面的快速資訊。
-              The button on the left allows you to purchase tickets and learn more about visiting information, including opening hours, ticket prices, and visitor guidelines. The button on the right lets you flip the poster to view the back side, revealing additional details.
-            </div> -->
-            <div class="explanation-text" style="color:rgb(60,60,60)">     
               2026草率季十週年 OPEN CALL 徵件開始！請點擊按鈕進入徵件頁面查看詳細資訊，包括徵件條件、徵件時間、徵件方式等以及草率季十週年的相關資訊。
               The 2026 TPABF 10th Anniversary OPEN CALL is now open! Please click the button to enter the OPEN CALL form page to view detailed information, including application criteria, application dates, application methods, and information about the TPABF 10th Anniversary.
-            </div>
+            </div> -->
           </div>
           
           <!-- start of poster-section -->
@@ -146,10 +144,10 @@
             <div class="poster-container" data-flipped="false">
               <div class="poster-card">
                 <div class="poster-front">
-                  <img class="poster" src="image/26open call-01.png" />
+                  <img class="poster" src="image/mainpage/main-01.jpg" />
                 </div>
                 <div class="poster-back">
-                  <img class="poster" src="image/26open call-02.png" />
+                  <img class="poster" src="image/mainpage/main-02.jpg" />
                 </div>
               </div>
             </div>
@@ -234,6 +232,7 @@
                 <option value="talk">Talk</option>
                 <option value="workshop">Workshop</option>
                 <option value="performance">Performance</option>
+                <option value="news">News</option>
               </select>
             </div>
           </div>
@@ -346,7 +345,7 @@
     <!-- 滾動橫幅 -->
     <div class="banner">
       <div class="banner-track">
-        <div class="banner-content">
+        <div class="banner-content" id="banner-content-1">
           <span class="dot"></span> 2025 草率季 TPABF
           徵件結果已公布，請有報名的單位登入攤商系統查詢。 
           <span class="dot"></span> The selection results for the 2025 TPABF are
@@ -364,7 +363,7 @@
           請持續關注我們的社群平台，掌握最新活動消息。Follow us on social media
           for the latest updates.
         </div>
-        <div class="banner-content">
+        <div class="banner-content" id="banner-content-2">
           <span class="dot"></span> 2025 草率季 TPABF
           徵件結果已公布，請有報名的單位登入攤商系統查詢。 
           <span class="dot"></span> The selection results for the 2025 TPABF are
@@ -428,6 +427,7 @@
     <script src="js/mainpage_image_rotata.js"></script>
     <script src="js/homepage-zine.js"></script>
     <script src="js/credits-content.js"></script>
+    <script src="js/index-content-control.js"></script>
     
     <script>
       // Credit drop-up toggle using existing footer CREDITS link
@@ -559,8 +559,6 @@
         });
       });
     </script>
-
-    <!-- 關閉主要內容容器 -->
     </div>
   </body>
 </html>
