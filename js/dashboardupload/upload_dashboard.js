@@ -2,12 +2,16 @@
 const uploadApiUrl =
   "https://script.google.com/macros/s/AKfycbxOxo-ZzjkkDlkIyCNlmFgYfPhpLOHQr3278Mv36PJrM_jdb_RsaG42hwM23Cp7b7onBw/exec";
 
+// 檔案上傳 API：catalog / marketing 上傳到 Google Drive
+const fileUploadApiUrl =
+  "https://script.google.com/macros/s/AKfycbytwthS-PvDMUZ5iRFCtDnowgcrrtsbeyjlohpOQNpiUyTnGo0YT77eSKz9ILOp9X_i/exec";
+
 // 新 API：只負責寫入 consent audit trail（電子簽章法留存）
 const consentApiUrl =
-  "https://script.google.com/macros/s/AKfycbxGzUAlLnwA_ClwpMqS-3U9_VTCWdkwCto0EoGqL6jErnpFSddgsv-VdcoEoEJGFCf8/exec";
+  "https://script.google.com/a/macros/double-grass.com/s/AKfycbxQqppVyIedlyrGFVDrEwmo0qjFeCvVS4VlPrrTLArszrj0i2-9mtfMTP8zASRwBp9l4g/exec";
 
 // ★ 每次換同意書 PDF 時只改這一行（檔名即版本號）。Apps Script 不需要動。
-const DECLARATION_PDF_FILENAME = "exhibitor-declaration-2026v1.pdf";
+const DECLARATION_PDF_FILENAME = "exhibitor-declaration-2026v2.pdf";
 
 // 將 clickwrap 同意紀錄送至後端並寫入 audit trail
 async function saveConsentToAPI() {
@@ -624,17 +628,14 @@ const handleFileUpload = async (
     errorStep = "上傳到伺服器 Uploading to server";
     let uploadRes;
     try {
-      uploadRes = await fetch(
-        "https://script.google.com/macros/s/AKfycbwB6gvxUJA-_i-1oWuZnya0YHoa4nwv8bioZUjZAaGvf-ibqGpyNcujUL6LEowwqN1s/exec",
-        {
-          redirect: "follow",
-          method: "POST",
-          headers: {
-            "Content-Type": "text/plain;charset=utf-8",
-          },
-          body: bodyString,
+      uploadRes = await fetch(fileUploadApiUrl, {
+        redirect: "follow",
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8",
         },
-      );
+        body: bodyString,
+      });
     } catch (fetchError) {
       // 網路錯誤
       if (
