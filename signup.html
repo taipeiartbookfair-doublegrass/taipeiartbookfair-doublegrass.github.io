@@ -326,10 +326,10 @@
             } else {
               alert(data.message);
             }
-          } catch (err) {
-            console.error(err);
-            alert("系統錯誤，請稍後再試");
-          }
+          } } catch (err) {
+  console.error("註冊 API 錯誤：", err);
+  alert("系統錯誤：" + err.message);
+}
         });
     </script>
   </body>
