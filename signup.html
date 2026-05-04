@@ -1,35 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <base target="_top" />
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <meta
-          http-equiv="Content-Security-Policy"
-          content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;"
-    />
-
     <title>Sign Up - 草率季Taipei Art Book Fair</title>
-
-    <link rel="shortcut icon" href="image/icon-1.ico" />
-    <link rel="stylesheet" href="css/font.css" />
-
-    <!-- Google tag (gtag.js) -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-EPSXJPDH6L"
-    ></script>
-
-    <script>
-      window.dataLayer = window.dataLayer || [];
-
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-
-      gtag("js", new Date());
-      gtag("config", "G-EPSXJPDH6L");
-    </script>
 
     <style>
       body {
@@ -101,23 +78,6 @@
         outline: none;
       }
 
-      .sub-actions {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: 4px;
-        padding-right: 6px;
-      }
-
-      .fp {
-        padding-left: 5px;
-        padding-right: 5px;
-        font-size: 0.8rem;
-        text-decoration: underline;
-        color: grey;
-        display: inline-block;
-        margin-bottom: 1rem;
-      }
-
       .submit-box {
         display: flex;
         justify-content: center;
@@ -146,16 +106,21 @@
         cursor: not-allowed;
       }
 
-      .bgimg {
-        filter: saturate(500) hue-rotate(185deg) contrast(200%) brightness(90%)
-          sepia(25%);
-        position: fixed;
-        z-index: -50;
-        width: 100vw;
-        height: 100vh;
-        -webkit-user-drag: none;
-        top: 0;
-        left: 0;
+      .sub-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 4px;
+        padding-right: 6px;
+      }
+
+      .fp {
+        padding-left: 5px;
+        padding-right: 5px;
+        font-size: 0.8rem;
+        text-decoration: underline;
+        color: grey;
+        display: inline-block;
+        margin-bottom: 1rem;
       }
 
       .back {
@@ -174,6 +139,20 @@
         cursor: pointer;
       }
 
+      .status {
+        display: none;
+        width: 100%;
+        max-width: 380px;
+        margin-top: 8px;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid black;
+        background-color: ghostwhite;
+        color: black;
+        font-size: 0.8rem;
+        word-break: break-word;
+      }
+
       ::selection {
         color: palegreen;
         background-color: olive;
@@ -182,14 +161,6 @@
   </head>
 
   <body>
-    <img
-      draggable="false"
-      class="bgimg"
-      id="sasa"
-      src="image/bgimg4.jpg"
-      alt=""
-    />
-
     <div class="login-wrapper">
       <h2>註冊 Sign Up</h2>
 
@@ -290,25 +261,43 @@
         </form>
 
         <div class="sub-actions">
-          <a href="login.html" class="fp">
+          <a href="#" class="fp" onclick="goLogin(); return false;">
             已有帳號？回到登入 Already have an account? Back to Login
           </a>
         </div>
       </div>
+
+      <div id="status" class="status"></div>
     </div>
 
-    <a href="index.html">
+    <a href="#" onclick="goHome(); return false;">
       <div class="back">回主頁 Back</div>
     </a>
 
     <script>
-      const apiUrl =
-        "https://script.google.com/macros/s/AKfycbwa7cEliZdr-XI0A8FiSWjfB_kcfksRRx0SFS-pmgypdX4Nv6D50mr5zVF8XwIqOnI/exec";
-
       const signupForm = document.getElementById("signup-form");
       const submitBtn = document.getElementById("submit-btn");
+      const statusBox = document.getElementById("status");
 
-      signupForm.addEventListener("submit", async function (e) {
+      function showStatus(message) {
+        statusBox.style.display = "block";
+        statusBox.textContent = message;
+      }
+
+      function resetButton() {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "註冊 Sign Up";
+      }
+
+      function goLogin() {
+        alert("這是 Apps Script 註冊頁。請改成你的正式 login.html 網址。");
+      }
+
+      function goHome() {
+        alert("這是 Apps Script 註冊頁。請改成你的正式首頁網址。");
+      }
+
+      signupForm.addEventListener("submit", function (e) {
         e.preventDefault();
 
         const account = document.getElementById("email").value.trim();
@@ -327,51 +316,47 @@
           return;
         }
 
-        const body = new URLSearchParams({
-          action: "register",
+        const formData = {
           account: account,
           password: password,
           phone: phone,
           name: name,
           region: region,
-        });
+        };
 
         submitBtn.disabled = true;
         submitBtn.textContent = "註冊中...";
+        showStatus("資料送出中，請稍候...");
 
-        try {
-          const res = await fetch(apiUrl, {
-            method: "POST",
-            body: body,
-          });
+        google.script.run
+          .withSuccessHandler(function (res) {
+            console.log("registerFromPage response:", res);
 
-          const text = await res.text();
-          console.log("API 原始回應：", text);
+            if (res && res.success) {
+              try {
+                localStorage.setItem("token", res.token);
+              } catch (err) {}
 
-          let data;
+              showStatus("註冊成功，application_id：" + res.user.application_id);
+              alert("註冊成功");
 
-          try {
-            data = JSON.parse(text);
-          } catch (jsonErr) {
-            console.error("JSON 解析錯誤：", jsonErr);
-            alert("API 回傳格式錯誤，請檢查 Apps Script 部署權限或後端程式");
-            return;
-          }
+              // 正式上線時，如果 login.html 是外部網站，改這裡：
+              // window.top.location.href = "https://你的網站/login.html";
 
-          if (data.success) {
-            localStorage.setItem("token", data.token);
-            alert("註冊成功");
-            window.location.href = "login.html";
-          } else {
-            alert(data.message || "註冊失敗");
-          }
-        } catch (err) {
-          console.error("註冊 API 錯誤：", err);
-          alert("系統錯誤：" + err.message);
-        } finally {
-          submitBtn.disabled = false;
-          submitBtn.textContent = "註冊 Sign Up";
-        }
+            } else {
+              showStatus(res && res.message ? res.message : "註冊失敗");
+              alert(res && res.message ? res.message : "註冊失敗");
+            }
+
+            resetButton();
+          })
+          .withFailureHandler(function (err) {
+            console.error("registerFromPage error:", err);
+            showStatus("系統錯誤：" + err.message);
+            alert("系統錯誤：" + err.message);
+            resetButton();
+          })
+          .registerFromPage(formData);
       });
     </script>
   </body>
