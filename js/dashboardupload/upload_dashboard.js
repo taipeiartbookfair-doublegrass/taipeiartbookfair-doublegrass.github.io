@@ -1,9 +1,13 @@
-// API URL（直接使用 URL 字串，避免與 dashboard-basic.js 中的 apiUrl 重複宣告）
+// 舊 API：負責主試算表的讀寫（同意書打勾、匯款狀態等），不要動
 const uploadApiUrl =
+  "https://script.google.com/macros/s/AKfycbxOxo-ZzjkkDlkIyCNlmFgYfPhpLOHQr3278Mv36PJrM_jdb_RsaG42hwM23Cp7b7onBw/exec";
+
+// 新 API：只負責寫入 consent audit trail（電子簽章法留存）
+const consentApiUrl =
   "https://script.google.com/macros/s/AKfycbx4cdlvczqva6nyAr4Ujwpjq3trJqLvOPXo3xZLwCABK6MM5606W0ag0oBzG4rmTjRB/exec";
 
-// ★ 每次更新同意書 PDF 時，這裡和 Apps Script 的 AGREEMENT_VERSION 都要一起改
-const FRONTEND_AGREEMENT_VERSION = "2026_vendor_terms_v1";
+// ★ 每次換同意書 PDF 時只改這一行（檔名即版本號）。Apps Script 不需要動。
+const DECLARATION_PDF_FILENAME = "exhibitor-declaration-2026v1.pdf";
 
 // 將 clickwrap 同意紀錄送至後端並寫入 audit trail
 async function saveConsentToAPI() {
@@ -24,10 +28,10 @@ async function saveConsentToAPI() {
       userId,
       name,
       email,
-      frontendVersion: FRONTEND_AGREEMENT_VERSION,
+      frontendVersion: DECLARATION_PDF_FILENAME,
     }).toString();
 
-    const res = await fetch(uploadApiUrl, {
+    const res = await fetch(consentApiUrl, {
       redirect: "follow",
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -48,7 +52,6 @@ async function saveConsentToAPI() {
 const folderIds = {
   marketing: "1GBQiVxTbCdl-kCCMvNTc9Ejjhfsxu9ds",
   catalog: "1uE7korPZDcMRCo0nTkoiowEh3sVpw5QA",
-  declaration: "11CnK9JWKistOUUf8HocJNb_lyK1WYdJp",
 };
 
 // 共用顯示與 localStorage key
@@ -174,7 +177,10 @@ async function updateSpreadsheetStatus(apiField, value) {
       [apiField]: value ? "true" : "false", // 轉換為字串
     }).toString();
 
-    const updateRes = await fetch(uploadApiUrl, {
+    // 使用主 API URL，因為 uploadApiUrl 可能沒有 update_dashboard_info 處理器
+    const mainApiUrl =
+      "https://script.google.com/macros/s/AKfycbxOxo-ZzjkkDlkIyCNlmFgYfPhpLOHQr3278Mv36PJrM_jdb_RsaG42hwM23Cp7b7onBw/exec";
+    const updateRes = await fetch(mainApiUrl, {
       redirect: "follow",
       method: "POST",
       headers: {
@@ -329,8 +335,12 @@ async function loadUploadStatusFromAPI() {
       emailInput.value = emailEl ? emailEl.textContent.trim() : "";
 
     // 顯示版本號
+    // 動態設定 PDF src（版本號即檔名）
+    const pdfFrame = document.getElementById("consent-modal-pdf");
+    if (pdfFrame) pdfFrame.src = "agreement/" + DECLARATION_PDF_FILENAME;
+
     const versionEl = document.getElementById("consent-modal-version");
-    if (versionEl) versionEl.textContent = FRONTEND_AGREEMENT_VERSION;
+    if (versionEl) versionEl.textContent = DECLARATION_PDF_FILENAME;
 
     // 重置 modal 狀態
     if (modalCb) {
