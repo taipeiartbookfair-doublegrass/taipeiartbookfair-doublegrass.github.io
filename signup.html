@@ -1,40 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
   <head>
+    <base target="_top" />
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;
-      connect-src *;
-      img-src * data: blob:;
-      script-src * 'unsafe-inline' 'unsafe-eval';
-      style-src * 'unsafe-inline';
-      frame-src *;"
-    />
-
-    <title>Sign Up - 草率季Taipei Art Book Fair</title>
-
-    <link rel="shortcut icon" href="image/icon-1.ico" />
-    <link rel="stylesheet" href="css/font.css" />
-
-    <!-- Google tag (gtag.js) -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-EPSXJPDH6L"
-    ></script>
-
-    <script>
-      window.dataLayer = window.dataLayer || [];
-
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-
-      gtag("js", new Date());
-      gtag("config", "G-EPSXJPDH6L");
-    </script>
+    <title>Sign Up - 草率季 Taipei Art Book Fair</title>
 
     <style>
       body {
@@ -106,23 +78,6 @@
         outline: none;
       }
 
-      .sub-actions {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: 4px;
-        padding-right: 6px;
-      }
-
-      .fp {
-        padding-left: 5px;
-        padding-right: 5px;
-        font-size: 0.8rem;
-        text-decoration: underline;
-        color: grey;
-        display: inline-block;
-        margin-bottom: 1rem;
-      }
-
       .submit-box {
         display: flex;
         justify-content: center;
@@ -151,16 +106,21 @@
         cursor: not-allowed;
       }
 
-      .bgimg {
-        filter: saturate(500) hue-rotate(185deg) contrast(200%) brightness(90%)
-          sepia(25%);
-        position: fixed;
-        z-index: -50;
-        width: 100vw;
-        height: 100vh;
-        -webkit-user-drag: none;
-        top: 0;
-        left: 0;
+      .sub-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 4px;
+        padding-right: 6px;
+      }
+
+      .fp {
+        padding-left: 5px;
+        padding-right: 5px;
+        font-size: 0.8rem;
+        text-decoration: underline;
+        color: grey;
+        display: inline-block;
+        margin-bottom: 1rem;
       }
 
       .back {
@@ -202,33 +162,18 @@
   </head>
 
   <body>
-    <img
-      draggable="false"
-      class="bgimg"
-      id="sasa"
-      src="image/bgimg4.jpg"
-      alt=""
-    />
-
     <div class="login-wrapper">
       <h2>註冊 Sign Up</h2>
 
       <div class="login-form">
-        <form
-          id="signup-form"
-          method="POST"
-          action="https://script.google.com/macros/s/AKfycbxLLxgXIqKYGOlwLXwHCpNqJSXwFx8Mhr13nc4gMrbd8XctycrTf7tlEumEFpmxPkng/exec"
-          target="_blank"
-        >
-          <input type="hidden" name="action" value="register" />
-
+        <form id="signup-form">
           <div class="input-box">
             <label for="email">電子郵件 Email</label>
             <input
               type="email"
-              name="account"
               id="email"
               placeholder="your@email.com"
+              autocomplete="email"
               required
             />
           </div>
@@ -237,9 +182,9 @@
             <label for="password">密碼 Password</label>
             <input
               type="password"
-              name="password"
               id="password"
               placeholder="Enter your password"
+              autocomplete="new-password"
               minlength="6"
               required
             />
@@ -249,9 +194,9 @@
             <label for="phone">電話 Phone</label>
             <input
               type="tel"
-              name="phone"
               id="phone"
               placeholder="Enter your phone number"
+              autocomplete="tel"
               required
             />
           </div>
@@ -260,16 +205,16 @@
             <label for="name">姓名 Name</label>
             <input
               type="text"
-              name="name"
               id="name"
               placeholder="Enter your name"
+              autocomplete="name"
               required
             />
           </div>
 
           <div class="input-box">
-            <label for="region">地區/國籍 Region (Nationality)</label>
-            <select name="region" id="region" required>
+            <label for="region">地區 / 國籍 Region</label>
+            <select id="region" required>
               <option value="">請選擇 Please select</option>
               <option value="TW">台灣 Taiwan</option>
               <option value="CN">中國 China</option>
@@ -317,7 +262,7 @@
         </form>
 
         <div class="sub-actions">
-          <a href="login.html" class="fp">
+          <a href="#" class="fp" onclick="goLogin(); return false;">
             已有帳號？回到登入 Already have an account? Back to Login
           </a>
         </div>
@@ -326,28 +271,24 @@
       <div id="status" class="status"></div>
     </div>
 
-    <a href="index.html">
+    <a href="#" onclick="goHome(); return false;">
       <div class="back">回主頁 Back</div>
     </a>
-
-    <iframe
-      name="hidden_iframe"
-      id="hidden_iframe"
-      style="display: none"
-    ></iframe>
 
     <script>
       const signupForm = document.getElementById("signup-form");
       const submitBtn = document.getElementById("submit-btn");
       const statusBox = document.getElementById("status");
-      const hiddenIframe = document.getElementById("hidden_iframe");
-
-      let submitted = false;
-      let timeoutTimer = null;
 
       function showStatus(message) {
         statusBox.style.display = "block";
         statusBox.textContent = message;
+      }
+
+      function setLoading() {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "註冊中...";
+        showStatus("資料送出中，請稍候...");
       }
 
       function resetButton() {
@@ -355,59 +296,83 @@
         submitBtn.textContent = "註冊 Sign Up";
       }
 
-      signupForm.addEventListener("submit", function (e) {
-        const account = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value;
-        const phone = document.getElementById("phone").value.trim();
-        const name = document.getElementById("name").value.trim();
-        const region = document.getElementById("region").value;
+      function goLogin() {
+        // 這裡之後可改成你的正式登入頁 URL
+        window.top.location.href = "login.html";
+      }
 
-        if (!account || !password || !phone || !name || !region) {
-          e.preventDefault();
+      function goHome() {
+        // 這裡之後可改成你的正式首頁 URL
+        window.top.location.href = "index.html";
+      }
+
+      signupForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const formData = {
+          account: document.getElementById("email").value.trim(),
+          password: document.getElementById("password").value,
+          phone: document.getElementById("phone").value.trim(),
+          name: document.getElementById("name").value.trim(),
+          region: document.getElementById("region").value,
+        };
+
+        if (
+          !formData.account ||
+          !formData.password ||
+          !formData.phone ||
+          !formData.name ||
+          !formData.region
+        ) {
           alert("請完整填寫所有欄位");
           return;
         }
 
-        if (password.length < 6) {
-          e.preventDefault();
+        if (formData.password.length < 6) {
           alert("密碼至少需要 6 碼");
           return;
         }
 
-        submitted = true;
-        submitBtn.disabled = true;
-        submitBtn.textContent = "註冊中...";
-        showStatus("資料已送出，請稍候...");
+        setLoading();
 
-        clearTimeout(timeoutTimer);
+        google.script.run
+          .withSuccessHandler(function (res) {
+            console.log("registerFromPage response:", res);
 
-        timeoutTimer = setTimeout(function () {
-          if (submitted) {
-            showStatus(
-              "資料已送出。\n請到 Users 工作表確認是否新增。\n如果沒有新增，請確認 Apps Script 部署網址是否正確。"
-            );
+            if (res && res.success) {
+              try {
+                if (res.token) {
+                  localStorage.setItem("token", res.token);
+                }
+              } catch (err) {}
+
+              showStatus(
+                "註冊成功\napplication_id：" +
+                  (res.user && res.user.application_id
+                    ? res.user.application_id
+                    : "")
+              );
+
+              alert("註冊成功");
+
+              // 成功後跳登入頁
+              window.top.location.href = "login.html";
+              return;
+            }
+
+            showStatus(res && res.message ? res.message : "註冊失敗");
+            alert(res && res.message ? res.message : "註冊失敗");
             resetButton();
-          }
-        }, 8000);
-      });
+          })
+          .withFailureHandler(function (err) {
+            console.error("registerFromPage error:", err);
 
-      hiddenIframe.addEventListener("load", function () {
-        if (!submitted) return;
+            showStatus("系統錯誤：" + err.message);
+            alert("系統錯誤：" + err.message);
 
-        clearTimeout(timeoutTimer);
-
-        showStatus(
-          "送出完成。\n請到 Users 工作表確認是否新增。"
-        );
-
-        alert("註冊資料已送出");
-
-        submitted = false;
-        resetButton();
-
-        setTimeout(function () {
-          window.location.href = "login.html";
-        }, 1000);
+            resetButton();
+          })
+          .registerFromPage(formData);
       });
     </script>
   </body>
