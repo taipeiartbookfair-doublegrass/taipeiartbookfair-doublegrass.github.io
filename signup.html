@@ -192,7 +192,7 @@
     <div class="login-wrapper">
       <h2>註冊 Sign Up</h2>
       <div class="login-form">
-        <form action="/signup" method="POST">
+        <form id="signup-form">
           <div class="input-box">
             <label for="email">電子郵件 Email</label>
             <input
@@ -293,6 +293,45 @@
     </div>
 
     <a href="index.html"><div class="back">回主頁 Back</div></a>
+
+    <script>
+      const apiUrl = "你的 Apps Script Web App URL";
+
+      document
+        .getElementById("signup-form")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const body = new URLSearchParams({
+            action: "register",
+            account: document.getElementById("email").value.trim(),
+            password: document.getElementById("password").value,
+            phone: document.getElementById("phone").value.trim(),
+            name: document.getElementById("name").value.trim(),
+            region: document.getElementById("region").value,
+          });
+
+          try {
+            const res = await fetch(apiUrl, {
+              method: "POST",
+              body: body,
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+              localStorage.setItem("token", data.token);
+              alert("註冊成功");
+              window.location.href = "login.html";
+            } else {
+              alert(data.message);
+            }
+          } catch (err) {
+            console.error(err);
+            alert("系統錯誤，請稍後再試");
+          }
+        });
+    </script>
   </body>
 </html>
 
