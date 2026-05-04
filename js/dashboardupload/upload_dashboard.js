@@ -4,7 +4,7 @@ const uploadApiUrl =
 
 // 新 API：只負責寫入 consent audit trail（電子簽章法留存）
 const consentApiUrl =
-  "https://script.google.com/macros/s/AKfycbx4cdlvczqva6nyAr4Ujwpjq3trJqLvOPXo3xZLwCABK6MM5606W0ag0oBzG4rmTjRB/exec";
+  "https://script.google.com/macros/s/AKfycbxGzUAlLnwA_ClwpMqS-3U9_VTCWdkwCto0EoGqL6jErnpFSddgsv-VdcoEoEJGFCf8/exec";
 
 // ★ 每次換同意書 PDF 時只改這一行（檔名即版本號）。Apps Script 不需要動。
 const DECLARATION_PDF_FILENAME = "exhibitor-declaration-2026v1.pdf";
@@ -17,8 +17,15 @@ async function saveConsentToAPI() {
   const name = nameEl ? nameEl.textContent.trim() : "";
   const email = emailEl ? emailEl.textContent.trim() : "";
 
+  console.log("[consent] 準備送出 audit trail", {
+    userId,
+    name,
+    email,
+    version: DECLARATION_PDF_FILENAME,
+  });
+
   if (!userId || !email) {
-    console.warn("saveConsentToAPI: 缺少 userId 或 email，略過 audit trail");
+    console.warn("[consent] 缺少 userId 或 email，略過");
     return;
   }
 
@@ -31,18 +38,26 @@ async function saveConsentToAPI() {
       frontendVersion: DECLARATION_PDF_FILENAME,
     }).toString();
 
+    console.log("[consent] 打 API:", consentApiUrl);
     const res = await fetch(consentApiUrl, {
       redirect: "follow",
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: params,
     });
-    const data = await res.json();
-    if (!data.success) {
-      console.warn("save_consent 後端回傳失敗：", data.message);
+
+    console.log("[consent] HTTP status:", res.status);
+    const text = await res.text();
+    console.log("[consent] 回應內容:", text);
+
+    const data = JSON.parse(text);
+    if (data.success) {
+      console.log("[consent] ✓ audit trail 寫入成功", data);
+    } else {
+      console.warn("[consent] ✗ 後端回傳失敗：", data.message);
     }
   } catch (err) {
-    console.error("saveConsentToAPI 錯誤：", err);
+    console.error("[consent] fetch 錯誤：", err);
   }
 }
 
