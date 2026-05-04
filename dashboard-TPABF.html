@@ -18,6 +18,7 @@
     <!-- <link rel="stylesheet" href="css/opencall.css" /> -->
     <link rel="shortcut icon" href="image/icon-1.ico" />
 
+    <!-- checking -->
     <!-- Google tag (gtag.js) -->
     <script
       async
@@ -328,18 +329,17 @@
               <tr>
                 <td colspan="2" style="position: relative">
                   <span class="label">品牌名稱 Brand Name</span><br />
-                  <span style="font-size: 3rem" id="brand-name">品牌名稱</span>
+                  <span style="font-size: 3rem" id="brand-name"></span>
+                  <br />
+                  <span id="brand-name-original" style="font-size: 1.1rem; color: #555;"></span>
                 </td>
               </tr>
 
               <tr>
                 <td colspan="2">
                   <span class="label">品牌簡介 Bio</span><br />
-                  <div class="bio" id="bio">
-                    草率季」是臺灣大型藝術書刊的文化市集，也是臺灣首度串連各種理念的創作者、出版社、獨立書店、藝術家等的市集，展出各式畫冊、獨立刊物、藝術雜誌等特色刊物。臺灣目前正在形成在地文化底蘊的背景下，這份狂野與不確定性的特質，吸引了亞洲如韓國、日本等藝術創作者前來共襄盛舉，草率季漸漸成為臺灣與國際間出版連結的大型藝術書刊市集。從
-                    2016
-                    第一屆草率季開始，每年都規劃不同主題、廣邀國內外各領域藝文創作者，提供各個參展單位表達自我與理想的交流平台。
-                  </div>
+                  <div class="bio" id="bio"></div>
+                  <div class="bio" id="bio-en" style="color: #444; margin-top: 0.3em;"></div>
                 </td>
               </tr>
               <tr>
@@ -404,12 +404,12 @@
                   <span id="facebook"></span>
                 </td>
               </tr>
-              <!-- <tr>
+              <tr>
                 <td colspan="2">
-                  <span class="label">無限柔軟是 Soft POW is…...</span><br />
+                  <span class="label">2026TPABF 主題小提問：我最驕傲的小動作Ctrl+Y是？ (small behavior I re-do)</span><br />
                   <span id="yearlyanswer"></span>
                 </td>
-              </tr> -->
+              </tr>
               <tr
                 id="electricity-row"
                 style="background-color: #d3c4bc; display: none"
@@ -418,22 +418,20 @@
                   <span class="label">電力需求 Electricity Requirement</span
                   ><br />
                   <span id="electricity-regulation">
-                    請務必詳列設備名稱與瓦數，於右上角<span
+                    於右上角<span
                       style="
                         background-color: black;
                         color: ghostwhite;
                         padding: 1px;
                       "
                       >編輯 Edit</span
-                    >做修改，範例如下：<br />
-                    微波爐：1100W<br />
-                    電扇：65W<br />
-                    熱水壺：1500W<br /><br />
-                    📌
-                    未事先申報之電器不得於現場使用，如於現場發現並屢勸不聽，將依《罰金手冊》規定處以罰款。<br />
-                    📌 如需使用 220V 電壓，將酌收費用
-                    NT$1000，並請於表單中註明。（
-                    為維護安全，請勿使用變壓器，主辦單位不提供電壓轉換服務）
+                    >做修改。請務必詳列設備名稱與瓦數，範例如下：<br />
+                    微波爐／1100W／1個<br />
+                    熱水壺／1500W／1個<br />
+                    電扇／65W／1個<br /><br />
+                    📌 未事先申報之電器不得於現場使用，如於現場發現並屢勸不聽，將依《攤主手冊》規定處以罰款。<br />
+                    📌 如需使用 220v 電壓，將收取費用 NT$1000，並請於表單中註明。<br>
+                    📌 為維護安全，請勿使用變壓器，主辦單位不提供電壓轉換服務。
                   </span>
                 </td>
                 <td>
@@ -469,11 +467,12 @@
               <table width="100%">
                 <tr>
                   <td colspan="2">
-                    <span class="label">品牌名稱 Brand Name</span><br />
+                    <span class="label">英文品牌名稱 English Brand Name</span>
+                    <span style="font-size:0.8em; color:#888;">（必填 Required）</span><br />
                     <input
                       type="text"
                       name="brandName"
-                      value="品牌名稱"
+                      value=""
                       style="width: 95%"
                       id="brandName-edit"
                       maxlength="150"
@@ -483,14 +482,48 @@
                 </tr>
                 <tr>
                   <td colspan="2">
-                    <span class="label">品牌簡介 Bio</span><br />
+                    <span class="label">原文品牌名稱 Original Brand Name</span>
+                    <span style="font-size:0.8em; color:#888;">（非英語系請填寫 For non-English brands）</span><br />
+                    <input
+                      type="text"
+                      name="brandNameOriginal"
+                      value=""
+                      style="width: 95%"
+                      id="brandName-original-edit"
+                      maxlength="150"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <span class="label">中文品牌簡介 Chinese Bio</span>
+                    <span style="font-size:0.8em; color:#888;">（最多 80 字 / max 80 characters）</span><br />
                     <textarea
                       name="bio"
-                      rows="6"
+                      rows="3"
                       style="width: 95%"
                       id="bio-edit"
-                      maxlength="1000"
+                      maxlength="80"
                     ></textarea>
+                    <div style="font-size:0.8em; color:#888; text-align:right; width:95%;">
+                      <span id="bio-edit-counter">0</span> / 80
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <span class="label">英文品牌簡介 English Bio</span>
+                    <span style="font-size:0.8em; color:#888;">（最多 100 字 / max 100 characters）</span><br />
+                    <textarea
+                      name="bio-en"
+                      rows="3"
+                      style="width: 95%"
+                      id="bio-edit-en"
+                      maxlength="100"
+                    ></textarea>
+                    <div style="font-size:0.8em; color:#888; text-align:right; width:95%;">
+                      <span id="bio-edit-en-counter">0</span> / 100
+                    </div>
                   </td>
                 </tr>
                 <tr>
@@ -823,10 +856,10 @@
                     />
                   </td>
                 </tr>
-                <!-- <tr>
+                <tr>
                   <td colspan="2">
                     <span class="label"
-                      >無限柔軟是 Soft POW is…..(50字內 Within 50 words）</span
+                      >2026TPABF 主題小提問：我最驕傲的小動作Ctrl+Y是？ (small behavior I re-do)</span
                     ><br />
                     <textarea
                       name="yearlyanswer"
@@ -836,7 +869,7 @@
                       maxlength="50"
                     ></textarea>
                   </td>
-                </tr> -->
+                </tr>
                 <tr id="edit-electricity-row">
                   <td
                     colspan="2"
@@ -844,6 +877,7 @@
                   >
                     <span class="label">電力需求 Electricity Requirement</span
                     ><br />
+                    <span id="electricity-edit-deadline-notice" style="font-size:0.8em; color:#c00; display:block; margin-bottom:0.3em;"></span>
                     <textarea
                       name="electricity"
                       rows="3"
@@ -855,9 +889,13 @@
                 </tr>
               </table>
 
-              <p style="margin-top: 2rem; color: darkgray">
-                請再次確認資訊是否正確後進行修改。請注意，草率簿將於 8
-                月底開始排版，最終資料將以工作同仁所彙整的版本為準。
+              <p style="margin-top: 2rem; color: darkgray" id="edit-form-deadline-note">
+                請再次確認資訊是否正確後再進行修改。<br>
+                ⏰ <b>電力需求申報截止：1/9（五）</b>，逾期無法受理現場臨時申請。<br>
+                ⏰ <b>草率簿露出資料截止：1/9（五）</b>，逾期視同放棄刊登權益。<br>
+                Please double-check that all information is correct before making changes.<br>
+                ⏰ <b>Electricity declaration deadline: January 9 (Fri.)</b> — on-site last-minute requests will not be accepted.<br>
+                ⏰ <b>Catalog exposure data deadline: January 9 (Fri.)</b> — late submissions forfeit publication rights.
               </p>
 
               <div style="margin-top: 1rem">
@@ -887,23 +925,24 @@
               <!-- 攤商編號 -->
               <tr
                 id="booth-number-row"
-                style="display: none; width: 100%; table-layout: auto"
+                style="display: none;"
               >
                 <td colspan="3" style="padding: 0; border: none">
-                  <table style="width: 100%; table-layout: auto">
+                  <table style="width: 100%; box-sizing: border-box">
                     <tr style="padding: 0; border: none">
                       <td
                         style="
-                          width: 40vw;
+                          width: 65%;
                           border-right: 1px dashed black;
                           border-bottom: 1px solid aliceblue;
+                          box-sizing: border-box;
                         "
                       >
                         <span class="label">攤位編號 Booth Number</span><br />
                         <div style="vertical-align: middle; font-size: 2.7rem">
                           <span
                             style="
-                              font-size: 1.5rem;
+                              font-size: 3rem;
                               color: black;
                               line-height: 1.5rem;
                             "
@@ -917,10 +956,11 @@
                       id="booth-map-row"
                         style="
                           border-bottom: 1px solid aliceblue;
-                          width: 15vw;
+                          width: 35%;
                           border-top: 1px solid black;
                           border-left: none;
                           border-right: 1px solid black;
+                          box-sizing: border-box;
                         "
                       >
                         <span class="label">攤位地圖 Booth Map</span><br /><span
@@ -1063,43 +1103,60 @@
                                 target="_blank"
                                 id="declaration-download-link"
                               >
-                                下載參展同意書
+                                閱讀參展同意書
                               </a>
                               <br />
                               <span
                                 style="
                                   font-size: 0.8em;
-                                  line-height: 0.7rem;
+                                  line-height: 1.3rem;
                                   color: #888;
+                                  display: block;
+                                  margin-top: 0.3em;
                                 "
                                 id="declaration-desc"
                               >
-                                請下載並簽署參展同意書，完成後請上傳。</span
-                              ><br />
-                              <input
-                                type="file"
-                                id="declaration-file"
-                                accept=".pdf,.jpg,.jpeg,.png"
-                                style="margin-bottom: 0.5em; max-width: 198px"
-                              />
+                                請閱讀參展同意書後勾選同意。</span
+                              >
+                              <label
+                                id="declaration-agree-label"
+                                style="
+                                  display: flex;
+                                  align-items: flex-start;
+                                  gap: 0.4em;
+                                  margin-top: 0.5em;
+                                  cursor: pointer;
+                                  font-size: 0.85em;
+                                  line-height: 1.4;
+                                "
+                              >
+                                <input
+                                  type="checkbox"
+                                  id="declaration-agree-checkbox"
+                                  style="margin-top: 0.15em; flex-shrink: 0;"
+                                />
+                                <span id="declaration-agree-text">我已閱讀並同意參展同意書<br/>I have read and agree to the Exhibitor Declaration</span>
+                              </label>
                               <button
-                                id="uploadBtnDeclaration"
+                                id="confirmBtnDeclaration"
                                 type="button"
                                 style="
+                                  margin-top: 0.4em;
                                   padding: 0.3em 1.2em;
                                   background: #000;
                                   color: #fff;
                                   border: none;
                                   border-radius: 3px;
                                   cursor: pointer;
+                                  display: none;
                                 "
                               >
-                                上傳 Upload</button
+                                確認同意 Confirm</button
                               ><br />
-                              <!-- <span
+                              <span
                                 id="declaration-upload-status"
                                 style="color: green"
-                              ></span> -->
+                              ></span>
                             </td>
                           </tr>
                         </table>
@@ -1266,6 +1323,7 @@
                   <small>hooroo@double-grass.com</small>
                 </td>
               </tr>
+
               <!-- 中國簽證資料上傳 Visa Upload -->
               <tr style="display: none" id="visaCN">
                 <td style="border-top: none; width: 55vw; border-right: none">
@@ -1288,11 +1346,28 @@
                 </td>
               </tr>
 
+               <!-- 海外簽證資料連結-->
+              <tr style="display: none" id="overseasvisa">
+                <td style="border-top: none; width: 55vw">
+                  <div id="overseasvisa-desc">
+                    <span class="label">簽證申請 Visa Support</span><br />
+                    We provide a visa support package, including an official invitation letter and a brief introduction to TPABF.
+                    If you need any additional documents or information, feel free to contact us.
+                  </div>
+                  <a
+                    href="https://drive.google.com/drive/folders/1WuFNxCMZA_vVqN-u_CEjHVKswGI5_4f1?usp=sharing"
+                    target="_blank"
+                    >Download Package</a
+                  >
+                </td>
+              </tr>
+
               <!-- 素材下載 Download -->
               <tr id="media-section" style="display: none">
                 <td
                   colspan="1"
                   style="border-top: none; width: 80%; border-right: none"
+                  class="material-download-td"
                 >
                   <span class="label"
                     >行銷素材下載＆上傳 ​Download & Upload Marketing
@@ -1301,16 +1376,16 @@
                   <div id="material-download-annouce-time">
                     <div id="material-download-desc" style="margin-top: 0.5em">
                       <strong>視覺素材包：</strong><br />
-                      歡迎使用 2025 草率季主視覺素材，點此下載檔案。
+                      歡迎使用 2026 草率季主視覺素材，點此下載檔案。
                     </div>
                     <a
                       id="media-zip-link"
-                      href="https://drive.google.com/drive/folders/18CIdZXZi0wD4fGmh_YGyc-4PYUavMHSn?usp=sharing"
+                      href="https://drive.google.com/drive/folders/1Xn8yRXOP4LZ9tIZed-NpQGe-tylq_7K6?usp=drive_link"
                       download
                       >Download</a
                     ><br /><br />
                     <div id="material-upload-desc">
-                      <strong>社群宣傳圖檔上傳：</strong><br />
+                      <strong>行銷素材檔案上傳:</strong><br />
                       請依照素材包內的說明製作，並將製作完成的<b>貼文、限時動態圖檔</b>打包為
                       zip上傳。<br />
                       ⚠️
@@ -1333,7 +1408,7 @@
                       <input
                         type="file"
                         id="marketing-file"
-                        accept=".zip,.ZIP,.rar,.RAR,.7z,.7Z"
+                        accept=".zip,.ZIP"
                         style="max-width: 198px"
                       /><br />
                       <button
@@ -1350,10 +1425,10 @@
                       >
                         上傳 Upload</button
                       ><br />
-                      <!-- <span
+                      <span
                         id="marketing-upload-status"
                         style="color: green"
-                      ></span> -->
+                      ></span>
                     </div>
                   </div>
                   <div id="ddl-material-upload-section" class="ddl"></div>
@@ -1372,7 +1447,7 @@
                     ensure your items arrive safely and on time, please complete
                     the shipping service form first and follow its instructions.
                     It is important that your package
-                    <u>arrives before</u> February 11, 2026 (Wed.) at the
+                    <u>arrives before</u> by 2/15 (Sun.). at the
                     designated address. <br /><br />
                     Late or unregistered shipments will not be delivered to the
                     venue.
@@ -1390,7 +1465,7 @@
                   <div id="foreign-shipping-form-section">
                     <div style="min-width: 198px" id="foreign-shipping-form">
                       <a
-                        href="https://forms.gle/WExjyPUMcDxgXTaTA"
+                        href="https://forms.gle/Gi8PrGFw4ksQghxg7"
                         target="_blank"
                         >Shipping Service Form</a
                       >
@@ -1469,6 +1544,7 @@
                     width: 20%;
                     border-left: 1px dashed black;
                   "
+                  class="catalog-upload-td"
                 >
                   <div id="catalog-upload-section">
                     <div id="catalog-upload-btn" style="min-width: 198px">
@@ -1492,10 +1568,10 @@
                       >
                         上傳 Upload</button
                       ><br />
-                      <!-- <span
+                      <span
                         id="catalog-upload-status"
                         style="color: green"
-                      ></span> -->
+                      ></span>
                     </div>
                   </div>
                   <div id="ddl-catalog-upload-section" class="ddl"></div>
@@ -1514,7 +1590,7 @@
                     <span id="ticket-discountcode"></span>
                     <br /><br />
                     <a
-                      href="https://tour.ibon.com.tw/event/e2508000035koaw"
+                      href="https://www.accupass.com/eflow/ticket/2512310947135246631630"
                       target="_blank"
                       id="ticket-link"
                       >快速通關票購票連結</a
@@ -1540,7 +1616,7 @@
                   </div>
                   <div id="manual-annouce-time">
                     <a
-                      href="https://drive.google.com/drive/folders/1Hvz9sxlOw7NObvuF2k-wJbwn9YAaDonQ?usp=sharing"
+                      href="https://drive.google.com/drive/folders/1hez89vTSId3veAt9NWcr2pgOuJJBGn_e?usp=sharing"
                       target="_blank"
                       id="manual-link"
                       >下載 Download</a
@@ -1554,7 +1630,6 @@
         </td>
 
         <!-- 帳號資料 -->
-
         <td class="account" id="account" style="display: none">
           <h3 style="color: blue; margin-top: 15px">Profile</h3>
           <br />
@@ -1934,123 +2009,80 @@
         </td>
         <!-- 帳號完 -->
 
-        <td class="admin" id="contact-method" style="display: none">
+        <!-- contact method -->
+        <td class="admin" id="contact-method" style="display: none; font-family: 'Inclusive Sans', sans-serif;">
           <div class="scroll-inner">
             <table width="100%">
               <tr>
                 <td style="border: none">
-                  <h3>Contact Method</h3>
-                  <br />
-
-                  <br />
-                  <div
-                    style="
-                      font-size: 1rem;
-                      font-family: 'Inclusive Sans', sans-serif;
-                    "
-                  >
-                    如有任何問題，請依主題聯繫對應窗口，我們將盡快回覆您 If you
-                    have any questions, please contact the appropriate email
-                    below:
-                    <br /><br /><br />
-                    <div style="margin-left: 1em">
-                      📌 簽證相關 Visa Support<br />
-                      ✉️
-                      <a href="mailto:anm@double-grass.com"
-                        >anm@double-grass.com</a
-                      ><br /><br />
-                      📌 草率簿資料上傳 & 行銷素材 Catalog Submission &
-                      Marketing Materials<br />
-                      ✉️
-                      <a href="mailto:shao@double-grass.com"
-                        >shao@double-grass.com</a
-                      ><br /><br />
-                      📌 攤位配置與參展相關 Booth & Exhibitor Inquiries<br />
-                      ✉️
-                      <a href="mailto:xavia@double-grass.com"
-                        >xavia@double-grass.com</a
-                      ><br /><br />
-                      📌 寄件服務 Shipping Service<br />
-                      ✉️
-                      <a href="mailto:shakyfloor@double-grass.com"
-                        >shakyfloor@double-grass.com</a
-                      ><br /><br />
-                      📌 現場活動相關（講座／工作坊／表演）Program Proposals<br />
-                      ✉️
-                      <a href="mailto:shakyfloor@double-grass.com"
-                        >shakyfloor@double-grass.com</a
-                      ><br /><br />
-                      📌 帳務與收據 Invoice & Payment Questions<br />
-                      ✉️
-                      <a href="mailto:anm@double-grass.com"
-                        >anm@double-grass.com</a
-                      ><br />
-                    </div>
-                    <br /><br />
-                    <span><u>提醒 Reminder</u>:</span><br />
-                    來信請註明您的<i>報名編號</i>，以利我們快速為您查詢與回覆。
-                    <br />Please include your <i>application number</i> in all
-                    emails to help us respond efficiently.
-                  </div>
-                  <!-- 我484故意寫個圈圈叉叉在這裡讓你忘記你為什麼要聯絡窗口? 嗯對，是。
-                   Do i purposely write an XOXO here to distract you from your original purpose? yish:P -->
-                  <div id="tictactoe-container">
-                    <div
-                      id="tictactoe-board"
-                      style="
-                        display: grid;
-                        grid-template-columns: repeat(3, 1fr);
-                        position: relative;
-                      "
-                    >
-                      <button class="ttt-cell"></button>
-                      <button class="ttt-cell"></button>
-                      <button class="ttt-cell"></button>
-                      <button class="ttt-cell"></button>
-                      <button class="ttt-cell"></button>
-                      <button class="ttt-cell"></button>
-                      <button class="ttt-cell"></button>
-                      <button class="ttt-cell"></button>
-                      <button class="ttt-cell"></button>
-                      <button
-                        id="ttt-refresh"
-                        style="
-                          display: none;
-                          position: absolute;
-                          left: 50%;
-                          top: 50%;
-                          transform: translate(-50%, -50%);
-                          z-index: 10;
-                        "
-                      >
-                        refresh
-                      </button>
-                    </div>
-                    <div
-                      id="tictactoe-status"
-                      style="text-align: center; margin: 1em 0"
-                    ></div>
-                    <div style="text-align: center; margin: 1em 0">
-                      <button id="ttt-refresh" style="display: none">
-                        refresh
-                      </button>
-                    </div>
-                  </div>
+                  <h3>Contact</h3>
+        
+                  <p>
+                    活動期間，我們將陸續寄送 4 封重要通知，請特別留意信件主旨前標示<b>「＊」</b>的郵件，這些皆為重要資訊，包括：
+                    <br />
+                    Throughout the event, we will send out 4 important notifications. Please pay special attention to emails with a <b>“＊”</b> at the beginning of the subject line, as these contain essential information, including:
+                  </p>
+        
+                  <ul>
+                    <li>參展報名完成 · Registration Complete</li>
+                    <li>攤主手冊公布 · Release of the Exhibitor’s Manual</li>
+                    <li>進場 &amp; 報到須知 · Set Up &amp; Check In Guidelines</li>
+                    <li>報到條碼 · Check In Barcode</li>
+                    <li>展後調查問卷 · Exhibitors Survey</li>
+                  </ul>
+        
+                  <p>
+                    此外，也會有相關資訊提醒信件。請攤主協助留意收件箱，並檢查垃圾郵件，以免錯過任何重要訊息。
+                    <br />
+                    Additional reminder emails with relevant information may also be sent. Exhibitors are kindly asked to check their inbox and spam folder to ensure no important emails are missed.
+                  </p>
+        
+                  <p>
+                    如有任何問題，請依主題聯繫對應窗口，我們將盡快回覆您。<br />
+                    If you have any questions, please contact the appropriate email address below.
+                  </p>
+        
+                  <p>
+                    <strong>＊＊我們將主要透過 <i>Email</i> 聯繫與回覆，來信時請務必在主旨註明您的<mark>報名編號及附上相關截圖畫面</mark>，以利我們快速查詢與回覆。</strong><br />
+                    <strong>＊＊We will primarily respond via email. Please include your <mark>application number and attached relevant screenshots</mark> in the subject of each email to help us respond efficiently.</strong>
+                  </p>
+                  <br>
+                  <hr style="border-top: 1px dashed black; margin: 1rem 0; border-bottom: none;" />
+        
+                  <p><strong>📌 主要回應 Email 窗口 · Primary Contact Email</strong><br />
+                    ✉️ <a href="mailto:hooroo@double-grass.com">hooroo@double-grass.com</a><br />
+                    （攤位與參展相關、現場活動、資料上傳等相關問題 · Booth & exhibitor inquiries, on-site events, material uploads）
+                  </p>
+        
+                  <p><strong>📌 簽證相關／收據問題 · Visa Support & Invoice Questions</strong><br />
+                    ✉️ <a href="mailto:anm@double-grass.com">anm@double-grass.com</a>（CC：<a href="mailto:hooroo@double-grass.com">hooroo@double-grass.com</a>）
+                  </p>
+        
+                  <p><strong>📌 寄件服務 · Shipping Service</strong><br />
+                    ✉️ <a href="mailto:yun@double-grass.com">yun@double-grass.com</a>（CC：<a href="mailto:hooroo@double-grass.com">hooroo@double-grass.com</a>）
+                  </p>
                 </td>
               </tr>
             </table>
           </div>
         </td>
+        
+        <!-- faq -->
         <td class="admin" id="faq" style="display: none">
           <div class="scroll-inner">
             <h3 style="z-index: 99">FAQ</h3>
             <table class="faqtable" width="100%">
               <tr>
+                <td class="faq-number-cell" style="background-color:lemonchiffon"></td>
+                <td style="background-color: #000; color: #fff;"><marquee><strong>(綠取階段)</strong></marquee></td>
+                <td style="background-color: #000; color: #fff;"><marquee><strong>(Application Phase)</strong></marquee></td>
+              </tr>
+              <tr>
                 <td class="faq-number-cell">
                   <span class="faq-number">1</span>
                 </td>
                 <td class="QA-section" style="border-right: none">
-                  <span class="labelAQ">Q: 如何確認是否付款成功？</span><br />
+                  <span class="labelAQ">Q: 我該不該加購通行憑證呢？</span><br />
                   <span
                     style="
                       font-size: 1rem;
@@ -2058,17 +2090,15 @@
                     "
                   >
                     A:
-                    完成付款後，系統會自動寄出付款確認信至您填寫的信箱。團隊將於指定時間統一更新「攤商管理」頁面中的核帳狀態。
+                    我們提供了一個<a href=https://docs.google.com/spreadsheets/d/1A33pr06kXFJKgvln3-ie_YdIw-BeYaRm9ckBdDQZtyc/edit?usp=sharing" target="_blank">簡易計算表格</a>，只需填寫攤位類型、桌數以及預計進場人數，系統將會提供最佳加購建議，幫助您避免錯誤購買。歡迎善加利用！
                   </span>
                 </td>
                 <td class="QA-section">
                   <span class="labelAQ en"
-                    >Q: How do I confirm if my payment was successful?</span
+                    >Q: Should I purchase additional access passes?</span
                   ><br />
                   <span class="faq-answer-en">
-                    A: After completing payment, a confirmation email will be
-                    sent to your registered email. The team will update the
-                    Exhibitor Status on the "Dashboard" at the specified time.
+                    A: We have provided a <a href=https://docs.google.com/spreadsheets/d/1A33pr06kXFJKgvln3-ie_YdIw-BeYaRm9ckBdDQZtyc/edit?usp=sharing" target="_blank">simple calculation spreadsheet</a>. By entering your booth type, number of tables, and expected number of attendees, the system will suggest the optimal number of passes to purchase, helping you avoid incorrect purchases. We encourage you to make use of it!
                   </span>
                 </td>
               </tr>
@@ -2078,7 +2108,7 @@
                   <span class="faq-number">2</span>
                 </td>
                 <td class="QA-section" style="border-right: none">
-                  <span class="labelAQ">Q: 沒有收到付款確認信怎麼辦？</span
+                  <span class="labelAQ">Q: 同一天的通行憑證可以讓不同人使用嗎？</span
                   ><br />
                   <span
                     style="
@@ -2087,18 +2117,16 @@
                     "
                   >
                     A:
-                    請先確認垃圾郵件夾；如仍未收到，請截圖您的付款頁面或紀錄，並來信與我們聯繫。
+                    不可以。通行憑證為刺青貼紙形式，每張貼紙於同一天僅限一人使用，當日不可更換使用者，亦不可跨日使用。
                   </span>
                 </td>
                 <td class="QA-section">
                   <span class="labelAQ en"
-                    >Q: What if I didn't receive the payment confirmation
-                    email?</span
+                    >Q: Can the same-day access pass be used by different people?
+                    </span
                   ><br />
                   <span class="faq-answer-en">
-                    A: Please check your spam folder first. If you still haven't
-                    received it, take a screenshot of your payment page or
-                    record and contact us.
+                    A: No. Access passes are provided as temporary tattoo stickers. Each sticker may only be used by one person per day and cannot be transferred to another person on the same day or used across different days.
                   </span>
                 </td>
               </tr>
@@ -2108,7 +2136,7 @@
                   <span class="faq-number">3</span>
                 </td>
                 <td class="QA-section" style="border-right: none">
-                  <span class="labelAQ">Q: 我已付款，但錄取狀態沒有更新？</span
+                  <span class="labelAQ">Q: 如果我需要更多通行憑證，可以加購嗎？</span
                   ><br />
                   <span
                     style="
@@ -2117,18 +2145,22 @@
                     "
                   >
                     A:
-                    請耐心等待，團隊會於公告時間統一更新核帳狀態。如有急件或疑問，請附上付款截圖來信詢問。
+                    每個攤位最多僅能加購 1 份通行憑證。如有超過需求，請依實際活動天數與人數，另行購買入場票券。<br><br>
+
+                    （親友預售票將於 01/26–02/08 開賣。）<br>
+                    （各票種與相關資訊，請持續關注我們的 IG 貼文喔～～）
                   </span>
                 </td>
                 <td class="QA-section">
                   <span class="labelAQ en"
-                    >Q: I have paid, but my Exhibitor Status hasn't been
-                    updated?</span
+                    >Q:  Can I purchase more access passes if needed?
+                    </span
                   ><br />
                   <span class="faq-answer-en">
-                    A: Please be patient. The TPABF team will update the
-                    Exhibitor Status at the announced time. For urgent cases or
-                    questions, please email us with your payment screenshot.
+                    A: Each booth may purchase up to one additional access pass. If you need more, please purchase admission tickets based on the actual number of event days and attendees.<br><br>
+
+                    (Friends & Family Ticket available from 01/26 to 02/08.)<br>
+                    (For ticket types and updates, please follow our Instagram for more information.)
                   </span>
                 </td>
               </tr>
@@ -2139,7 +2171,7 @@
                 </td>
                 <td class="QA-section" style="border-right: none">
                   <span class="labelAQ"
-                    >Q: 已付款基礎攤位費，但想加購通行憑證？</span
+                    >Q:可以用什麼繳費？</span
                   ><br />
                   <span
                     style="
@@ -2147,19 +2179,16 @@
                       font-family: 'Inclusive Sans', sans-serif;
                     "
                   >
-                    A:
-                    階段為唯一的加購申請與付款時段，付款完成後無法再更改選項，請務必於付款前確認。
+                    A:繳費頁面有說明支援的付款方式，信用卡、apple pay、銀行轉帳（轉帳已關閉）。
                   </span>
                 </td>
                 <td class="QA-section">
                   <span class="labelAQ en"
-                    >Q: I have paid the basic fee, but want to add an extra
-                    pass?</span
+                    >Q: What payment methods are available?
+                    </span
                   ><br />
                   <span class="faq-answer-en">
-                    A: The current phase is the only period for add-on
-                    applications and payments. Once payment is completed,
-                    options cannot be changed. Please confirm before paying.
+                    A: Supported payment methods are listed on the payment page, including credit card, Apple Pay, and bank transfer(bank transfer is now closed).
                   </span>
                 </td>
               </tr>
@@ -2169,48 +2198,51 @@
                   <span class="faq-number">5</span>
                 </td>
                 <td class="QA-section" style="border-right: none">
-                  <span class="labelAQ">Q: 是否有開發票或收據？</span><br />
+                  <span class="labelAQ"
+                    >Q: 如何確認是否付款成功？</span
+                  ><br />
                   <span
                     style="
                       font-size: 1rem;
                       font-family: 'Inclusive Sans', sans-serif;
                     "
                   >
-                    A: 網站自動開立電子發票，請確認報名時所填Email。
+                    A:
+                    完成付款後，訂單的付款狀態將會在官方商店中顯示。
                   </span>
                 </td>
                 <td class="QA-section">
                   <span class="labelAQ en"
-                    >Q: Will I receive an invoice or receipt?</span
+                    >Q: How can I confirm if my payment was successful?
+                    </span
                   ><br />
                   <span class="faq-answer-en">
-                    A: The website automatically issues an e-invoice. Please
-                    make sure your email is correct when registering.
+                    A: After completing payment, the payment status will be shown in your order on the official store.
                   </span>
                 </td>
               </tr>
-              <!-- 6 -->
+              <!-- 6  -->
               <tr>
                 <td class="faq-number-cell">
                   <span class="faq-number">6</span>
                 </td>
                 <td class="QA-section" style="border-right: none">
-                  <span class="labelAQ">Q: 我還可以加購通行憑證嗎？</span><br />
+                  <span class="labelAQ">Q: 我已完成付款，但參展資格狀態尚未更新？</span><br />
                   <span
                     style="
                       font-size: 1rem;
                       font-family: 'Inclusive Sans', sans-serif;
                     "
                   >
-                    A: 目前不開放加購。如需入場，可至攤商管理頁面購買「親友快速通關票」。
+                    A: 請耐心等候，團隊將於 1 月 5 日前 統一更新「攤商管理頁面」的狀態。如有急件或任何疑問，請附上付款截圖來信洽詢。
                   </span>
                 </td>
                 <td class="QA-section">
                   <span class="labelAQ en"
-                    >Q: Can I purchase additional access passes?</span
+                    >Q: I’ve completed the payment, but my Exhibitor Status hasn’t been updated.</span
                   ><br />
                   <span class="faq-answer-en">
-                    A: Additional access passes are currently not available. If someone needs entry, please purchase a "Fast Track Friend Pass" through the Exhibitor Management Page.
+                    A: Please allow some time for processing. The team will update the status on the Exhibitor Management Page by January 5. If you have any urgent matters or questions, please contact us and include a screenshot of your payment.
                   </span>
                 </td>
               </tr>
@@ -2220,22 +2252,23 @@
                   <span class="faq-number">7</span>
                 </td>
                 <td class="QA-section" style="border-right: none">
-                  <span class="labelAQ">Q: 親友快速通關票怎麼買？</span><br />
+                  <span class="labelAQ">Q: 我已完成付款，還可以更改加購的桌數或通行憑證數量嗎？</span><br />
                   <span
                     style="
                       font-size: 1rem;
                       font-family: 'Inclusive Sans', sans-serif;
                     "
                   >
-                    A: 購票時間為 11/20–11/23。請從攤商管理頁面提供的連結購買（建議由攤主統一處理），並輸入優惠代碼。每個代碼限單次下單，建議先統計數量後一次購買。
+                    A: 本階段為唯一的加購申請時段（至 12/31 為止）。完成繳費後恕不接受任何變更，請於付款前確認所需的加購項目。
                   </span>
                 </td>
                 <td class="QA-section">
                   <span class="labelAQ en"
-                    >Q: How do I buy the Fast Track Friend Pass?</span
+                    >Q: I’ve completed the payment. Can I still change the number of additional tables or access passes?
+                    </span
                   ><br />
                   <span class="faq-answer-en">
-                    A: Sales are open from 11/20–11/23. Please use the purchase link provided in the Exhibitor Management Page (we recommend the exhibitor handle all purchases for their friends) and enter the discount code. Each code can be used for one order only, so please confirm the quantity needed before placing a single order.
+                    A: This is the only period for add-on applications (until Dec 31). No changes will be accepted after payment is completed, so please confirm all add-on items before payment.
                   </span>
                 </td>
               </tr>
@@ -2245,22 +2278,24 @@
                   <span class="faq-number">8</span>
                 </td>
                 <td class="QA-section" style="border-right: none">
-                  <span class="labelAQ">Q: 通行憑證可以讓不同人使用嗎？</span><br />
+                  <span class="labelAQ">Q: 是否會提供發票或收據？
+                  </span><br />
                   <span
                     style="
                       font-size: 1rem;
                       font-family: 'Inclusive Sans', sans-serif;
                     "
                   >
-                    A: 可以。但活動入場以「紋身貼紙」為憑證，通行憑證僅作識別使用。
+                    A: 台灣訂單將由網站自動開立電子發票，請確認報名時填寫的 Email 正確。海外單位如需開立發票，請填寫<a href="https://docs.google.com/forms/d/e/1FAIpQLScuHHfn3zhWd4RVrOCPLY72xf9XiNAf1Sb8De4WJaOCAHovDQ/viewform?usp=header" target="_blank">此表單</a>；提交後，我們將盡快將發票寄送至您的電子郵件信箱。
                   </span>
                 </td>
                 <td class="QA-section">
                   <span class="labelAQ en"
-                    >Q: Can access passes be used by different people?</span
+                    >Q: Will an invoice or receipt be provided?
+                    </span
                   ><br />
                   <span class="faq-answer-en">
-                    A: Yes. However, entry to the event requires the "tattoo sticker" as the admission credential. The access pass is for identification only.
+                    A: Overseas participants who require an invoice should complete <a href="https://docs.google.com/forms/d/e/1FAIpQLScuHHfn3zhWd4RVrOCPLY72xf9XiNAf1Sb8De4WJaOCAHovDQ/viewform?usp=header" target="_blank">this form</a>; once submitted, the invoice will be sent to your email as soon as possible.
                   </span>
                 </td>
               </tr>
@@ -2270,32 +2305,261 @@
                   <span class="faq-number">9</span>
                 </td>
                 <td class="QA-section" style="border-right: none">
-                  <span class="labelAQ">Q: 為什麼攤商編號貼紙的字體顏色不一樣？</span><br />
+                  <span class="labelAQ">Q:攤位費可以開發票打統編嗎？
+                  </span><br />
                   <span
                     style="
                       font-size: 1rem;
                       font-family: 'Inclusive Sans', sans-serif;
                     "
                   >
-                    A: 黃色字體代表首次參與的攤商，歡迎大家多多交流！
+                    A:可以，繳費處可填寫發票抬頭。
                   </span>
                 </td>
                 <td class="QA-section">
                   <span class="labelAQ en"
-                    >Q: Why are the booth number sticker text colors different?</span
+                    >Q: Can I request an invoice with my company tax ID for the booth fee?
+                    </span
                   ><br />
                   <span class="faq-answer-en">
-                    A: Yellow text indicates exhibitors who are joining us for the first time—please feel free to say hi!
+                    A: Yes. You may fill in the invoice details at the payment page.
                   </span>
                 </td>
               </tr>
-              <!-- 10 -->
+               <tr>
+                <td class="faq-number-cell" style="background-color:lightgreen"></td>
+                <td style="background-color: #000; color: #fff;"><marquee><strong>（完成報名後）</strong></marquee></td>
+                <td style="background-color: #000; color: #fff;"><marquee><strong>(After Application Phase)</strong></marquee></td>
+              </tr>
               <tr>
                 <td class="faq-number-cell">
-                  <span class="faq-number">10</span>
+                  <span class="faq-number">1</span>
                 </td>
                 <td class="QA-section" style="border-right: none">
-                  <span class="labelAQ">Q: 我可以換位置嗎？</span><br />
+                  <span class="labelAQ">Q: 候補錄取什麼時候會通知？</span><br />
+                  <span
+                    style="
+                      font-size: 1rem;
+                      font-family: 'Inclusive Sans', sans-serif;
+                    "
+                  >
+                    A: 預計1/2會寄信告知有候補上的攤商。
+                  </span>
+                </td>
+                <td class="QA-section">
+                  <span class="labelAQ en"
+                    >Q: When will waitlisted exhibitors be notified?</span
+                  ><br />
+                  <span class="faq-answer-en">
+                    A: We expect to notify exhibitors who move up from the waitlist before January 5 via email.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td class="faq-number-cell">
+                  <span class="faq-number">2</span>
+                </td>
+                <td class="QA-section" style="border-right: none">
+                  <span class="labelAQ">Q: 已經上傳同意書了，為什麼網頁上還是顯示未完成？</span><br />
+                  <span
+                    style="
+                      font-size: 1rem;
+                      font-family: 'Inclusive Sans', sans-serif;
+                    "
+                  >
+                   A: 我們近期（1/2前）會手動審核，請再稍等一下。
+                  </span>
+                </td>
+                <td class="QA-section">
+                  <span class="labelAQ en"
+                    >Q: I’ve uploaded the agreement, but the page still shows “incomplete.” Why?</span
+                  ><br />
+                  <span class="faq-answer-en">
+                    A: We will manually review the “Exhibitor Declaration” soon (before January 2). Please allow some time.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td class="faq-number-cell">
+                  <span class="faq-number">3</span>
+                </td>
+                <td class="QA-section" style="border-right: none">
+                  <span class="labelAQ">Q: 我原本是創作攤，可以換成書攤嗎？</span><br />
+                  <span
+                    style="
+                      font-size: 1rem;
+                      font-family: 'Inclusive Sans', sans-serif;
+                    "
+                  >
+                   A: 本次入選攤位將以當初錄取的攤種為準，恕無法再更改攤位類型，感謝理解。
+                  </span>
+                </td>
+                <td class="QA-section">
+                  <span class="labelAQ en"
+                    >Q: I was accepted as a non-book booth. Can I change to a book booth?</span
+                  ><br />
+                  <span class="faq-answer-en">
+                    A: No. Booth types will remain as originally accepted and cannot be changed.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td class="faq-number-cell">
+                  <span class="faq-number">4</span>
+                </td>
+                <td class="QA-section" style="border-right: none">
+                  <span class="labelAQ">Q: 請問可以增加合攤夥伴嗎？</span><br />
+                  <span
+                    style="
+                      font-size: 1rem;
+                      font-family: 'Inclusive Sans', sans-serif;
+                    "
+                  >
+                   A: 可以增加合攤夥伴沒問題，但攤位名稱和社群宣傳只會以錄取的品牌為主要露出。
+                  </span>
+                </td>
+                <td class="QA-section">
+                  <span class="labelAQ en"
+                    >Q: Can I add a co-exhibitor?</span
+                  ><br />
+                  <span class="faq-answer-en">
+                    A: Yes, adding a co-exhibitor is fine. However, the booth name and social media promotion will be based on the accepted brand only.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td class="faq-number-cell">
+                  <span class="faq-number">5</span>
+                </td>
+                <td class="QA-section" style="border-right: none">
+                  <span class="labelAQ">Q: 有推薦的飯店嗎？</span><br />
+                  <span
+                    style="
+                      font-size: 1rem;
+                      font-family: 'Inclusive Sans', sans-serif;
+                    "
+                  >
+                   A: 天雲旅棧台北基河館、天閣酒店台北劍潭、見潭璞旅(走路即可抵達會場)
+                  </span>
+                </td>
+                <td class="QA-section">
+                  <span class="labelAQ en"
+                    >Q: Do you recommend any hotels?</span
+                  ><br />
+                  <span class="faq-answer-en">
+                    A: Tango Inn Taipei JiHe, the tango taipei jiantan,Boutech Jiantan Hotel (Within walking distance to the venue)
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td class="faq-number-cell">
+                  <span class="faq-number">6</span>
+                </td>
+                <td class="QA-section" style="border-right: none">
+                  <span class="labelAQ">Q: 可以在活動前先寄包裹嗎？</span><br />
+                  <span
+                    style="
+                      font-size: 1rem;
+                      font-family: 'Inclusive Sans', sans-serif;
+                    "
+                  >
+                   A: 可以，可在攤商管理頁面點選「寄件服務」（1/2開放申請，僅開放國外攤商）。
+                  </span>
+                </td>
+                <td class="QA-section">
+                  <span class="labelAQ en"
+                    >Q: Can I send parcels in advance before the event?</span
+                  ><br />
+                  <span class="faq-answer-en">
+                    A: Yes. You may select “Shipping Service” in the exhibitor management page (open at January 2, available to international exhibitors only).
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td class="faq-number-cell">
+                  <span class="faq-number">7</span>
+                </td>
+                <td class="QA-section" style="border-right: none">
+                  <span class="labelAQ">Q: 可以使用發電機嗎？</span><br />
+                  <span
+                    style="
+                      font-size: 1rem;
+                      font-family: 'Inclusive Sans', sans-serif;
+                    "
+                  >
+                   A: :不開放使用發電機。若有使用的電力需求，請至攤商管理頁面下方的「電力需求」欄位進行編輯。
+                  </span>
+                </td>
+                <td class="QA-section">
+                  <span class="labelAQ en"
+                    >Q: Is it allowed to use a generator?</span
+                  ><br />
+                  <span class="faq-answer-en">
+                    A: Generators are not allowed. If you have any power requirements, please fill them in under the “Power Requirements” section at the bottom of your Exhibitor Management Page.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td class="faq-number-cell">
+                  <span class="faq-number">8</span>
+                </td>
+                <td class="QA-section" style="border-right: none">
+                  <span class="labelAQ">Q: 攤位是否有背牆？我可以換到靠牆的位子嗎？</span><br />
+                  <span
+                    style="
+                      font-size: 1rem;
+                      font-family: 'Inclusive Sans', sans-serif;
+                    "
+                  >
+                   A: :可以先參考以往攤位的展示方式，實際攤位配置方式可參考攤商管理頁面之攤主手冊（一月底寄出）。
+                  </span>
+                </td>
+                <td class="QA-section">
+                  <span class="labelAQ en"
+                    >Q: Will there be a back wall for the booth? Is it possible to switch to a wall-side booth?</span
+                  ><br />
+                  <span class="faq-answer-en">
+                    A: Please refer to previous booth setups for reference. Final booth layouts and wall availability will be detailed in the Exhibitor Manual, which will be sent at the end of January.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td class="faq-number-cell">
+                  <span class="faq-number">9</span>
+                </td>
+                <td class="QA-section" style="border-right: none">
+                  <span class="labelAQ">Q: 常見付款方式有哪些？
+                  </span><br />
+                  <span
+                    style="
+                      font-size: 1rem;
+                      font-family: 'Inclusive Sans', sans-serif;
+                    "
+                  >
+                   A: :大部分訪客偏好使用現金，但也有不少人使用信用卡或 Apple Pay。PayPal 較少見，但偶爾有人使用。如果可能，建議提供至少一種數位支付方式，但僅收現金也完全沒問題。
+                  </span>
+                </td>
+                <td class="QA-section">
+                  <span class="labelAQ en"
+                    >Q: What are the common payment methods?
+                    </span
+                  ><br />
+                  <span class="faq-answer-en">
+                    A: Most visitors prefer cash, but many also use credit cards and Apple Pay. PayPal is less common but still used occasionally. If possible, it’s a good idea to offer at least one digital payment option, though accepting cash only is also fine.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td class="faq-number-cell" style="background-color:lime"></td>
+                <td style="background-color: #000; color: #fff;"><marquee><strong>（活動期間）</strong></marquee></td>
+                <td style="background-color: #000; color: #fff;"><marquee><strong>(Event Period)</strong></marquee></td>
+              </tr>
+              <tr>
+                <td class="faq-number-cell">
+                  <span class="faq-number">1</span>
+                </td>
+                <td class="QA-section" style="border-right: none">
+                  <span class="labelAQ">Q: 我可以換攤位位置嗎？</span><br />
                   <span
                     style="
                       font-size: 1rem;
@@ -2314,10 +2578,9 @@
                   </span>
                 </td>
               </tr>
-              <!-- 11 -->
               <tr>
                 <td class="faq-number-cell">
-                  <span class="faq-number">11</span>
+                  <span class="faq-number">2</span>
                 </td>
                 <td class="QA-section" style="border-right: none">
                   <span class="labelAQ">Q: 草率簿可以多拿幾本嗎？</span><br />
@@ -2342,7 +2605,7 @@
               <!-- 12 -->
               <tr>
                 <td class="faq-number-cell">
-                  <span class="faq-number">12</span>
+                  <span class="faq-number">3</span>
                 </td>
                 <td class="QA-section" style="border-right: none">
                   <span class="labelAQ">Q: 材料區怎麼沒有多餘的佈置材料？</span><br />
@@ -2364,56 +2627,6 @@
                   </span>
                 </td>
               </tr>
-              <!-- 13 -->
-              <tr>
-                <td class="faq-number-cell">
-                  <span class="faq-number">13</span>
-                </td>
-                <td class="QA-section" style="border-right: none">
-                  <span class="labelAQ">Q: 我想在 NMHW 寄賣書籍，可以嗎？</span><br />
-                  <span
-                    style="
-                      font-size: 1rem;
-                      font-family: 'Inclusive Sans', sans-serif;
-                    "
-                  >
-                    A: 11/23 16:00 後，我們僅接受先前有填寫表單的寄售攤商交付未售完書籍，不開放臨時加收品項喔。
-                  </span>
-                </td>
-                <td class="QA-section">
-                  <span class="labelAQ en"
-                    >Q: I'd like to consign books at NMHW as well. Is that possible?</span
-                  ><br />
-                  <span class="faq-answer-en">
-                    A: After 16:00 on 11/23, we will only accept unsold books from exhibitors who previously submitted the consignment form. We are unable to accept any additional or last-minute items.
-                  </span>
-                </td>
-              </tr>
-              <!-- 14 -->
-              <tr>
-                <td class="faq-number-cell">
-                  <span class="faq-number">14</span>
-                </td>
-                <td class="QA-section" style="border-right: none">
-                  <span class="labelAQ">Q: 我也想參明年草率季十週年！！</span><br />
-                  <span
-                    style="
-                      font-size: 1rem;
-                      font-family: 'Inclusive Sans', sans-serif;
-                    "
-                  >
-                    A: 即日起至 11 月 23 日 <a href="https://docs.google.com/forms/d/e/1FAIpQLSdX8IoYUCzD4RHkmqq60va11vtOdfPDMDnwPArOY0UZT9vltg/viewform" target="_blank">點此表單</a> 勾選「＊2026十週年報名我要參加＊」將直接獲取錄取資格。並維持與2025年相同之攤位費用。
-                  </span>
-                </td>
-                <td class="QA-section">
-                  <span class="labelAQ en"
-                    >Q: I want to join the 10th Anniversary edition of TPABF next year!</span
-                  ><br />
-                  <span class="faq-answer-en">
-                    A: From now until November 23rd, you may <a href="https://docs.google.com/forms/d/e/1FAIpQLSdX8IoYUCzD4RHkmqq60va11vtOdfPDMDnwPArOY0UZT9vltg/viewform" target="_blank">fill out this form</a> and check "＊I want to join the 2026 10th Anniversary＊" to secure your spot. The booth fee will be the same as in 2025.
-                  </span>
-        </td>
-      </tr>
     </table>
           </div>
         </td>
@@ -3083,17 +3296,17 @@
                     <button
                       type="button"
                       id="togglePassword"
-        style="
+                      style="
                         position: absolute;
                         right: 5px;
                         top: 50%;
                         transform: translateY(-50%);
                         font-size: 14px;
-        "
-      >
+                        "
+                      >
                       Show
                     </button>
-      </div>
+                  </div>
 
                   <div id="password-rules" style="margin-top: 8px; font-size: 14px">
                     <div id="length-rule">✕ 至少 8 個字元</div>
