@@ -8,6 +8,24 @@
     <link rel="shortcut icon" href="image/icon-1.ico" />
     <link rel="stylesheet" href="css/opencall.css" />
     <link rel="stylesheet" href="css/font.css" />
+    <script>
+      (function () {
+        try {
+          if (new URLSearchParams(location.search).get("embed") === "1") {
+            document.documentElement.classList.add("opencall-embed");
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <style>
+      html.opencall-embed .ETgohome {
+        display: none !important;
+      }
+      html.opencall-embed body {
+        margin: 0;
+        padding: 1rem 0.75rem 2rem;
+      }
+    </style>
 
     <!-- Google tag (gtag.js) -->
     <script
@@ -52,24 +70,39 @@
       <br /><br />
       <span class="description-header">Exhibitor's Info</span>
       <div class="module-form layout-form-columnized">
-        <!--Exhibitor Name-->
+        <!-- 攤商姓名：英文（entry.1159390039）、原文（entry.2674519284）— 後者請在 Google 表單建獨立簡答題並替換 ID -->
         <div class="column">
-          <span class="from-header">品牌名稱</span>
-          輸入內容將公開顯示於官網目錄及標籤上供參觀者搜尋。
+          <span class="from-header">攤商／品牌名稱（英文）</span>
+          此為官網、目錄與搜尋標籤之正式顯示名稱（必填），建議與對外英文品牌名一致。
         </div>
         <div class="column layout-form-column-grid-1">
-          <span class="from-description-header-ness">必填問題、25字元以內</span>
+          <span class="from-description-header-ness">必填、80 字元以內</span>
           <input
             class="form-input"
             name="entry.1159390039"
-            placeholder="品牌名稱"
-            maxlength="25"
+            placeholder="English name"
+            maxlength="80"
             required
             pattern="^[\p{L}\p{N}\s!&quot;#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]+$"
             title="請勿輸入特殊符號"
           />
         </div>
-        
+        <div class="column">
+          <span class="from-header">攤商／品牌名稱（原文／慣用名稱）</span>
+          若慣用名稱為中文、日文等其他語言或表記，請於此填寫（選填）；與英文不同時建議填寫，供評選與內部辨識參考。
+        </div>
+        <div class="column layout-form-column-grid-1">
+          <span class="from-description-header-ness-no">選填、80 字元以內</span>
+          <input
+            class="form-input"
+            name="entry.2674519284"
+            placeholder="例如：中文、日文表記等（無則可空白）"
+            maxlength="80"
+            pattern="^[\p{L}\p{N}\s!&quot;#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]*$"
+            title="請勿輸入特殊符號；可不填"
+          />
+        </div>
+
         <!--Bio-->
         <div class="column">
           <span class="from-header">品牌介紹</span>
@@ -77,13 +110,13 @@
         </div>
         <div class="column layout-form-column-grid-1">
           <span class="from-description-header-ness"
-            >必填問題、300 個字元內</span
+            >必填、中文簡介最多 80 字（與後台／官網露出一致）</span
           >
           <textarea
             class="form-input-textarea"
             name="entry.1877870250"
-            placeholder="品牌介紹"
-            maxlength="1000"
+            placeholder="品牌介紹（最多 80 字）"
+            maxlength="80"
             required
           ></textarea>
         </div>
@@ -711,112 +744,6 @@
             maxlength="1000"
           ></textarea>
         </div>
-      </div>
-
-      <span class="description-header">Contact Info</span>
-      <div class="module-form layout-form-columnized">
-        <!--Name of Person in Charge-->
-        <div class="column">
-          <span class="from-header">聯絡代表姓名</span>
-          如果您以公司、團體或其他集體的身份報名，選擇一名代表人。
-        </div>
-        <div class="column layout-form-column-grid-1">
-          <span class="from-description-header-ness">必填問題</span>
-          <input
-            autocomplete="name"
-            class="form-input"
-            name="entry.1522532449"
-            placeholder="聯絡代表姓名"
-            maxlength="100"
-            required
-          />
-        </div>
-
-        <!--Email-->
-        <div class="column">
-          <span class="from-header">電子信箱</span>
-          此電子信箱將作為日後通知、註冊、查詢帳號之使用，<strong>一旦提交將不提供修改及調整</strong>。錄取與備取通知信將以此電子信箱寄出，請留意收信信箱或垃圾信箱，未錄取不另行通知。
-        </div>
-        <div class="column layout-form-column-grid-1">
-          <span class="from-description-header-ness">必填問題</span>
-          <input
-            type="email"
-            autocomplete="email"
-            class="form-input"
-            name="entry.529156755"
-            id="email-input"
-            placeholder="電子信箱"
-            maxlength="500"
-            required
-          />
-          <div
-            id="email-error"
-            style="color: plum; display: none; font-size: 13px"
-          >
-            請輸入有效的電子信箱，例如：example@gmail.com
-          </div>
-        </div>
-
-        <!--Password-->
-        <div class="column">
-          <span class="from-header">登錄密碼</span>
-          此登錄密碼將作為日後註冊、查詢帳號之使用，<strong>一旦提交將不提供修改及調整，</strong>
-        </div>
-        <div class="column layout-form-column-grid-1">
-          <span class="from-description-header-ness">必填問題</span>
-          <div style="position: relative">
-            <input
-              id="password"
-              type="password"
-              autocomplete="off"
-              class="form-input"
-              name="entry.174970451"
-              placeholder="Password"
-              maxlength="500"
-              required
-              style="padding-right: 30px"
-            />
-            <button
-              type="button"
-              id="togglePassword"
-              style="
-                position: absolute;
-                right: 5px;
-                top: 50%;
-                transform: translateY(-50%);
-                font-size: 14px;
-              "
-            >
-              Show
-            </button>
-          </div>
-
-          <div id="password-rules" style="margin-top: 8px; font-size: 14px">
-            <div id="length-rule">✕ 至少 8 個字元</div>
-            <div id="uppercase-rule">✕ 至少一個大寫字母</div>
-            <div id="lowercase-rule">✕ 至少一個小寫字母</div>
-            <div id="number-rule">✕ 至少一個數字</div>
-          </div>
-        </div>
-
-        <!--Telephone Number-->
-        <div class="column">
-          <span class="from-header">聯絡電話</span>
-          此聯絡電話將作為日後聯繫使用。
-        </div>
-        <div class="column layout-form-column-grid-1">
-          <span class="from-description-header-ness">必填問題</span>
-          <input
-            autocomplete="tel"
-            class="form-input"
-            name="entry.1057735065"
-            placeholder="聯絡電話。例：0212345678"
-            maxlength="50"
-            required
-          />
-        </div>
-
-        
       </div>
 
       <span class="description-header">Notice</span>

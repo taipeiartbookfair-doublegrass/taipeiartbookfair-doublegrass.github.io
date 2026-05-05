@@ -17,10 +17,28 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location.href = "login.html";
       }
 
+      const BIO_ZH_MAX = 80;
+      const BIO_EN_MAX = 100;
+
       const brandName = document.getElementById("brandName-edit").value.trim();
       const brandNameOriginal = (document.getElementById("brandName-original-edit")?.value || "").trim();
       const bio = document.getElementById("bio-edit").value.trim();
       const bioEn = (document.getElementById("bio-edit-en")?.value || "").trim();
+
+      if (bio.length > BIO_ZH_MAX) {
+        document.getElementById("loading-mask").style.display = "none";
+        alert(
+          `中文品牌簡介請勿超過 ${BIO_ZH_MAX} 字。\nChinese bio must be at most ${BIO_ZH_MAX} characters.`,
+        );
+        return;
+      }
+      if (bioEn.length > BIO_EN_MAX) {
+        document.getElementById("loading-mask").style.display = "none";
+        alert(
+          `英文品牌簡介請勿超過 ${BIO_EN_MAX} 字。\nEnglish bio must be at most ${BIO_EN_MAX} characters.`,
+        );
+        return;
+      }
       const role = document.getElementById("role-edit").value;
       const website = document.getElementById("website-edit").value.trim();
       const facebook = document.getElementById("facebook-edit").value.trim();

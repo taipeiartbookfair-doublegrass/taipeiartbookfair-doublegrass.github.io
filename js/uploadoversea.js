@@ -94,7 +94,7 @@ form.addEventListener("submit", async function (e) {
   let fileInput;
   let hiddenFieldId;
   let needsUpload = false;
-  // 支援中文（本地）與英文（海外 oversea_20251218_invite.html）攤位類型
+  // 支援中文（本地）與英文（海外 overseaapplication.html）攤位類型
   if (selectedBoothType) {
     const boothValue = selectedBoothType.value;
     if (boothValue === "裝置類" || boothValue === "Installation Booth") {
