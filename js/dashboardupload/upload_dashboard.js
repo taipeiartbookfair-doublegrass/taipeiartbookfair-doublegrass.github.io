@@ -356,7 +356,7 @@ async function loadUploadStatusFromAPI() {
     // 顯示版本號
     // 動態設定 PDF src（版本號即檔名）
     const pdfFrame = document.getElementById("consent-modal-pdf");
-    if (pdfFrame) pdfFrame.src = "agreement/" + DECLARATION_PDF_FILENAME;
+    if (pdfFrame) pdfFrame.src = "dashboard/" + DECLARATION_PDF_FILENAME;
 
     const versionEl = document.getElementById("consent-modal-version");
     if (versionEl) versionEl.textContent = DECLARATION_PDF_FILENAME;
