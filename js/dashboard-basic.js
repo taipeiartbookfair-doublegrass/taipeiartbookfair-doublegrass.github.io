@@ -187,7 +187,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   document.getElementById("brand-name").textContent = apiData["品牌"] || "";
   const brandNameOriginalEl = document.getElementById("brand-name-original");
   if (brandNameOriginalEl)
-    brandNameOriginalEl.textContent = apiData["品牌原文"] || "";
+    brandNameOriginalEl.textContent = apiData["品牌(原文)"] || "";
   document.getElementById("bio").textContent = apiData["品牌簡介"] || "";
   const bioEnEl = document.getElementById("bio-en");
   if (bioEnEl) bioEnEl.textContent = apiData["品牌簡介EN"] || "";
@@ -555,31 +555,20 @@ document.addEventListener("DOMContentLoaded", async function () {
       );
     }
 
-    // 控制電力需求顯示
+    // 控制電力需求顯示（需申報電力的攤別：裝置、策展、食物）
+    const needsElectricity =
+      boothType === "食物酒水攤" ||
+      boothType === "裝置攤" ||
+      boothType === "策展攤" ||
+      boothType === "Installation Booth" ||
+      boothType === "Curation Booth" ||
+      boothType === "Food & Beverage";
     const electricityRow = document.getElementById("electricity-row");
-    if (electricityRow) {
-      if (
-        boothType === "食物酒水攤" ||
-        boothType === "裝置攤" ||
-        boothType === "策展攤"
-      ) {
-        electricityRow.style.display = "";
-      } else {
-        electricityRow.style.display = "none";
-      }
-    }
+    if (electricityRow)
+      electricityRow.style.display = needsElectricity ? "" : "none";
     const editElectricityRow = document.getElementById("edit-electricity-row");
-    if (editElectricityRow) {
-      if (
-        boothType === "食物酒水攤" ||
-        boothType === "裝置攤" ||
-        boothType === "策展攤"
-      ) {
-        editElectricityRow.style.display = "";
-      } else {
-        editElectricityRow.style.display = "none";
-      }
-    }
+    if (editElectricityRow)
+      editElectricityRow.style.display = needsElectricity ? "" : "none";
   }
   updateBoothInfo(boothType);
 
@@ -886,8 +875,7 @@ Please follow the instructions below to create your materials, and upload the co
         Electric fan / 65W / 1 unit<br /><br />
         📌 Unregistered appliances are NOT permitted on site. Repeated violations will be subject to fines as specified in the Exhibitor’s Manual.<br />
         📌 If 220v is required, an additional fee of NT$1000 will be charged — please state this in the form.<br />
-        📌 For safety, do not use transformers; the Organizer does not provide voltage conversion services.<br /><br />
-        🛒 <strong>220v Add-on:</strong> <a href="https://nmhw.taipeiartbookfair.com/products/加購電力需求" target="_blank" style="color:#c00; font-weight:bold;">Purchase 220v Power on Shopline (NT$1,000)</a>
+        📌 For safety, do not use transformers; the Organizer does not provide voltage conversion services.
       `;
     } else if (isForeign) {
       // 其他國外攤位：簡短英文提示
@@ -1351,14 +1339,41 @@ Please follow the instructions below to create your materials, and upload the co
   }
   function fmtDeadlineEN(iso) {
     const d = new Date(iso);
-    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     return `${months[d.getMonth()]} ${d.getDate()} (${days[d.getDay()]})`;
   }
   function fmtDeadlineLongEN(iso) {
     const d = new Date(iso);
-    const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-    let h = d.getHours(), m = d.getMinutes().toString().padStart(2, "0");
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    let h = d.getHours(),
+      m = d.getMinutes().toString().padStart(2, "0");
     const ampm = h >= 12 ? "PM" : "AM";
     h = h % 12 || 12;
     return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()} at ${h}:${m} ${ampm} (UTC+8)`;
@@ -1386,7 +1401,7 @@ Please follow the instructions below to create your materials, and upload the co
       const span = document.createElement("span");
       span.innerHTML = textNode.nodeValue.replace(
         /(https?:\/\/[^\s<>"]+)/g,
-        '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
+        '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>',
       );
       textNode.parentNode.replaceChild(span, textNode);
     });
@@ -1422,7 +1437,7 @@ Please follow the instructions below to create your materials, and upload the co
 
     // 填入所有 ddl 元素（支援 id="ddl-{sectionId}" 和 data-ddl="{sectionId}"）
     const ddlEls = document.querySelectorAll(
-      `#ddl-${sectionId}, [data-ddl="${sectionId}"]`
+      `#ddl-${sectionId}, [data-ddl="${sectionId}"]`,
     );
     if (ddlEls.length && deadline) {
       const isEnglishBooth = isEnglishBoothType(boothType);
@@ -1443,16 +1458,27 @@ Please follow the instructions below to create your materials, and upload the co
       const ddlText = isEnglishBooth
         ? `Deadline: ${deadlineStr}`
         : `截止日期：${deadlineStr}`;
-      ddlEls.forEach((el) => { el.textContent = ddlText; });
+      ddlEls.forEach((el) => {
+        el.textContent = ddlText;
+        if (el.style.display === "none") el.style.display = "";
+      });
     }
 
     // 以 API 截止日期重新渲染含日期的 UI 元件
     if (deadline) {
       if (sectionId === "billing-section") {
-        setYesLanguage(boothType, fmtDeadlineCN(deadline), fmtDeadlineLongEN(deadline));
+        setYesLanguage(
+          boothType,
+          fmtDeadlineCN(deadline),
+          fmtDeadlineLongEN(deadline),
+        );
       }
-      if (sectionId === "edit-electricity-row") {
-        updateElectricityList(boothType, fmtDeadlineCN(deadline), fmtDeadlineEN(deadline));
+      if (sectionId === "edit-button-row") {
+        updateElectricityList(
+          boothType,
+          fmtDeadlineCN(deadline),
+          fmtDeadlineEN(deadline),
+        );
       }
     }
 

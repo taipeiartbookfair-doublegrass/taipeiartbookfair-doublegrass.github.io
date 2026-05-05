@@ -310,8 +310,13 @@
               </tr>
 
               <!-- 編輯按鈕 -->
-              <tr style="background-color: black; text-align: right">
-                <td colspan="2" style="padding: 2px 5px">
+              <tr id="edit-button-row" style="background-color: black; text-align: right; position: relative">
+                <td colspan="2" style="padding: 2px 5px;">
+                  <span
+                    id="edit-button-ddl"
+                    data-ddl="edit-button-row"
+                    style="font-size: 0.7rem; color: #ffb3a7; display: none;"
+                  ></span>
                   <span
                     style="
                       text-align: right;
@@ -329,6 +334,14 @@
                 <td colspan="2" style="position: relative">
                   <span class="label">品牌名稱 Brand Name</span><br />
                   <span style="font-size: 3rem" id="brand-name"></span>
+                  <br />
+                  <span id="brand-name" style="font-size: 1.1rem; color: #555;"></span>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2" style="position: relative">
+                  <span class="label">品牌名稱 Brand Name(原文)</span><br />
+                  <span style="font-size: 3rem" id="brand-name-original"></span>
                   <br />
                   <span id="brand-name-original" style="font-size: 1.1rem; color: #555;"></span>
                 </td>
@@ -416,7 +429,6 @@
                 <td>
                   <span class="label">電力需求 Electricity Requirement</span
                   ><br />
-                  <span data-ddl="edit-electricity-row" style="font-size:0.8em; color:#c00; display:block; margin-bottom:0.2em;"></span>
                   <span id="electricity-regulation">
                     於右上角<span
                       style="
@@ -483,7 +495,7 @@
                 <tr>
                   <td colspan="2">
                     <span class="label">原文品牌名稱 Original Brand Name</span>
-                    <span style="font-size:0.8em; color:#888;">（非英語系請填寫 For non-English brands）</span><br />
+                    <span style="font-size:0.8em; color:#888;">（非必填 optional）</span><br />
                     <input
                       type="text"
                       name="brandNameOriginal"
