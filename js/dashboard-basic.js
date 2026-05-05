@@ -652,33 +652,29 @@ document.addEventListener("DOMContentLoaded", async function () {
   setBillingNoticeLanguage(boothType);
 
   // 動態勾勾區塊語言還有攤商編號說明搭便車
-  function setYesLanguage(boothType, rawResult) {
+  // deadlineCN / deadlineEN 可由 publishTimes API 傳入覆蓋預設值
+  function setYesLanguage(boothType, deadlineCN, deadlineEN) {
     var yesdesc = document.getElementById("registration-status-desc");
     var billingnote1 = document.getElementById("billing-note1");
 
-    // 判斷期限
-    let deadline = "12 月 31 日";
-    let deadlineEn = "December 31, 2025 at 11:59 PM (UTC+8)";
-    if (rawResult === "2-是-2波") {
-      deadline = "12 月 31 日";
-      deadlineEn = "December 31, 2025 at 11:59 PM (UTC+8)";
-    }
+    const deadline = deadlineCN || "—";
+    const deadlineEn = deadlineEN || "—";
 
     if (boothType && yesdesc) {
       if (isEnglishBoothType(boothType)) {
-        yesdesc.innerHTML = `Please complete your payment and upload the signed agreement by <b><mark>${deadlineEn}</mark></b>. Late submissions will be considered a forfeiture of your participation. Our team will manually verify all payment and agreement uploads by <mark>January 5</mark>. If you have already completed the process, please keep a screenshot of your payment or upload confirmation. If your status hasn't been updated after <mark>January 5</mark>, feel free to contact us again.`;
+        yesdesc.innerHTML = `Please complete your payment and upload the signed agreement by <b><mark>${deadlineEn}</mark></b>. Late submissions will be considered a forfeiture of your participation. Our team will manually verify all payment and agreement uploads after the deadline. If you have already completed the process, please keep a screenshot of your payment or upload confirmation. If your status hasn't been updated, feel free to contact us.`;
         if (billingnote1) {
           billingnote1.innerHTML = `Payment Deadline: ${deadlineEn}`;
         }
       } else {
-        yesdesc.innerHTML = `請於<b><mark>${deadline}</mark></b>前完成繳費與同意書上傳，逾期將視同放棄參展資格。團隊將於<mark> 1月5日前 </mark>逐一人工確認繳費與同意書的上傳狀態。如您已完成繳交，請先保留相關繳費或上傳截圖；若狀態在 <mark>1月5日</mark> 後仍未更新，請與我們聯繫。`;
+        yesdesc.innerHTML = `請於<b><mark>${deadline}</mark></b>前完成繳費與同意書上傳，逾期將視同放棄參展資格。團隊將於截止後逐一人工確認繳費與同意書的上傳狀態。如您已完成繳交，請先保留相關繳費或上傳截圖；若狀態未更新，請與我們聯繫。`;
         if (billingnote1) {
           billingnote1.innerHTML = `付款期限: ${deadline}`;
         }
       }
     }
   }
-  setYesLanguage(boothType, apiData["錄取"]);
+  setYesLanguage(boothType);
 
   // 動態條件是錄取 區塊語言
   function setConditionalAcceptence(boothType) {
@@ -815,7 +811,8 @@ Please follow the instructions below to create your materials, and upload the co
   setMediaUploadLanguage(boothType);
 
   // 電力資訊（single source of truth）
-  function updateElectricityList(boothType) {
+  // deadlineCN / deadlineEN 由 publishTimes API 傳入，例如 "1/9（五）" / "Jan 9 (Fri)"
+  function updateElectricityList(boothType, deadlineCN, deadlineEN) {
     const electricityTitle = document.getElementById("electricity-title");
     const electricityList = document.querySelector("#electricity-title + ul");
     const regulationEl = document.getElementById("electricity-regulation");
@@ -844,13 +841,16 @@ Please follow the instructions below to create your materials, and upload the co
       <li>Not every booth has sockets; please bring an extension cord & coordinate with neighbors</li>
     `;
 
+    const ddlCN = deadlineCN || "—";
+    const ddlEN = deadlineEN || "—";
+
     // 設定上方「電源配置」
     if (isForeign) {
       if (isInstallation) {
         electricityTitle.textContent = "Electricity:";
         electricityList.innerHTML = `
           <li>Standard 110v power supply</li>
-          <li>Submit electricity request by <strong>Jan 9 (Fri)</strong>:</li>
+          <li>Submit electricity request by <strong>${ddlEN}</strong>:</li>
           <li style="margin-left:1em">List equipment name & wattage</li>
           <li style="margin-left:1em">On-site last-minute requests will NOT be accepted</li>
           <li style="margin-left:1em">Do not use transformers; 220v requires an add-on fee of NT$1000</li>
@@ -865,7 +865,7 @@ Please follow the instructions below to create your materials, and upload the co
         electricityTitle.textContent = "電源配置：";
         electricityList.innerHTML = `
           <li>供應一般電源110v</li>
-          <li><mark>1/9（五）</mark>前需提供電力需求申請：</li>
+          <li><mark>${ddlCN}</mark>前需提供電力需求申請：</li>
           <li style="margin-left:1em">條列使用電器設備＆瓦數</li>
           <li style="margin-left:1em">不接受現場臨時申請</li>
           <li style="margin-left:1em">不得使用變壓器，220v 需以 NT$1000 加購</li>
@@ -923,60 +923,6 @@ Please follow the instructions below to create your materials, and upload the co
   }
   // initial call
   updateElectricityList(boothType);
-
-  // 編輯截止期限檢查
-  const ELECTRICITY_DEADLINE = new Date("2026-01-09T23:59:59+08:00");
-  const CATALOG_DEADLINE = new Date("2026-01-09T23:59:59+08:00");
-  const now = new Date();
-
-  const electricityNotice = document.getElementById(
-    "electricity-edit-deadline-notice",
-  );
-  const electricityEditField = document.getElementById("electricity-edit");
-  if (electricityNotice && electricityEditField) {
-    if (now > ELECTRICITY_DEADLINE) {
-      electricityNotice.textContent =
-        "⚠️ 電力需求申報已截止（1/9）。如有緊急需求請直接聯絡主辦單位。Electricity declaration deadline has passed (Jan 9). Please contact us directly for urgent requests.";
-      electricityEditField.disabled = true;
-      electricityEditField.style.backgroundColor = "#f5f5f5";
-      electricityEditField.style.color = "#999";
-    } else {
-      const daysLeft = Math.ceil(
-        (ELECTRICITY_DEADLINE - now) / (1000 * 60 * 60 * 24),
-      );
-      electricityNotice.textContent = `⏰ 申報截止：1/9（五）23:59（還剩 ${daysLeft} 天）Deadline: Jan 9 (Fri.) 23:59 (${daysLeft} day(s) left)`;
-      electricityNotice.style.color = daysLeft <= 3 ? "#c00" : "#b87900";
-    }
-  }
-
-  const catalogDeadlineNotice = document.getElementById(
-    "ddl-catalog-upload-section",
-  );
-  if (catalogDeadlineNotice) {
-    if (now > CATALOG_DEADLINE) {
-      catalogDeadlineNotice.innerHTML = `<span style="color:#c00; font-size:0.85em;">⚠️ 草率簿繳交已截止（1/9）。如有問題請聯絡主辦。Catalog submission deadline has passed (Jan 9).</span>`;
-    } else {
-      const daysLeft = Math.ceil(
-        (CATALOG_DEADLINE - now) / (1000 * 60 * 60 * 24),
-      );
-      catalogDeadlineNotice.innerHTML = `<span style="color:#b87900; font-size:0.85em;">⏰ 草率簿截止：1/9（五）（還剩 ${daysLeft} 天）Catalog deadline: Jan 9 (Fri.) (${daysLeft} day(s) left)</span>`;
-    }
-  }
-
-  const marketingDeadlineNotice = document.getElementById(
-    "ddl-material-upload-section",
-  );
-  if (marketingDeadlineNotice) {
-    const MARKETING_DEADLINE = new Date("2026-01-23T23:59:59+08:00");
-    if (now > MARKETING_DEADLINE) {
-      marketingDeadlineNotice.innerHTML = `<span style="color:#c00; font-size:0.85em;">⚠️ 行銷素材上傳已截止（1/23）。Marketing material upload deadline has passed (Jan 23).</span>`;
-    } else {
-      const daysLeft = Math.ceil(
-        (MARKETING_DEADLINE - now) / (1000 * 60 * 60 * 24),
-      );
-      marketingDeadlineNotice.innerHTML = `<span style="color:#b87900; font-size:0.85em;">⏰ 行銷素材截止：1/23（五）（還剩 ${daysLeft} 天）Marketing deadline: Jan 23 (Fri.) (${daysLeft} day(s) left)</span>`;
-    }
-  }
 
   // 狀態與欄位顯示
   const registrationStatusEl = document.getElementById("registration-status");
@@ -1397,6 +1343,27 @@ Please follow the instructions below to create your materials, and upload the co
   }
   setDiscountCodes(apiData["親友票"]);
 
+  // 從 ISO 日期字串格式化截止日期顯示文字
+  function fmtDeadlineCN(iso) {
+    const d = new Date(iso);
+    const days = ["日", "一", "二", "三", "四", "五", "六"];
+    return `${d.getMonth() + 1}/${d.getDate()}（${days[d.getDay()]}）`;
+  }
+  function fmtDeadlineEN(iso) {
+    const d = new Date(iso);
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    return `${months[d.getMonth()]} ${d.getDate()} (${days[d.getDay()]})`;
+  }
+  function fmtDeadlineLongEN(iso) {
+    const d = new Date(iso);
+    const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    let h = d.getHours(), m = d.getMinutes().toString().padStart(2, "0");
+    const ampm = h >= 12 ? "PM" : "AM";
+    h = h % 12 || 12;
+    return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()} at ${h}:${m} ${ampm} (UTC+8)`;
+  }
+
   // 將試算表純文字轉為 HTML：換行、Markdown 粗體斜體、URL 自動連結
   function processAfterMessage(raw) {
     // 1. 換行符號 → <br>
@@ -1435,13 +1402,14 @@ Please follow the instructions below to create your materials, and upload the co
     console.warn("Failed to load publish times:", e);
   }
 
-  // 假設 publishTimes 物件 key = section id, value = {descId, publishTime, deadline, preMessage}
+  // publishTimes 物件 key = sectionId，value = {descId, publishTime, deadline, preMessage, afterMessage, afterMessageEn}
+  // section 可以是 null（只更新 desc 和 ddl 元素，不做遮罩邏輯）
   Object.entries(publishTimes).forEach(([sectionId, info]) => {
-    let section = document.getElementById(sectionId);
-    let desc = document.getElementById(info.descId);
-    if (!section || !desc) return;
+    const section = document.getElementById(sectionId);
+    const desc = document.getElementById(info.descId);
+    if (!desc) return;
 
-    // 預設用 deadline
+    // 備取截止日期判斷
     let deadline = info.deadline;
     if (
       (sectionId === "billing-section" || sectionId === "agreement-section") &&
@@ -1475,67 +1443,66 @@ Please follow the instructions below to create your materials, and upload the co
       const ddlText = isEnglishBooth
         ? `Deadline: ${deadlineStr}`
         : `截止日期：${deadlineStr}`;
-      ddlEls.forEach((el) => {
-        el.textContent = ddlText;
-      });
+      ddlEls.forEach((el) => { el.textContent = ddlText; });
     }
 
-    // 預設用 deadline
-    // let deadline = info.deadline;
-    // 如果是備取，且有 backupDeadline 就用它
-    // if (
-    //   (sectionId === "billing-section" || sectionId === "agreement-section") &&
-    //   apiData["錄取"] === "2-是-2波" &&
-    //   info.backupDeadline
-    // ) {
-    //   deadline = info.backupDeadline;
-    // }
+    // 以 API 截止日期重新渲染含日期的 UI 元件
+    if (deadline) {
+      if (sectionId === "billing-section") {
+        setYesLanguage(boothType, fmtDeadlineCN(deadline), fmtDeadlineLongEN(deadline));
+      }
+      if (sectionId === "edit-electricity-row") {
+        updateElectricityList(boothType, fmtDeadlineCN(deadline), fmtDeadlineEN(deadline));
+      }
+    }
 
-    // 解析時間
     const now = new Date();
     const publishTime = info.publishTime ? new Date(info.publishTime) : null;
-    // 先確保 section 有 position: relative
-    section.style.position = "relative";
-    section.style.overflow = "hidden";
+
+    if (section) {
+      section.style.position = "relative";
+      section.style.overflow = "hidden";
+    }
 
     // 未公布前
     if (publishTime && now < publishTime) {
       desc.innerHTML = "";
-      let banner = document.createElement("div");
+      const banner = document.createElement("div");
       banner.className = "pre-banner";
       banner.style.color = "darkgrey";
       banner.style.fontSize = "1em";
       banner.style.marginTop = "0.5em";
       banner.textContent = info.preMessage || "Not available yet.";
       desc.appendChild(banner);
-
-      section.classList.add("disabled");
-      // 移除舊遮罩
-      let oldOverlay = section.querySelector(".overlay-closed");
-      if (oldOverlay) oldOverlay.remove();
+      if (section) {
+        section.classList.add("disabled");
+        const oldOverlay = section.querySelector(".overlay-closed");
+        if (oldOverlay) oldOverlay.remove();
+      }
     }
     // 截止後
     else if (deadlineTime && now > deadlineTime) {
-      section.style.pointerEvents = "none";
-      // 加遮罩
-      let overlay = document.createElement("div");
-      overlay.className = "overlay-closed";
-      overlay.textContent = "Close";
-      section.appendChild(overlay);
-      setTimeout(() => overlay.classList.add("active"), 10);
-
-      section.classList.add("disabled");
-      section.style.opacity = 1;
+      if (section) {
+        section.style.pointerEvents = "none";
+        const overlay = document.createElement("div");
+        overlay.className = "overlay-closed";
+        overlay.textContent = "Close";
+        section.appendChild(overlay);
+        setTimeout(() => overlay.classList.add("active"), 10);
+        section.classList.add("disabled");
+        section.style.opacity = 1;
+      }
     }
     // 公布期間
     else {
-      section.classList.remove("disabled");
-      section.style.opacity = "";
-      // 移除舊遮罩
-      section.style.pointerEvents = "";
-      let oldOverlay = section.querySelector(".overlay-closed");
-      if (oldOverlay) oldOverlay.remove();
-      // 公佈後自動填入內容（英文攤位用 afterMessageEn，其餘用 afterMessage）
+      if (section) {
+        section.classList.remove("disabled");
+        section.style.opacity = "";
+        section.style.pointerEvents = "";
+        const oldOverlay = section.querySelector(".overlay-closed");
+        if (oldOverlay) oldOverlay.remove();
+      }
+      // afterMessage：不填表示保留原始 HTML（如上傳按鈕區）
       const isEnglish = isEnglishBoothType(boothType);
       const msg =
         isEnglish && info.afterMessageEn
