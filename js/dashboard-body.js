@@ -85,6 +85,42 @@ document.addEventListener("DOMContentLoaded", function () {
   const isMobile = window.innerWidth <= 600;
   const displayValue = isMobile ? "block" : "table-cell";
 
+  const OPEN_CALL_IFRAME_LOCAL = "localapplication.html?embed=1";
+  const OPEN_CALL_IFRAME_OVERSEA = "overseaapplication.html?embed=1";
+
+  /** 若 HTML 仍為舊檔名（如 *_20251218_invite.html），強制改為目前申請頁，避免 iframe 404 */
+  function ensureOpenCallIframeSrc() {
+    const localFrame = document.getElementById("opencall-frame-local");
+    const overseaFrame = document.getElementById("opencall-frame-oversea");
+    if (!localFrame || !overseaFrame) return;
+    const base = document.baseURI || window.location.href;
+    const fix = (el, rel) => {
+      const want = new URL(rel, base).href;
+      let cur = "";
+      try {
+        cur = new URL(el.getAttribute("src") || "", base).href;
+      } catch (e) {
+        cur = "";
+      }
+      if (cur !== want) el.setAttribute("src", rel);
+    };
+    fix(localFrame, OPEN_CALL_IFRAME_LOCAL);
+    fix(overseaFrame, OPEN_CALL_IFRAME_OVERSEA);
+  }
+
+  function syncOpenCallIframeByRegion() {
+    ensureOpenCallIframeSrc();
+    const localFrame = document.getElementById("opencall-frame-local");
+    const overseaFrame = document.getElementById("opencall-frame-oversea");
+    if (!localFrame || !overseaFrame) return;
+    const r =
+      typeof getCookie === "function" ? getCookie("region") || "" : "";
+    const isTW = r.trim().toUpperCase() === "TW";
+    localFrame.classList.toggle("opencall-dashboard-iframe--hidden", !isTW);
+    overseaFrame.classList.toggle("opencall-dashboard-iframe--hidden", isTW);
+  }
+  window.syncOpenCallIframeByRegion = syncOpenCallIframeByRegion;
+
   window.openEditPage = function openEditPage() {
     const editPage = document.getElementById("edit-brand-page");
     const mid = document.querySelector(".mid");
@@ -144,11 +180,14 @@ document.addEventListener("DOMContentLoaded", function () {
     // 初始化字數計數器
     const bioEdit = document.getElementById("bio-edit");
     const bioCounter = document.getElementById("bio-edit-counter");
+    const BIO_ZH_MAX = 80;
+    const BIO_EN_MAX = 100;
     if (bioEdit && bioCounter) {
       bioCounter.textContent = bioEdit.value.length;
       bioEdit.addEventListener("input", () => {
         bioCounter.textContent = bioEdit.value.length;
-        bioCounter.style.color = bioEdit.value.length >= 80 ? "#c00" : "#888";
+        bioCounter.style.color =
+          bioEdit.value.length >= BIO_ZH_MAX ? "#c00" : "#888";
       });
     }
     const bioEditEn = document.getElementById("bio-edit-en");
@@ -157,7 +196,8 @@ document.addEventListener("DOMContentLoaded", function () {
       bioCounterEn.textContent = bioEditEn.value.length;
       bioEditEn.addEventListener("input", () => {
         bioCounterEn.textContent = bioEditEn.value.length;
-        bioCounterEn.style.color = bioEditEn.value.length >= 100 ? "#c00" : "#888";
+        bioCounterEn.style.color =
+          bioEditEn.value.length >= BIO_EN_MAX ? "#c00" : "#888";
       });
     }
 
@@ -340,6 +380,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
     
+    syncOpenCallIframeByRegion();
     // 顯示 OPEN CALL 表單
     if (openCallForm) {
       if (isMobile) {
@@ -461,6 +502,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
   // 然後顯示 dashboard
+  syncOpenCallIframeByRegion();
   if (window.showDashboardSection) {
     window.showDashboardSection();
   }

@@ -8,6 +8,24 @@
     <link rel="shortcut icon" href="image/icon-1.ico" />
     <link rel="stylesheet" href="css/opencall.css" />
     <link rel="stylesheet" href="css/font.css" />
+    <script>
+      (function () {
+        try {
+          if (new URLSearchParams(location.search).get("embed") === "1") {
+            document.documentElement.classList.add("opencall-embed");
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <style>
+      html.opencall-embed .ETgohome {
+        display: none !important;
+      }
+      html.opencall-embed body {
+        margin: 0;
+        padding: 1rem 0.75rem 2rem;
+      }
+    </style>
 
     <!-- Google tag (gtag.js) -->
     <script
@@ -53,21 +71,36 @@
       <br /><br />
       <span class="description-header">Exhibitor's Info</span>
       <div class="module-form layout-form-columnized">
-        <!--Exhibitor Name-->
+        <!-- Exhibitor name: English (entry.1159390039), original script (entry.2674519285) — add separate short-answer in Google Form and replace ID if needed -->
         <div class="column">
-          <span class="from-header">Exhibitor's Name</span>
-          The information you provide will be officially displayed on the website, in search tags, and in the catalog.
+          <span class="from-header">Exhibitor / Brand Name (English)</span>
+          Official display name for the website, directory, and search tags (required). Please use the English name you publish under.
         </div>
         <div class="column layout-form-column-grid-1">
-          <span class="from-description-header-ness">Required Question, Max. 30 characters</span>
+          <span class="from-description-header-ness">Required, max. 80 characters</span>
           <input
             class="form-input"
             name="entry.1159390039"
-            placeholder="Exhibitor's Name"
-            maxlength="39"
+            placeholder="e.g. Studio Name in English"
+            maxlength="80"
             required
             pattern="^[\p{L}\p{N}\s!&quot;#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]+$"
             title="Please do not enter special characters."
+          />
+        </div>
+        <div class="column">
+          <span class="from-header">Exhibitor / Brand Name (Original Script / Language)</span>
+          If you regularly use a name in another script or language, enter it here (optional). Helpful when it differs from the English name above.
+        </div>
+        <div class="column layout-form-column-grid-1">
+          <span class="from-description-header-ness-no">Optional, max. 80 characters</span>
+          <input
+            class="form-input"
+            name="entry.2674519285"
+            placeholder="e.g. name in your language or script (leave blank if same as English)"
+            maxlength="80"
+            pattern="^[\p{L}\p{N}\s!&quot;#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]*$"
+            title="Please do not enter special characters; may be left blank."
           />
         </div>
         <!--Bio-->
@@ -77,13 +110,13 @@
         </div>
         <div class="column layout-form-column-grid-1">
           <span class="from-description-header-ness"
-            >Required Question, Max. 300 characters</span
+            >Required, English bio max. 100 characters (same limit as dashboard)</span
           >
           <textarea
             class="form-input-textarea"
             name="entry.1793579345"
-            placeholder="Bio"
-            maxlength="1000"
+            placeholder="Bio (max. 100 characters)"
+            maxlength="100"
             required
           ></textarea>
         </div>
@@ -950,125 +983,6 @@
             maxlength="1000"
           ></textarea>
         </div>
-      </div>
-
-      <span class="description-header">Contact Info</span>
-      <div class="module-form layout-form-columnized">
-        <!--Name of Person in Charge-->
-        <div class="column">
-          <span class="from-header">Name of Person in Charge</span>
-          If you are exhibiting as a corporation, group, or collective, you must
-          designate a representative for your booth.
-        </div>
-        <div class="column layout-form-column-grid-1">
-          <span class="from-description-header-ness">Required Question</span>
-          <input
-            autocomplete="name"
-            class="form-input"
-            name="entry.1522532449"
-            placeholder="Name of Person in Charge"
-            maxlength="100"
-            required
-          />
-        </div>
-
-        <!--Email-->
-        <div class="column">
-          <span class="from-header">Email</span>
-          This email will be used for future notifications and registration of
-          website accounts.
-          <strong>Once registered, it cannot be modified.</strong> The admission
-          notice will be sent to this email. Please check your inbox and spam
-          folder regularly.
-        </div>
-        <div class="column layout-form-column-grid-1">
-          <span class="from-description-header-ness">Required Question</span>
-          <input
-            type="email"
-            autocomplete="email"
-            class="form-input"
-            name="entry.529156755"
-            id="email-input"
-            placeholder="Email"
-            maxlength="500"
-            required
-          />
-          <div
-            id="email-error"
-            style="color: plum; display: none; font-size: 13px"
-          >
-            Please enter a valid email address, such as: example@gmail.com
-          </div>
-        </div>
-
-        <!--Password-->
-        <div class="column">
-          <span class="from-header">Login Password</span>
-          This password will be use for the registration of website accounts.
-          <strong>Once registered, it cannot be modified.</strong> If you
-          registered multiple times, we will used the last password you entered.
-        </div>
-        <div class="column layout-form-column-grid-1">
-          <span class="from-description-header-ness">Required Question</span>
-          <div style="position: relative">
-            <input
-              id="password"
-              type="password"
-              autocomplete="new-password"
-              class="form-input"
-              name="entry.1848520839"
-              placeholder="Password"
-              maxlength="500"
-              required
-              style="padding-right: 60px"
-            />
-            <button
-              type="button"
-              id="togglePassword"
-              style="
-                position: absolute;
-                right: 5px;
-                top: 50%;
-                transform: translateY(-50%);
-                font-size: 14px;
-              "
-            >
-              Show
-            </button>
-          </div>
-
-          <div id="password-rules" style="margin-top: 8px; font-size: 14px">
-            <div id="length-rule">✕ At least 8 characters</div>
-            <div id="uppercase-rule">✕ At least one uppercase letter</div>
-            <div id="lowercase-rule">✕ At least one lowercase letter</div>
-            <div id="number-rule">✕ At least one number</div>
-          </div>
-        </div>
-
-        <!--Phone Number-->
-        <div class="column">
-          <span class="from-header">Phone Number or WhatsApp ID</span>
-          Please provide your phone number or WhatsApp ID in the full
-          international format.
-        </div>
-        <div class="column layout-form-column-grid-2">
-          <span class="from-description-header-ness">Required Question</span>
-          <input
-            autocomplete="tel"
-            class="form-input"
-            name="entry.1972200901"
-            placeholder="Phone Number. e.g., +1234567890"
-            maxlength="50"
-            required
-          />
-          <input
-            class="form-input"
-            name="entry.1241698740"
-            placeholder="WhatsApp ID. Optional"
-            maxlength="50"
-          />
-        </div>
-
       </div>
 
       <span class="description-header">Notice</span>

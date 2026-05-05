@@ -97,6 +97,67 @@ th {
   overflow-y: auto;
   padding-bottom: 3rem;
 }
+/* Open Call / FAQ：主表格 td 的全域 border／padding／word-break 會擠壓內嵌 iframe */
+td.admin#open-call-form,
+td.admin#faq {
+  border: none;
+  padding: 0;
+  word-break: normal;
+}
+/* Open Call：單一捲軸在 iframe 內，主欄不雙重捲動 */
+#open-call-form.admin {
+  overflow: hidden !important;
+}
+#open-call-form.admin > .scroll-inner.opencall-dashboard-host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-height: 100vh;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0;
+  padding-bottom: 0;
+  box-sizing: border-box;
+}
+#open-call-form .opencall-dashboard-iframe {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+  border: 0;
+  display: block;
+  background: transparent;
+}
+/* FAQ：PDF 嵌入改為視窗比例高度，不再固定 600px */
+#faq.admin {
+  overflow: hidden !important;
+}
+#faq.admin > .scroll-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-height: 100vh;
+  min-height: 0;
+  overflow: hidden;
+  padding-bottom: 0;
+  box-sizing: border-box;
+}
+#faq .faq-pdf-embed {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+}
+/* 避免全域 h3 的裝飾用超大字級壓縮 FAQ PDF 區 */
+#faq.admin .scroll-inner > h3 {
+  flex: 0 0 auto;
+  font-size: 1.35rem !important;
+  line-height: 1.3 !important;
+  margin: 0.6rem 0 0.75rem !important;
+  z-index: 99;
+}
 .faqtable {
   z-index: 3;
 }
@@ -757,6 +818,23 @@ html::-webkit-scrollbar-thumb:hover {
     overflow: visible !important;
     padding-bottom: 2em;
   }
+  /* Open Call / FAQ：覆寫手機版 .scroll-inner，讓 iframe／PDF 仍有足夠視窗高度 */
+  #open-call-form.admin.mobile-active > .scroll-inner.opencall-dashboard-host,
+  #faq.admin.mobile-active > .scroll-inner {
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding-bottom: 0 !important;
+  }
+  #open-call-form.admin.mobile-active .opencall-dashboard-iframe,
+  #faq.admin.mobile-active .faq-pdf-embed {
+    flex: 1 1 auto !important;
+    min-height: 65dvh !important;
+    width: 100% !important;
+  }
   table.layout,
   table,
   .faqtable {
@@ -928,4 +1006,9 @@ html::-webkit-scrollbar-thumb:hover {
     font-size: 28rem !important;
     line-height: 20rem !important;
   }
+}
+
+/* Open Call iframe：隱藏海外／本地其一時用（其餘由 #open-call-form 內 flex 決定高度） */
+.opencall-dashboard-iframe.opencall-dashboard-iframe--hidden {
+  display: none !important;
 }

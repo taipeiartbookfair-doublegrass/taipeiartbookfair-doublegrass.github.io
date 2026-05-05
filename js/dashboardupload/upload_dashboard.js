@@ -2,12 +2,16 @@
 const uploadApiUrl =
   "https://script.google.com/macros/s/AKfycbxOxo-ZzjkkDlkIyCNlmFgYfPhpLOHQr3278Mv36PJrM_jdb_RsaG42hwM23Cp7b7onBw/exec";
 
+// 檔案上傳 API：catalog / marketing 上傳到 Google Drive
+const fileUploadApiUrl =
+  "https://script.google.com/macros/s/AKfycbytwthS-PvDMUZ5iRFCtDnowgcrrtsbeyjlohpOQNpiUyTnGo0YT77eSKz9ILOp9X_i/exec";
+
 // 新 API：只負責寫入 consent audit trail（電子簽章法留存）
 const consentApiUrl =
-  "https://script.google.com/macros/s/AKfycbxGzUAlLnwA_ClwpMqS-3U9_VTCWdkwCto0EoGqL6jErnpFSddgsv-VdcoEoEJGFCf8/exec";
+  "https://script.google.com/macros/s/AKfycbxQqppVyIedlyrGFVDrEwmo0qjFeCvVS4VlPrrTLArszrj0i2-9mtfMTP8zASRwBp9l4g/exec";
 
 // ★ 每次換同意書 PDF 時只改這一行（檔名即版本號）。Apps Script 不需要動。
-const DECLARATION_PDF_FILENAME = "exhibitor-declaration-2026v1.pdf";
+const DECLARATION_PDF_FILENAME = "exhibitor-declaration-2026v2.pdf";
 
 // 將 clickwrap 同意紀錄送至後端並寫入 audit trail
 async function saveConsentToAPI() {
@@ -549,13 +553,40 @@ const handleFileUpload = async (
   const file = fileInput.files[0];
   const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
 
-  // 檢查檔案大小（設定 50MB 限制）
-  const maxSize = 50 * 1024 * 1024;
-  if (file.size > maxSize) {
-    return {
-      success: false,
-      errorMessage: `檔案大小超過限制 File size exceeds limit.\n\n檔案資訊 File Info:\n- 檔名 Filename: ${file.name}\n- 大小 Size: ${fileSizeMB} MB\n- 限制 Limit: 50 MB\n\n請壓縮檔案後再試。\nPlease compress the file and try again.`,
-    };
+  const isMarketing = folderId === folderIds.marketing;
+  const isCatalog = folderId === folderIds.catalog;
+
+  if (isMarketing) {
+    const lower = file.name.toLowerCase();
+    if (!lower.endsWith(".zip")) {
+      return {
+        success: false,
+        errorMessage: `僅限上傳 ZIP 檔 Only ZIP is accepted.\n\n檔案 Filename: ${file.name}\n請將行銷素材打包為副檔名 .zip 的單一壓縮檔後再上傳。\nPlease upload a single .zip archive only.`,
+      };
+    }
+    const marketingMaxBytes = 20 * 1024 * 1024;
+    if (file.size > marketingMaxBytes) {
+      return {
+        success: false,
+        errorMessage: `檔案超過 20MB File exceeds 20 MB.\n\n檔案 Filename: ${file.name}\n大小 Size: ${fileSizeMB} MB\n行銷素材上限為 20MB（與報名說明一致）。\nMarketing ZIP must be 20 MB or smaller.`,
+      };
+    }
+  } else if (isCatalog) {
+    const catalogMaxBytes = 50 * 1024 * 1024;
+    if (file.size > catalogMaxBytes) {
+      return {
+        success: false,
+        errorMessage: `檔案大小超過限制 File size exceeds limit.\n\n檔案資訊 File Info:\n- 檔名 Filename: ${file.name}\n- 大小 Size: ${fileSizeMB} MB\n- 限制 Limit: 50 MB\n\n請壓縮檔案後再試。\nPlease compress the file and try again.`,
+      };
+    }
+  } else {
+    const maxSize = 50 * 1024 * 1024;
+    if (file.size > maxSize) {
+      return {
+        success: false,
+        errorMessage: `檔案大小超過限制 File size exceeds limit.\n\n檔案資訊 File Info:\n- 檔名 Filename: ${file.name}\n- 大小 Size: ${fileSizeMB} MB\n- 限制 Limit: 50 MB\n\n請壓縮檔案後再試。\nPlease compress the file and try again.`,
+      };
+    }
   }
 
   let errorStep = "";
@@ -624,17 +655,14 @@ const handleFileUpload = async (
     errorStep = "上傳到伺服器 Uploading to server";
     let uploadRes;
     try {
-      uploadRes = await fetch(
-        "https://script.google.com/macros/s/AKfycbwB6gvxUJA-_i-1oWuZnya0YHoa4nwv8bioZUjZAaGvf-ibqGpyNcujUL6LEowwqN1s/exec",
-        {
-          redirect: "follow",
-          method: "POST",
-          headers: {
-            "Content-Type": "text/plain;charset=utf-8",
-          },
-          body: bodyString,
+      uploadRes = await fetch(fileUploadApiUrl, {
+        redirect: "follow",
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8",
         },
-      );
+        body: bodyString,
+      });
     } catch (fetchError) {
       // 網路錯誤
       if (
