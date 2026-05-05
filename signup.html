@@ -331,93 +331,92 @@
     </div>
 
     <a href="index.html">
-      <div class="back">回主頁 Back</div>
-    </a>
+  <div class="back">回主頁 Back</div>
+</a>
 
-    <iframe
-      name="signup_hidden_iframe"
-      id="signup_hidden_iframe"
-      style="display: none"
-    ></iframe>
+<iframe
+  name="signup_hidden_iframe"
+  id="signup_hidden_iframe"
+  style="display: none"
+></iframe>
 
-    <script>
-      const signupForm = document.getElementById("signup-form");
-      const submitBtn = document.getElementById("submit-btn");
-      const statusBox = document.getElementById("signup-status");
+<script>
+  const signupForm = document.getElementById("signup-form");
+  const submitBtn = document.getElementById("submit-btn");
 
-      let waitingForResponse = false;
-      let timeoutTimer = null;
+  let waitingForResponse = false;
+  let timeoutTimer = null;
 
-      function showStatus(message) {
-        statusBox.style.display = "block";
-        statusBox.textContent = message;
-      }
+  function resetButton() {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "註冊 Sign Up";
+  }
 
-      function resetButton() {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "註冊 Sign Up";
-      }
+  signupForm.addEventListener("submit", function (e) {
+    const account = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const phone = document.getElementById("phone").value.trim();
+    const name = document.getElementById("name").value.trim();
+    const region = document.getElementById("region").value;
 
-      signupForm.addEventListener("submit", function (e) {
-        const account = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value;
-        const phone = document.getElementById("phone").value.trim();
-        const name = document.getElementById("name").value.trim();
-        const region = document.getElementById("region").value;
+    if (!account || !password || !phone || !name || !region) {
+      e.preventDefault();
+      alert("請完整填寫所有欄位");
+      return;
+    }
 
-        if (!account || !password || !phone || !name || !region) {
-          e.preventDefault();
-          alert("請完整填寫所有欄位");
-          return;
-        }
+    if (password.length < 6) {
+      e.preventDefault();
+      alert("密碼至少需要 6 碼");
+      return;
+    }
 
-        if (password.length < 6) {
-          e.preventDefault();
-          alert("密碼至少需要 6 碼");
-          return;
-        }
+    waitingForResponse = true;
+    submitBtn.disabled = true;
+    submitBtn.textContent = "送出中...";
 
-        waitingForResponse = true;
-        submitBtn.disabled = true;
-        submitBtn.textContent = "送出中...";
-        showStatus("資料送出中，請稍候...");
+    clearTimeout(timeoutTimer);
 
-        clearTimeout(timeoutTimer);
-
-        timeoutTimer = setTimeout(function () {
-          if (waitingForResponse) {
-            waitingForResponse = false;
-            showStatus("送出逾時，請稍後再試。");
-            alert("送出逾時，請稍後再試。");
-            resetButton();
-          }
-        }, 20000);
-      });
-
-      window.addEventListener("message", function (event) {
-        const data = event.data;
-
-        if (!data || typeof data !== "object") {
-          return;
-        }
-
+    timeoutTimer = setTimeout(function () {
+      if (waitingForResponse) {
         waitingForResponse = false;
-        clearTimeout(timeoutTimer);
+        alert("送出逾時，但資料可能已送出。請稍後確認或重新整理。");
+        resetButton();
+      }
+    }, 20000);
+  });
 
-        console.log("註冊回傳：", data);
+  window.addEventListener("message", function (event) {
+    let data = event.data;
 
-        if (data.success) {
-          showStatus("註冊成功，正在前往登入頁...");
-          alert("註冊成功");
+    // 有些情況 postMessage 可能傳回字串，這裡一併處理
+    if (typeof data === "string") {
+      try {
+        data = JSON.parse(data);
+      } catch (err) {
+        return;
+      }
+    }
 
-          window.location.href =
-            "https://taipeiartbookfair-doublegrass.github.io/login.html";
-        } else {
-          showStatus(data.message || "註冊失敗");
-          alert(data.message || "註冊失敗");
-          resetButton();
-        }
-      });
-    </script>
-  </body>
+    if (!data || typeof data !== "object") {
+      return;
+    }
+
+    waitingForResponse = false;
+    clearTimeout(timeoutTimer);
+
+    console.log("註冊回傳：", data);
+
+    if (data.success) {
+      alert("註冊成功");
+
+      window.location.href =
+        "https://taipeiartbookfair-doublegrass.github.io/login.html";
+    } else {
+      alert(data.message || "註冊失敗");
+      resetButton();
+    }
+  });
+</script>
+</body>
 </html>
