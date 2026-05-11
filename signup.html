@@ -445,15 +445,14 @@
           phone: phone,
           name: name,
           region: region,
-        }).toString();
+        });
 
         try {
           const res = await fetch(SIGNUP_API_URL, {
-            redirect: "follow",
             method: "POST",
-            headers: {
-              "Content-Type": "text/plain;charset=utf-8",
-            },
+            redirect: "follow",
+            mode: "cors",
+            cache: "no-store",
             body: params,
           });
 
@@ -494,11 +493,19 @@
           console.error("Register error:", error);
           const detail =
             error && error.message ? String(error.message) : "";
+          let hint =
+            "若為 Failed to fetch：常見為瀏覽器擴充（廣告封鎖）、公司網路阻擋 Google、或 CORS。請試無痕視窗、暫停擴充、換網路或手機熱點。\n";
+          hint +=
+            "If you see Failed to fetch: try incognito, disable extensions (ad blockers), or another network (e.g. mobile hotspot). Google endpoints may be blocked on some networks.\n";
           const msg = detail
-            ? "連線錯誤 / Network error: " + detail
-            : "Network error, please try again later.";
+            ? "連線錯誤 / Network error: " + detail + "\n\n" + hint
+            : "Network error, please try again later.\n\n" + hint;
           alert(msg);
-          showStatus(msg);
+          showStatus(
+            detail
+              ? "連線錯誤 / Network error: " + detail
+              : "Network error, please try again later."
+          );
           resetButton();
         }
       });
