@@ -194,6 +194,13 @@
         white-space: pre-wrap;
       }
 
+      .password-rules {
+        font-size: 0.72rem;
+        line-height: 1.35;
+        margin-top: 4px;
+        color: plum;
+      }
+
       ::selection {
         color: palegreen;
         background-color: olive;
@@ -214,13 +221,7 @@
       <h2>註冊 Sign Up</h2>
 
       <div class="login-form">
-        <form
-          id="signup-form"
-          method="POST"
-          action="https://script.google.com/macros/s/AKfycbwTrna84HXKMotEk_8Dg23h_iwhnwmR2OToVvd71B3dHvUWdmobVmvicu4KDVOpn1fsFw/exec"
-          >
-          <input type="hidden" name="action" value="register" />
-
+        <form id="signup-form" method="POST">
           <div class="input-box">
             <label for="email">電子郵件 Email</label>
             <input
@@ -241,9 +242,15 @@
               id="password"
               placeholder="Enter your password"
               autocomplete="new-password"
-              minlength="6"
+              minlength="8"
               required
             />
+
+            <div class="password-rules" id="password-rules">
+              密碼需至少 8 碼，並包含大寫、小寫與數字。<br />
+              Password must be at least 8 characters and include uppercase,
+              lowercase, and number.
+            </div>
           </div>
 
           <div class="input-box">
@@ -330,93 +337,146 @@
     </div>
 
     <a href="index.html">
-  <div class="back">回主頁 Back</div>
-</a>
+      <div class="back">回主頁 Back</div>
+    </a>
 
-<iframe
-  name="signup_hidden_iframe"
-  id="signup_hidden_iframe"
-  style="display: none"
-></iframe>
+    <script>
+      const SIGNUP_API_URL =
+        "https://script.google.com/macros/s/AKfycbwNWgPsLK_ldHUIvoIg5a9k3PNIlmjvJeTgbCZ5CZsvKFQ7e1DoxbMsAawi4nI3Rea4DA/exec";
 
-<script>
-  const signupForm = document.getElementById("signup-form");
-  const submitBtn = document.getElementById("submit-btn");
+      const signupForm = document.getElementById("signup-form");
+      const submitBtn = document.getElementById("submit-btn");
+      const statusBox = document.getElementById("signup-status");
+      const passwordInput = document.getElementById("password");
+      const passwordRules = document.getElementById("password-rules");
 
-  let waitingForResponse = false;
-  let timeoutTimer = null;
-
-  function resetButton() {
-    submitBtn.disabled = false;
-    submitBtn.textContent = "註冊 Sign Up";
-  }
-
-  signupForm.addEventListener("submit", function (e) {
-    const account = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
-    const phone = document.getElementById("phone").value.trim();
-    const name = document.getElementById("name").value.trim();
-    const region = document.getElementById("region").value;
-
-    if (!account || !password || !phone || !name || !region) {
-      e.preventDefault();
-      alert("請完整填寫所有欄位");
-      return;
-    }
-
-    if (password.length < 6) {
-      e.preventDefault();
-      alert("密碼至少需要 6 碼");
-      return;
-    }
-
-    waitingForResponse = true;
-    submitBtn.disabled = true;
-    submitBtn.textContent = "送出中...";
-
-    clearTimeout(timeoutTimer);
-
-    timeoutTimer = setTimeout(function () {
-      if (waitingForResponse) {
-        waitingForResponse = false;
-        alert("送出逾時，但資料可能已成功送出。請勿重複送出，請前往登入頁。");
-
-        window.location.href =
-          "https://taipeiartbookfair-doublegrass.github.io/login.html";
+      function showStatus(message) {
+        if (!statusBox) return;
+        statusBox.style.display = "block";
+        statusBox.textContent = message;
       }
-    }, 8000);
-  });
 
-  window.addEventListener("message", function (event) {
-    let data = event.data;
-
-    if (typeof data === "string") {
-      try {
-        data = JSON.parse(data);
-      } catch (err) {
-        return;
+      function resetButton() {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "註冊 Sign Up";
       }
-    }
 
-    if (!data || typeof data !== "object") {
-      return;
-    }
+      function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || "").trim());
+      }
 
-    waitingForResponse = false;
-    clearTimeout(timeoutTimer);
+      function validatePassword(password) {
+        const value = String(password || "");
 
-    console.log("註冊回傳：", data);
+        if (value.length < 8) {
+          return "密碼至少需要 8 碼 Password must be at least 8 characters.";
+        }
 
-    if (data.success) {
-      alert("註冊成功");
+        if (!/[A-Z]/.test(value)) {
+          return "密碼至少需要一個大寫英文字母 Password needs one uppercase letter.";
+        }
 
-      window.location.href =
-        "https://taipeiartbookfair-doublegrass.github.io/login.html";
-    } else {
-      alert(data.message || "註冊失敗");
-      resetButton();
-    }
-  });
-</script>
-</body>
+        if (!/[a-z]/.test(value)) {
+          return "密碼至少需要一個小寫英文字母 Password needs one lowercase letter.";
+        }
+
+        if (!/[0-9]/.test(value)) {
+          return "密碼至少需要一個數字 Password needs one number.";
+        }
+
+        return "";
+      }
+
+      passwordInput.addEventListener("input", function () {
+        const error = validatePassword(passwordInput.value);
+
+        if (!passwordInput.value) {
+          passwordRules.style.color = "plum";
+          passwordRules.innerHTML =
+            "密碼需至少 8 碼，並包含大寫、小寫與數字。<br />Password must be at least 8 characters and include uppercase, lowercase, and number.";
+          return;
+        }
+
+        if (error) {
+          passwordRules.style.color = "plum";
+          passwordRules.textContent = error;
+        } else {
+          passwordRules.style.color = "darkgreen";
+          passwordRules.textContent = "✓ 密碼格式正確 Password format valid.";
+        }
+      });
+
+      signupForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const account = document
+          .getElementById("email")
+          .value.trim()
+          .toLowerCase();
+        const password = document.getElementById("password").value;
+        const phone = document.getElementById("phone").value.trim();
+        const name = document.getElementById("name").value.trim();
+        const region = document.getElementById("region").value;
+
+        if (!account || !password || !phone || !name || !region) {
+          alert("請完整填寫所有欄位 Please complete all fields.");
+          return;
+        }
+
+        if (!isValidEmail(account)) {
+          alert("請輸入有效的 Email Please enter a valid email.");
+          return;
+        }
+
+        const passwordError = validatePassword(password);
+        if (passwordError) {
+          alert(passwordError);
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "送出中... Sending...";
+        showStatus("註冊中，請稍候 Registering, please wait...");
+
+        const params = new URLSearchParams({
+          action: "register",
+          account: account,
+          password: password,
+          phone: phone,
+          name: name,
+          region: region,
+        }).toString();
+
+        try {
+          const res = await fetch(SIGNUP_API_URL, {
+            redirect: "follow",
+            method: "POST",
+            headers: {
+              "Content-Type": "text/plain;charset=utf-8",
+            },
+            body: params,
+          });
+
+          const data = await res.json();
+          console.log("Register response:", data);
+
+          if (data.success) {
+            alert("註冊成功，請登入 Register successful. Please login.");
+            window.location.href = "login.html";
+          } else {
+            const msg =
+              data.message || data.error || "註冊失敗 Register failed.";
+            alert(msg);
+            showStatus(msg);
+            resetButton();
+          }
+        } catch (error) {
+          console.error("Register error:", error);
+          alert("Network error, please try again later.");
+          showStatus("Network error, please try again later.");
+          resetButton();
+        }
+      });
+    </script>
+  </body>
 </html>
