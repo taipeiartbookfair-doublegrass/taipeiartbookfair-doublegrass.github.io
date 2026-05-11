@@ -140,16 +140,14 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (data.success) {
       apiData = data.data;
     } else {
-      alert(data.message || "資料取得失敗，請重新登入。");
-      setCookie("account", "", -1);
-      setCookie("region", "", -1);
-      setCookie("login", "", -1);
-      window.location.href = "login.html";
-      return;
+      // 尚未投稿（沒有 application_id）也能進入頁面，等投稿系統開放後再補資料
+      console.log(
+        "No application info yet:",
+        data.message || data.error || ""
+      );
     }
   } catch (error) {
-    alert("Network error, please try again later.");
-    return;
+    console.error("get_dashboard_info network error:", error);
   }
   if (window.setLoading) window.setLoading(0.9);
 
@@ -180,8 +178,21 @@ document.addEventListener("DOMContentLoaded", async function () {
         userData.data["phone"] || "";
       document.getElementById("nationality2").textContent =
         userData.data["region"] || "";
+    } else {
+      // 後端明確回 success: false（例如帳號不存在）才視為 session 失效
+      alert(
+        "登入狀態失效，請重新登入。\nSession expired, please log in again."
+      );
+      setCookie("account", "", -1);
+      setCookie("region", "", -1);
+      setCookie("login", "", -1);
+      window.location.href = "login.html";
+      return;
     }
-  } catch (error) {}
+  } catch (error) {
+    // 網路錯誤不直接登出，保留現有寬鬆行為
+    console.error("get_user_info network error:", error);
+  }
 
   // 對應 id 填入資料
   document.getElementById("brand-name").textContent = apiData["品牌"] || "";
