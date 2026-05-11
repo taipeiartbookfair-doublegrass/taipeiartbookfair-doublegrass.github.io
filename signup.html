@@ -342,7 +342,7 @@
 
     <script>
       const SIGNUP_API_URL =
-        "https://script.google.com/macros/s/AKfycbx44w8jODn0XDAJJAZrNlGSL65driw3rVp4TYVjcZLCNwEupKUI7JC_eJDZbd_8wfpI/exechttps://script.google.com/macros/s/AKfycbxFmbCcSnvYEo16GbyK1HKeX9dui5DTRNVy0gIY2VzvQfSZ_C3_iiKQ2vMY56h5eOBE3g/exec";
+        "https://script.google.com/macrohttps://script.google.com/macros/s/AKfycbw85GvBeDwTM3ChaUR1ZU0jAInYO4-t5q1QpyU2-NGZwpj4o05wnuXMkQpCHNVqkrqriA/execs/s/AKfycbx44w8jODn0XDAJJAZrNlGSL65driw3rVp4TYVjcZLCNwEupKUI7JC_eJDZbd_8wfpI/exechttps://script.google.com/macros/s/AKfycbxFmbCcSnvYEo16GbyK1HKeX9dui5DTRNVy0gIY2VzvQfSZ_C3_iiKQ2vMY56h5eOBE3g/exec";
 
       const signupForm = document.getElementById("signup-form");
       const submitBtn = document.getElementById("submit-btn");
@@ -457,7 +457,27 @@
             body: params,
           });
 
-          const data = await res.json();
+          const raw = await res.text();
+          let data;
+          try {
+            data = raw ? JSON.parse(raw) : {};
+          } catch (parseErr) {
+            const preview = raw.slice(0, 240).replace(/\s+/g, " ");
+            const msg =
+              "伺服器回傳非 JSON（HTTP " +
+              res.status +
+              "）。請在 Apps Script「部署」將存取權設為「任何人」，並確認網址為最新部署。\n" +
+              "Server returned non-JSON (HTTP " +
+              res.status +
+              "). Deploy the Web app with access: Anyone (including anonymous).\n" +
+              preview;
+            console.error("Register non-JSON response:", res.status, raw);
+            alert(msg);
+            showStatus(msg);
+            resetButton();
+            return;
+          }
+
           console.log("Register response:", data);
 
           if (data.success) {
@@ -472,8 +492,13 @@
           }
         } catch (error) {
           console.error("Register error:", error);
-          alert("Network error, please try again later.");
-          showStatus("Network error, please try again later.");
+          const detail =
+            error && error.message ? String(error.message) : "";
+          const msg = detail
+            ? "連線錯誤 / Network error: " + detail
+            : "Network error, please try again later.";
+          alert(msg);
+          showStatus(msg);
           resetButton();
         }
       });
