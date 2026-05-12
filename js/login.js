@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   const apiUrl =
-    "https://script.google.com/macros/s/AKfycbzf2s5A3QcztCK9f5bOZgkDdV9pcmyYmVFwK2u2GrAqhs7lItff-Q-1-BO23tDT00TSRA/exec";
+    "https://script.google.com/macros/s/AKfycbyRV_uiklsvHWPeBblxTz47OlTnQ-IeKIxifYZ1D-8ZzHdljVMEbXwsKGO84Agon7mU8g/exec";
   const form = document.querySelector(".login-form");
   const loading = document.getElementById("login-loading");
 

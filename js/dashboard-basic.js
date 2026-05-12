@@ -7,7 +7,7 @@ if (!account || !region) {
 }
 
 const apiUrl =
-  "https://script.google.com/macros/s/AKfycbzf2s5A3QcztCK9f5bOZgkDdV9pcmyYmVFwK2u2GrAqhs7lItff-Q-1-BO23tDT00TSRA/exec";
+  "https://script.google.com/macros/s/AKfycbyRV_uiklsvHWPeBblxTz47OlTnQ-IeKIxifYZ1D-8ZzHdljVMEbXwsKGO84Agon7mU8g/exec";
 const publishApiUrl =
   "https://script.google.com/macros/s/AKfycbwL1g0fpahfuau7g8vuF1Oya0aAS2QvIj0S0EL6rXuajWzYVfgviUm64EmR95xwRMPEQg/exec";
 
