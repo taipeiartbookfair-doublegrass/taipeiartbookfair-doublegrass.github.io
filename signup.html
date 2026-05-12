@@ -843,6 +843,9 @@
       }
 
       emailInput.addEventListener("input", function () {
+        if (emailInput.readOnly) {
+          return;
+        }
         if (isVerified || verificationEmail) {
           resetVerificationState();
           hideStatus();
@@ -868,6 +871,8 @@
           alert("請輸入有效的電子郵件格式 Please enter a valid email format");
           return;
         }
+
+        hideStatus();
 
         try {
           sendVerificationBtn.disabled = true;
@@ -939,6 +944,9 @@
         } finally {
           if (!isVerified) {
             setSendVerificationButtonDefault();
+          } else if (sendVerificationBtn.textContent === "發送中... Sending...") {
+            sendVerificationBtn.disabled = true;
+            sendVerificationBtn.textContent = "已寄出 Code sent";
           }
         }
       });
@@ -968,6 +976,7 @@
           );
           return;
         }
+        const password = document.getElementById("password").value;
         const countryCode = document.getElementById("country-code").value;
         const phone = document.getElementById("phone").value.trim();
         const lastName = document.getElementById("last-name").value.trim();
