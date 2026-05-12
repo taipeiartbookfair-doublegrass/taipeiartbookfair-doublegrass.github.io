@@ -710,9 +710,6 @@
         "send-verification-btn",
       );
       const emailInput = document.getElementById("email");
-      const verificationCodeBox = document.getElementById(
-        "verification-code-box",
-      );
       const verificationCodeInput =
         document.getElementById("verification-code");
       const formFields = document.getElementById("form-fields");
@@ -852,7 +849,7 @@
         }
       });
 
-      // Step 1: Send verification code
+      // Step 1: Send code (same transport as forgot password: text/plain + forgot_password_send_email; if account not in DB, try signup_send_email)
       sendVerificationBtn.addEventListener("click", async function (event) {
         event.preventDefault();
 
@@ -872,46 +869,60 @@
           return;
         }
 
-        let sendSucceeded = false;
-
         try {
           sendVerificationBtn.disabled = true;
           sendVerificationBtn.textContent = "發送中... Sending...";
 
-          const params = new URLSearchParams({
-            action: "signup_send_email",
+          const forgotParams = new URLSearchParams({
+            action: "forgot_password_send_email",
             account: email,
           });
+          let data = await postToSignupApi(forgotParams);
 
-          const data = await postToSignupApi(params);
+          if (
+            !data.success &&
+            isAccountNotFoundMessage(data.message || data.error)
+          ) {
+            const signupParams = new URLSearchParams({
+              action: "signup_send_email",
+              account: email,
+            });
+            data = await postToSignupApi(signupParams);
+          }
 
           if (data.success) {
-            sendSucceeded = true;
             verificationEmail = email;
-            isVerified = false;
+            isVerified = true;
             verificationCodeInput.value = "";
 
-            verificationCodeBox.style.display = "flex";
+            emailInput.readOnly = true;
+            sendVerificationBtn.disabled = true;
+            sendVerificationBtn.textContent = "已寄出 Code sent";
+
+            formFields.classList.remove("form-fields-hidden");
+            formFields.classList.add("form-fields-visible");
+
+            document.getElementById("password").required = true;
+            document.getElementById("phone").required = true;
+            document.getElementById("country-code").required = true;
+            document.getElementById("last-name").required = true;
+            document.getElementById("first-name").required = true;
+            document.getElementById("region").required = true;
+
             verificationCodeInput.focus();
             showStatus(
               "驗證碼已寄至 " +
                 email +
-                "，請於 10 分鐘內輸入。\nVerification code sent to " +
+                "。請輸入信中信內驗證碼並填寫下方資料後按「註冊」。\nCode sent to " +
                 email +
-                ". Please enter it within 10 minutes.",
+                ". Enter the code from email, complete the form, then Sign Up.",
             );
-            startSendCodeCooldown();
           } else {
-            const baseMsg =
+            alert(
               data.message ||
-              data.error ||
-              "發送驗證碼失敗，請稍後再試 Failed to send verification code, please try again later";
-            let extra = "";
-            if (String(baseMsg).indexOf("Unknown action") !== -1) {
-              extra =
-                "\n\n（後端）請確認 Apps Script 專案內：`ROUTES` 有 `signup_send_email`，且 `User.signup_send_email` 函數已定義並存檔；然後「部署」→「管理部署」→ 選「新版本」再發布。\n\n(Backend) Ensure `User.signup_send_email` exists, is listed in `ROUTES`, then Deploy → Manage deployments → New version.";
-            }
-            alert(baseMsg + extra);
+                data.error ||
+                "發送驗證碼失敗，請稍後再試 Failed to send verification code, please try again later",
+            );
           }
         } catch (error) {
           console.error("Send verification error:", error);
@@ -926,102 +937,37 @@
               hint;
           alert(msg);
         } finally {
-          if (!sendSucceeded) {
+          if (!isVerified) {
             setSendVerificationButtonDefault();
           }
         }
       });
 
-      // Step 2: Verify code and show remaining form fields
-      async function verifyCode() {
-        const email = emailInput.value.trim().toLowerCase();
-        const code = verificationCodeInput.value.trim();
-
-        if (!verificationEmail || email !== verificationEmail) {
-          alert(
-            "Email 已變更，請重新發送驗證碼 Email changed. Please send a new verification code.",
-          );
-          resetVerificationState();
-          return;
-        }
-
-        if (!code) {
-          alert("請輸入驗證碼 Please enter verification code");
-          return;
-        }
-
-        try {
-          verifyCodeBtn.disabled = true;
-          verifyCodeBtn.textContent = "驗證中...";
-
-          const params = new URLSearchParams({
-            action: "signup_verify_code",
-            account: email,
-            token: code,
-            verificationCode: code,
-          });
-
-          const data = await postToSignupApi(params);
-
-          if (!data.success) {
-            alert(data.message || data.error || "驗證失敗 Verification failed.");
-            return;
-          }
-
-          clearSendCodeCooldown();
-          isVerified = true;
-          verificationCodeBox.style.display = "none";
-          emailInput.readOnly = true;
-          sendVerificationBtn.disabled = true;
-          sendVerificationBtn.textContent = "已驗證 Verified";
-
-          formFields.classList.remove("form-fields-hidden");
-          formFields.classList.add("form-fields-visible");
-
-          document.getElementById("password").required = true;
-          document.getElementById("phone").required = true;
-          document.getElementById("country-code").required = true;
-          document.getElementById("last-name").required = true;
-          document.getElementById("first-name").required = true;
-          document.getElementById("region").required = true;
-
-          showStatus(
-            "驗證成功！請填寫其他資訊 Verification successful! Please fill in other information",
-          );
-
-          setTimeout(() => {
-            hideStatus();
-          }, 2000);
-        } catch (error) {
-          alert("網絡錯誤，請稍後再試 Network error, please try again later");
-          console.error("Verify code error:", error);
-        } finally {
-          verifyCodeBtn.disabled = false;
-          verifyCodeBtn.textContent = "確認 Verify";
-        }
-      }
-
-      verifyCodeBtn.addEventListener("click", function () {
-        verifyCode();
-      });
-
-      // Allow Enter key to verify code
       verificationCodeInput.addEventListener("keypress", function (e) {
-        if (e.key === "Enter" && verificationCodeBox.style.display !== "none") {
-          verifyCode();
+        if (e.key === "Enter" && isVerified) {
+          e.preventDefault();
+          submitBtn.click();
         }
       });
 
       // Form submission
       signupForm.addEventListener("submit", function (e) {
-        if (!isVerified) {
+        if (!isVerified || !verificationEmail) {
           e.preventDefault();
-          alert("請先驗證您的電子郵件 Please verify your email first");
+          alert(
+            "請先按「發送驗證碼」收信後再註冊 Please press Send Verification Code first.",
+          );
           return;
         }
 
         const account = emailInput.value.trim().toLowerCase();
-        const password = document.getElementById("password").value;
+        if (account !== verificationEmail) {
+          e.preventDefault();
+          alert(
+            "Email 與寄送驗證碼時不一致，請重新發送驗證碼 Email does not match the address used to send the code.",
+          );
+          return;
+        }
         const countryCode = document.getElementById("country-code").value;
         const phone = document.getElementById("phone").value.trim();
         const lastName = document.getElementById("last-name").value.trim();
@@ -1067,6 +1013,7 @@
         registerParams.set("name", lastName + firstName);
         registerParams.set("region", region);
         registerParams.set("verificationCode", verificationCode);
+        registerParams.set("token", verificationCode);
 
         e.preventDefault();
 
