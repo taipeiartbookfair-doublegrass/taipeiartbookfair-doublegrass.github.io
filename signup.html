@@ -200,6 +200,9 @@
 
       .form-fields-visible {
         display: flex;
+        flex-direction: column;
+      }
+
       .password-rules {
         font-size: 0.72rem;
         line-height: 1.35;
@@ -244,47 +247,6 @@
             <button id="send-verification-btn" type="button">
               發送驗證碼 Send Verification Code
             </button>
-          <div class="input-box">
-            <label for="password">密碼 Password</label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              placeholder="Enter your password"
-              autocomplete="new-password"
-              minlength="8"
-              required
-            />
-
-            <div class="password-rules" id="password-rules">
-              密碼需至少 8 碼，並包含大寫、小寫與數字。<br />
-              Password must be at least 8 characters and include uppercase,
-              lowercase, and number.
-            </div>
-          </div>
-
-          <div class="input-box">
-            <label for="phone">電話 Phone</label>
-            <input
-              type="tel"
-              name="phone"
-              id="phone"
-              placeholder="Enter your phone number"
-              autocomplete="tel"
-              required
-            />
-          </div>
-
-          <div class="input-box">
-            <label for="name">姓名 Name</label>
-            <input
-              type="text"
-              name="name"
-              id="name"
-              placeholder="Enter your name"
-              autocomplete="name"
-              required
-            />
           </div>
 
           <div
@@ -304,8 +266,15 @@
                 name="password"
                 id="password"
                 placeholder="Enter your password"
-                minlength="6"
+                autocomplete="new-password"
+                minlength="8"
               />
+
+              <div class="password-rules" id="password-rules">
+                密碼需至少 8 碼，並包含大寫、小寫與數字。<br />
+                Password must be at least 8 characters and include uppercase,
+                lowercase, and number.
+              </div>
             </div>
 
             <div class="input-box">
@@ -315,6 +284,7 @@
                 name="phone"
                 id="phone"
                 placeholder="Enter your phone number"
+                autocomplete="tel"
               />
             </div>
 
@@ -325,6 +295,7 @@
                 name="name"
                 id="name"
                 placeholder="Enter your name"
+                autocomplete="name"
               />
             </div>
 
@@ -398,8 +369,7 @@
 
       const signupForm = document.getElementById("signup-form");
       const submitBtn = document.getElementById("submit-btn");
-      const statusBox = document.getElementById("status");
-      const hiddenIframe = document.getElementById("hidden_iframe");
+      const statusBox = document.getElementById("signup-status");
       const sendVerificationBtn = document.getElementById(
         "send-verification-btn",
       );
@@ -427,6 +397,7 @@
       }
 
       function hideStatus() {
+        if (!statusBox) return;
         statusBox.style.display = "none";
       }
 
@@ -486,9 +457,6 @@
             // Show verification code input
             verificationCodeBox.style.display = "flex";
             verificationCodeInput.focus();
-
-            // Set up verification code input handler
-            setupVerificationHandler();
           } else {
             alert(
               data.message ||
@@ -504,18 +472,7 @@
         }
       });
 
-      // Step 2: Verify the code and show form fields
-      function setupVerificationHandler() {
-        verificationCodeInput.addEventListener("keypress", function (e) {
-          if (e.key === "Enter") {
-            verifyCode();
-          }
-        });
-
-        // Also allow verification by clicking outside the input or just wait for submission
-        // For now, we'll verify on Enter key and allow user to proceed to submit form
-      }
-
+      // Step 2: Verify code and show remaining form fields
       function verifyCode() {
         const code = verificationCodeInput.value.trim();
 
@@ -524,10 +481,8 @@
           return;
         }
 
-        // In a real implementation, you would verify with backend here
-        // For now, we'll show the form fields to allow completion
-        // Your brother's backend should handle the actual verification when form is submitted
-
+        // Backend verification will happen on form submission
+        // For now, show the form fields
         isVerified = true;
         verificationCodeBox.style.display = "none";
 
@@ -535,7 +490,7 @@
         formFields.classList.remove("form-fields-hidden");
         formFields.classList.add("form-fields-visible");
 
-        // Make password, phone, name, region required now that form is visible
+        // Make all fields required
         document.getElementById("password").required = true;
         document.getElementById("phone").required = true;
         document.getElementById("name").required = true;
@@ -547,8 +502,15 @@
 
         setTimeout(() => {
           hideStatus();
-        }, 3000);
+        }, 2000);
       }
+
+      // Allow Enter key to verify code
+      verificationCodeInput.addEventListener("keypress", function (e) {
+        if (e.key === "Enter" && verificationCodeBox.style.display !== "none") {
+          verifyCode();
+        }
+      });
 
       // Form submission
       signupForm.addEventListener("submit", function (e) {
@@ -571,9 +533,9 @@
           return;
         }
 
-        if (password.length < 6) {
+        if (password.length < 8) {
           e.preventDefault();
-          alert("密碼至少需要 6 碼 Password must be at least 6 characters");
+          alert("密碼至少需要 8 碼 Password must be at least 8 characters");
           return;
         }
 
@@ -583,12 +545,17 @@
           return;
         }
 
-        // Add verification code to form data
-        const verificationCodeField = document.createElement("input");
-        verificationCodeField.type = "hidden";
-        verificationCodeField.name = "verificationCode";
-        verificationCodeField.value = verificationCode;
-        signupForm.appendChild(verificationCodeField);
+        // Prepare form data with verification code
+        const formData = new FormData();
+        formData.append("action", "register");
+        formData.append("account", account);
+        formData.append("password", password);
+        formData.append("phone", phone);
+        formData.append("name", name);
+        formData.append("region", region);
+        formData.append("verificationCode", verificationCode);
+
+        e.preventDefault();
 
         submitted = true;
         submitBtn.disabled = true;
@@ -597,53 +564,64 @@
 
         clearTimeout(timeoutTimer);
 
+        // Submit to backend
+        fetch(
+          "https://script.google.com/macros/s/AKfycbxLLxgXIqKYGOlwLXwHCpNqJSXwFx8Mhr13nc4gMrbd8XctycrTf7tlEumEFpmxPkng/exec",
+          {
+            redirect: "follow",
+            method: "POST",
+            body: formData,
+          },
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            clearTimeout(timeoutTimer);
+
+            if (data.success) {
+              showStatus("送出完成。\n請到 Users 工作表確認是否新增。");
+              alert(
+                data.message ||
+                  "註冊成功，請登入 Register successful. Please login.",
+              );
+              setTimeout(() => {
+                window.location.href = "login.html";
+              }, 1500);
+            } else {
+              const msg =
+                data.message || data.error || "註冊失敗 Register failed.";
+              alert(msg);
+              showStatus(msg);
+              resetButton();
+            }
+          })
+          .catch((error) => {
+            clearTimeout(timeoutTimer);
+            console.error("Register error:", error);
+            const detail = error && error.message ? String(error.message) : "";
+            let hint =
+              "若為 Failed to fetch：常見為瀏覽器擴充（廣告封鎖）、公司網路阻擋 Google、或 CORS。請試無痕視窗、暫停擴充、換網路或手機熱點。\n";
+            hint +=
+              "If you see Failed to fetch: try incognito, disable extensions (ad blockers), or another network (e.g. mobile hotspot). Google endpoints may be blocked on some networks.\n";
+            const msg = detail
+              ? "連線錯誤 / Network error: " + detail + "\n\n" + hint
+              : "Network error, please try again later.\n\n" + hint;
+            alert(msg);
+            showStatus(
+              detail
+                ? "連線錯誤 / Network error: " + detail
+                : "Network error, please try again later.",
+            );
+            resetButton();
+          });
+
         timeoutTimer = setTimeout(function () {
           if (submitted) {
             showStatus(
               "資料已送出。\n請到 Users 工作表確認是否新增。\n如果沒有新增，請確認 Apps Script 部署網址是否正確。",
             );
-            resetButton();
-            return;
+            // Don't auto-reset, keep the form as is
           }
-
-        showStatus("送出完成。\n請到 Users 工作表確認是否新增。");
-
-          if (data.success) {
-            alert("註冊成功，請登入 Register successful. Please login.");
-            window.location.href = "login.html";
-          } else {
-            const msg =
-              data.message || data.error || "註冊失敗 Register failed.";
-            alert(msg);
-            showStatus(msg);
-            resetButton();
-          }
-        } catch (error) {
-          console.error("Register error:", error);
-          const detail =
-            error && error.message ? String(error.message) : "";
-          let hint =
-            "若為 Failed to fetch：常見為瀏覽器擴充（廣告封鎖）、公司網路阻擋 Google、或 CORS。請試無痕視窗、暫停擴充、換網路或手機熱點。\n";
-          hint +=
-            "If you see Failed to fetch: try incognito, disable extensions (ad blockers), or another network (e.g. mobile hotspot). Google endpoints may be blocked on some networks.\n";
-          const msg = detail
-            ? "連線錯誤 / Network error: " + detail + "\n\n" + hint
-            : "Network error, please try again later.\n\n" + hint;
-          alert(msg);
-          showStatus(
-            detail
-              ? "連線錯誤 / Network error: " + detail
-              : "Network error, please try again later."
-          );
-          resetButton();
-        }
-      });
-
-      // Allow pressing Enter in verification code input to trigger verification
-      verificationCodeInput.addEventListener("keypress", function (e) {
-        if (e.key === "Enter" && verificationCodeBox.style.display !== "none") {
-          verifyCode();
-        }
+        }, 10000);
       });
     </script>
   </body>
