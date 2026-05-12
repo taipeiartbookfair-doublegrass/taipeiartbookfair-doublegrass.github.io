@@ -730,6 +730,40 @@
       let timeoutTimer = null;
       let verificationEmail = "";
       let isVerified = false;
+      const SEND_CODE_COOLDOWN_MS = 60000;
+      let sendCodeCooldownTimer = null;
+
+      function clearSendCodeCooldown() {
+        if (sendCodeCooldownTimer) {
+          clearInterval(sendCodeCooldownTimer);
+          sendCodeCooldownTimer = null;
+        }
+      }
+
+      function setSendVerificationButtonDefault() {
+        sendVerificationBtn.disabled = false;
+        sendVerificationBtn.textContent = "發送驗證碼 Send Verification Code";
+      }
+
+      function startSendCodeCooldown() {
+        clearSendCodeCooldown();
+        const deadline = Date.now() + SEND_CODE_COOLDOWN_MS;
+        function tick() {
+          const leftSec = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+          if (leftSec <= 0) {
+            clearSendCodeCooldown();
+            if (!isVerified) {
+              setSendVerificationButtonDefault();
+            }
+            return;
+          }
+          sendVerificationBtn.disabled = true;
+          sendVerificationBtn.textContent =
+            "請 " + leftSec + " 秒後再試 / Resend in " + leftSec + "s";
+        }
+        tick();
+        sendCodeCooldownTimer = setInterval(tick, 1000);
+      }
 
       function showStatus(message) {
         if (!statusBox) return;
@@ -817,16 +851,28 @@
       }
 
       function resetVerificationState() {
+        clearSendCodeCooldown();
         isVerified = false;
         verificationEmail = "";
         verificationCodeInput.value = "";
         verificationCodeBox.style.display = "none";
         formFields.classList.remove("form-fields-visible");
         formFields.classList.add("form-fields-hidden");
-        document.getElementById("password").required = false;
-        document.getElementById("phone").required = false;
-        document.getElementById("name").required = false;
-        document.getElementById("region").required = false;
+        [
+          "password",
+          "phone",
+          "country-code",
+          "last-name",
+          "first-name",
+          "region",
+        ].forEach(function (id) {
+          const el = document.getElementById(id);
+          if (el) {
+            el.required = false;
+          }
+        });
+        emailInput.readOnly = false;
+        setSendVerificationButtonDefault();
       }
 
       emailInput.addEventListener("input", function () {
@@ -840,6 +886,10 @@
       sendVerificationBtn.addEventListener("click", async function (event) {
         event.preventDefault();
 
+        if (isVerified) {
+          return;
+        }
+
         const email = emailInput.value.trim().toLowerCase();
 
         if (!email) {
@@ -851,6 +901,8 @@
           alert("請輸入有效的電子郵件格式 Please enter a valid email format");
           return;
         }
+
+        let sendSucceeded = false;
 
         try {
           sendVerificationBtn.disabled = true;
@@ -864,17 +916,21 @@
           const data = await postToSignupApi(params);
 
           if (data.success) {
-            alert(
-              "驗證碼已發送至您的電子郵件 Verification code sent to your email",
-            );
+            sendSucceeded = true;
             verificationEmail = email;
             isVerified = false;
+            verificationCodeInput.value = "";
 
             verificationCodeBox.style.display = "flex";
             verificationCodeInput.focus();
             showStatus(
-              "驗證碼已寄出，請於 10 分鐘內輸入。\nVerification code sent. Please enter it within 10 minutes.",
+              "驗證碼已寄至 " +
+                email +
+                "，請於 10 分鐘內輸入。\nVerification code sent to " +
+                email +
+                ". Please enter it within 10 minutes.",
             );
+            startSendCodeCooldown();
           } else {
             alert(
               data.message ||
@@ -883,11 +939,21 @@
             );
           }
         } catch (error) {
-          alert("網絡錯誤，請稍後再試 Network error, please try again later");
           console.error("Send verification error:", error);
+          const detail = error && error.message ? String(error.message) : "";
+          let hint =
+            "若為 Failed to fetch：常見為瀏覽器擴充（廣告封鎖）、公司網路阻擋 Google、或連線問題。請試無痕視窗、暫停擴充、換網路或手機熱點。\n";
+          hint +=
+            "If you see Failed to fetch: try incognito, disable extensions (ad blockers), or another network (e.g. mobile hotspot).\n";
+          const msg = detail
+            ? "連線錯誤 / Network error: " + detail + "\n\n" + hint
+            : "網絡錯誤，請稍後再試 Network error, please try again later.\n\n" +
+              hint;
+          alert(msg);
         } finally {
-          sendVerificationBtn.disabled = false;
-          sendVerificationBtn.textContent = "發送驗證碼 Send Verification Code";
+          if (!sendSucceeded) {
+            setSendVerificationButtonDefault();
+          }
         }
       });
 
@@ -920,23 +986,14 @@
             verificationCode: code,
           });
 
-<<<<<<< HEAD
           const data = await postToSignupApi(params);
-=======
-        // Make all fields required
-        document.getElementById("password").required = true;
-        document.getElementById("phone").required = true;
-        document.getElementById("country-code").required = true;
-        document.getElementById("last-name").required = true;
-        document.getElementById("first-name").required = true;
-        document.getElementById("region").required = true;
->>>>>>> 24fe11ad40a9c69962d5e1dc71272b5cb24a1b82
 
           if (!data.success) {
             alert(data.message || data.error || "驗證失敗 Verification failed.");
             return;
           }
 
+          clearSendCodeCooldown();
           isVerified = true;
           verificationCodeBox.style.display = "none";
           emailInput.readOnly = true;
@@ -948,7 +1005,9 @@
 
           document.getElementById("password").required = true;
           document.getElementById("phone").required = true;
-          document.getElementById("name").required = true;
+          document.getElementById("country-code").required = true;
+          document.getElementById("last-name").required = true;
+          document.getElementById("first-name").required = true;
           document.getElementById("region").required = true;
 
           showStatus(
@@ -986,7 +1045,7 @@
           return;
         }
 
-        const account = emailInput.value.trim();
+        const account = emailInput.value.trim().toLowerCase();
         const password = document.getElementById("password").value;
         const countryCode = document.getElementById("country-code").value;
         const phone = document.getElementById("phone").value.trim();
@@ -1022,31 +1081,17 @@
           return;
         }
 
-<<<<<<< HEAD
-        const params = new URLSearchParams({
-          action: "register",
-          account: account,
-          password: password,
-          phone: phone,
-          name: name,
-          region: region,
-          token: verificationCode,
-          verificationCode: verificationCode,
-        });
-=======
-        // Prepare form data with verification code
-        const formData = new FormData();
-        formData.append("action", "register");
-        formData.append("account", account);
-        formData.append("password", password);
-        formData.append("country_code", countryCode);
-        formData.append("phone", phone);
-        formData.append("last_name", lastName);
-        formData.append("first_name", firstName);
-        formData.append("name", lastName + firstName);
-        formData.append("region", region);
-        formData.append("verificationCode", verificationCode);
->>>>>>> 24fe11ad40a9c69962d5e1dc71272b5cb24a1b82
+        const registerParams = new URLSearchParams();
+        registerParams.set("action", "register");
+        registerParams.set("account", account);
+        registerParams.set("password", password);
+        registerParams.set("country_code", countryCode);
+        registerParams.set("phone", phone);
+        registerParams.set("last_name", lastName);
+        registerParams.set("first_name", firstName);
+        registerParams.set("name", lastName + firstName);
+        registerParams.set("region", region);
+        registerParams.set("verificationCode", verificationCode);
 
         e.preventDefault();
 
@@ -1057,7 +1102,7 @@
 
         clearTimeout(timeoutTimer);
 
-        postToSignupApi(params)
+        postToSignupApi(registerParams)
           .then((data) => {
             clearTimeout(timeoutTimer);
 
