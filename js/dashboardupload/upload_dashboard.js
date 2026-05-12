@@ -1,6 +1,6 @@
 // 舊 API：負責主試算表的讀寫（同意書打勾、匯款狀態等），不要動
 const uploadApiUrl =
-  "https://script.google.com/macros/s/AKfycbzPTDMCkmIkFlH6HQSEP72Bn2ffOXWcnH6hRPx6FSsQ0NkPZpX2ZumWS-VjYuErUL93Og/exec";
+  "https://script.google.com/macros/s/AKfycbzf2s5A3QcztCK9f5bOZgkDdV9pcmyYmVFwK2u2GrAqhs7lItff-Q-1-BO23tDT00TSRA/exec";
 
 // 檔案上傳 API：catalog / marketing 上傳到 Google Drive
 const fileUploadApiUrl =
@@ -198,7 +198,7 @@ async function updateSpreadsheetStatus(apiField, value) {
 
     // 使用主 API URL，因為 uploadApiUrl 可能沒有 update_dashboard_info 處理器
     const mainApiUrl =
-      "https://script.google.com/macros/s/AKfycbzPTDMCkmIkFlH6HQSEP72Bn2ffOXWcnH6hRPx6FSsQ0NkPZpX2ZumWS-VjYuErUL93Og/exec";
+      "https://script.google.com/macros/s/AKfycbzf2s5A3QcztCK9f5bOZgkDdV9pcmyYmVFwK2u2GrAqhs7lItff-Q-1-BO23tDT00TSRA/exec";
     const updateRes = await fetch(mainApiUrl, {
       redirect: "follow",
       method: "POST",

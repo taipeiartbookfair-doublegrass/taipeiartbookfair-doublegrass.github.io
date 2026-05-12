@@ -8,7 +8,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   // Google Apps Script API 端點
   const apiUrl =
-    "https://script.google.com/macros/s/AKfycbzPTDMCkmIkFlH6HQSEP72Bn2ffOXWcnH6hRPx6FSsQ0NkPZpX2ZumWS-VjYuErUL93Og/exec";
+    "https://script.google.com/macros/s/AKfycbzf2s5A3QcztCK9f5bOZgkDdV9pcmyYmVFwK2u2GrAqhs7lItff-Q-1-BO23tDT00TSRA/exec";
 
   // 檢查是否已經有 HTML 中的元素存在，如果有就使用現有的結構
   const existingSendButton = document.getElementById("send-verification-btn");
