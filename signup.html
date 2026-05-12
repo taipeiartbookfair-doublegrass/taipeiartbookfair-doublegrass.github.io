@@ -6,12 +6,12 @@
 
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;
-      connect-src *;
-      img-src * data: blob:;
-      script-src * 'unsafe-inline' 'unsafe-eval';
-      style-src * 'unsafe-inline';
-      frame-src *;"
+      content="default-src 'self';
+         script-src 'self' 'unsafe-inline' https://www.google.com https://www.gstatic.com https://code.jquery.com https://www.googletagmanager.com;
+         style-src 'self' 'unsafe-inline';
+         img-src 'self' data: blob:;
+         connect-src https://www.google-analytics.com https://script.google.com https://script.googleusercontent.com;
+         frame-src https://www.google.com https://script.google.com https://script.googleusercontent.com;"
     />
 
     <title>Sign Up - 草率季Taipei Art Book Fair</title>
@@ -179,7 +179,7 @@
         cursor: pointer;
       }
 
-      .status {
+      #signup-status {
         display: none;
         width: 100%;
         max-width: 380px;
@@ -200,6 +200,11 @@
 
       .form-fields-visible {
         display: flex;
+      .password-rules {
+        font-size: 0.72rem;
+        line-height: 1.35;
+        margin-top: 4px;
+        color: plum;
       }
 
       ::selection {
@@ -222,14 +227,7 @@
       <h2>註冊 Sign Up</h2>
 
       <div class="login-form">
-        <form
-          id="signup-form"
-          method="POST"
-          action="https://script.google.com/macros/s/AKfycbxLLxgXIqKYGOlwLXwHCpNqJSXwFx8Mhr13nc4gMrbd8XctycrTf7tlEumEFpmxPkng/exec"
-          target="_blank"
-        >
-          <input type="hidden" name="action" value="register" />
-
+        <form id="signup-form" method="POST">
           <div class="input-box">
             <label for="email">電子郵件 Email</label>
             <input
@@ -237,6 +235,7 @@
               name="account"
               id="email"
               placeholder="your@email.com"
+              autocomplete="email"
               required
             />
           </div>
@@ -245,6 +244,47 @@
             <button id="send-verification-btn" type="button">
               發送驗證碼 Send Verification Code
             </button>
+          <div class="input-box">
+            <label for="password">密碼 Password</label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="Enter your password"
+              autocomplete="new-password"
+              minlength="8"
+              required
+            />
+
+            <div class="password-rules" id="password-rules">
+              密碼需至少 8 碼，並包含大寫、小寫與數字。<br />
+              Password must be at least 8 characters and include uppercase,
+              lowercase, and number.
+            </div>
+          </div>
+
+          <div class="input-box">
+            <label for="phone">電話 Phone</label>
+            <input
+              type="tel"
+              name="phone"
+              id="phone"
+              placeholder="Enter your phone number"
+              autocomplete="tel"
+              required
+            />
+          </div>
+
+          <div class="input-box">
+            <label for="name">姓名 Name</label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              placeholder="Enter your name"
+              autocomplete="name"
+              required
+            />
           </div>
 
           <div
@@ -345,20 +385,17 @@
         </div>
       </div>
 
-      <div id="status" class="status"></div>
+      <div id="signup-status"></div>
     </div>
 
     <a href="index.html">
       <div class="back">回主頁 Back</div>
     </a>
 
-    <iframe
-      name="hidden_iframe"
-      id="hidden_iframe"
-      style="display: none"
-    ></iframe>
-
     <script>
+      const SIGNUP_API_URL =
+        "https://script.google.com/macros/s/AKfycbzPTDMCkmIkFlH6HQSEP72Bn2ffOXWcnH6hRPx6FSsQ0NkPZpX2ZumWS-VjYuErUL93Og/exec";
+
       const signupForm = document.getElementById("signup-form");
       const submitBtn = document.getElementById("submit-btn");
       const statusBox = document.getElementById("status");
@@ -384,6 +421,7 @@
       let isVerified = false;
 
       function showStatus(message) {
+        if (!statusBox) return;
         statusBox.style.display = "block";
         statusBox.textContent = message;
       }
@@ -565,25 +603,40 @@
               "資料已送出。\n請到 Users 工作表確認是否新增。\n如果沒有新增，請確認 Apps Script 部署網址是否正確。",
             );
             resetButton();
+            return;
           }
-        }, 8000);
-      });
-
-      hiddenIframe.addEventListener("load", function () {
-        if (!submitted) return;
-
-        clearTimeout(timeoutTimer);
 
         showStatus("送出完成。\n請到 Users 工作表確認是否新增。");
 
-        alert("註冊資料已送出");
-
-        submitted = false;
-        resetButton();
-
-        setTimeout(function () {
-          window.location.href = "login.html";
-        }, 1000);
+          if (data.success) {
+            alert("註冊成功，請登入 Register successful. Please login.");
+            window.location.href = "login.html";
+          } else {
+            const msg =
+              data.message || data.error || "註冊失敗 Register failed.";
+            alert(msg);
+            showStatus(msg);
+            resetButton();
+          }
+        } catch (error) {
+          console.error("Register error:", error);
+          const detail =
+            error && error.message ? String(error.message) : "";
+          let hint =
+            "若為 Failed to fetch：常見為瀏覽器擴充（廣告封鎖）、公司網路阻擋 Google、或 CORS。請試無痕視窗、暫停擴充、換網路或手機熱點。\n";
+          hint +=
+            "If you see Failed to fetch: try incognito, disable extensions (ad blockers), or another network (e.g. mobile hotspot). Google endpoints may be blocked on some networks.\n";
+          const msg = detail
+            ? "連線錯誤 / Network error: " + detail + "\n\n" + hint
+            : "Network error, please try again later.\n\n" + hint;
+          alert(msg);
+          showStatus(
+            detail
+              ? "連線錯誤 / Network error: " + detail
+              : "Network error, please try again later."
+          );
+          resetButton();
+        }
       });
 
       // Allow pressing Enter in verification code input to trigger verification
