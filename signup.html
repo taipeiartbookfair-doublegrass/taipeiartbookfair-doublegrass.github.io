@@ -210,6 +210,21 @@
         color: plum;
       }
 
+      .verification-actions {
+        display: flex;
+        gap: 6px;
+      }
+
+      .verification-actions input {
+        flex: 1;
+      }
+
+      .verification-actions button {
+        width: auto;
+        min-width: 110px;
+        font-size: 0.75rem;
+      }
+
       ::selection {
         color: palegreen;
         background-color: olive;
@@ -255,7 +270,18 @@
             style="display: none"
           >
             <label for="verification-code">驗證碼 Verification Code</label>
-            <input type="text" id="verification-code" name="verificationCode" />
+            <div class="verification-actions">
+              <input
+                type="text"
+                id="verification-code"
+                name="verificationCode"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+              />
+              <button id="verify-code-btn" type="button">
+                確認 Verify
+              </button>
+            </div>
           </div>
 
           <div id="form-fields" class="form-fields-hidden">
@@ -379,11 +405,8 @@
       );
       const verificationCodeInput =
         document.getElementById("verification-code");
+      const verifyCodeBtn = document.getElementById("verify-code-btn");
       const formFields = document.getElementById("form-fields");
-
-      // Google Apps Script API endpoint
-      const apiUrl =
-        "https://script.google.com/macros/s/AKfycbwNWgPsLK_ldHUIvoIg5a9k3PNIlmjvJeTgbCZ5CZsvKFQ7e1DoxbMsAawi4nI3Rea4DA/exec";
 
       let submitted = false;
       let timeoutTimer = null;
@@ -411,11 +434,95 @@
         return emailRegex.test(email);
       }
 
+      function validatePassword(password) {
+        const value = String(password || "");
+
+        if (value.length < 8) {
+          return "密碼至少需要 8 碼 Password must be at least 8 characters.";
+        }
+
+        if (!/[A-Z]/.test(value)) {
+          return "密碼至少需要一個大寫英文字母 Password needs one uppercase letter.";
+        }
+
+        if (!/[a-z]/.test(value)) {
+          return "密碼至少需要一個小寫英文字母 Password needs one lowercase letter.";
+        }
+
+        if (!/[0-9]/.test(value)) {
+          return "密碼至少需要一個數字 Password needs one number.";
+        }
+
+        return "";
+      }
+
+      document.getElementById("password").addEventListener("input", function () {
+        const passwordInput = document.getElementById("password");
+        const passwordRules = document.getElementById("password-rules");
+        const error = validatePassword(passwordInput.value);
+
+        if (!passwordInput.value) {
+          passwordRules.style.color = "plum";
+          passwordRules.innerHTML =
+            "密碼需至少 8 碼，並包含大寫、小寫與數字。<br />Password must be at least 8 characters and include uppercase, lowercase, and number.";
+          return;
+        }
+
+        if (error) {
+          passwordRules.style.color = "plum";
+          passwordRules.textContent = error;
+        } else {
+          passwordRules.style.color = "darkgreen";
+          passwordRules.textContent = "密碼格式正確 Password format valid.";
+        }
+      });
+
+      async function postToSignupApi(params) {
+        const response = await fetch(SIGNUP_API_URL, {
+          redirect: "follow",
+          method: "POST",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8",
+          },
+          body: params.toString(),
+        });
+
+        const raw = await response.text();
+        try {
+          return raw ? JSON.parse(raw) : {};
+        } catch (error) {
+          console.error("Signup API non-JSON response:", response.status, raw);
+          throw new Error(
+            "Server returned non-JSON response. Please check Apps Script deployment.",
+          );
+        }
+      }
+
+      function resetVerificationState() {
+        isVerified = false;
+        verificationEmail = "";
+        verificationCodeInput.value = "";
+        verificationCodeBox.style.display = "none";
+        formFields.classList.remove("form-fields-visible");
+        formFields.classList.add("form-fields-hidden");
+        document.getElementById("password").required = false;
+        document.getElementById("phone").required = false;
+        document.getElementById("name").required = false;
+        document.getElementById("region").required = false;
+      }
+
+      emailInput.addEventListener("input", function () {
+        if (isVerified || verificationEmail) {
+          resetVerificationState();
+          hideStatus();
+        }
+      });
+
       // Step 1: Send verification code
       sendVerificationBtn.addEventListener("click", async function (event) {
         event.preventDefault();
 
-        const email = emailInput.value.trim();
+        const email = emailInput.value.trim().toLowerCase();
 
         if (!email) {
           alert("請輸入您的電子郵件 Please enter your email");
@@ -431,35 +538,29 @@
           sendVerificationBtn.disabled = true;
           sendVerificationBtn.textContent = "發送中... Sending...";
 
-          // Send verification code
           const params = new URLSearchParams({
             action: "signup_send_email",
             account: email,
-          }).toString();
-
-          const response = await fetch(apiUrl, {
-            redirect: "follow",
-            method: "POST",
-            headers: {
-              "Content-Type": "text/plain;charset=utf-8",
-            },
-            body: params,
           });
 
-          const data = await response.json();
+          const data = await postToSignupApi(params);
 
           if (data.success) {
             alert(
               "驗證碼已發送至您的電子郵件 Verification code sent to your email",
             );
             verificationEmail = email;
+            isVerified = false;
 
-            // Show verification code input
             verificationCodeBox.style.display = "flex";
             verificationCodeInput.focus();
+            showStatus(
+              "驗證碼已寄出，請於 10 分鐘內輸入。\nVerification code sent. Please enter it within 10 minutes.",
+            );
           } else {
             alert(
               data.message ||
+                data.error ||
                 "發送驗證碼失敗，請稍後再試 Failed to send verification code, please try again later",
             );
           }
@@ -473,37 +574,74 @@
       });
 
       // Step 2: Verify code and show remaining form fields
-      function verifyCode() {
+      async function verifyCode() {
+        const email = emailInput.value.trim().toLowerCase();
         const code = verificationCodeInput.value.trim();
+
+        if (!verificationEmail || email !== verificationEmail) {
+          alert(
+            "Email 已變更，請重新發送驗證碼 Email changed. Please send a new verification code.",
+          );
+          resetVerificationState();
+          return;
+        }
 
         if (!code) {
           alert("請輸入驗證碼 Please enter verification code");
           return;
         }
 
-        // Backend verification will happen on form submission
-        // For now, show the form fields
-        isVerified = true;
-        verificationCodeBox.style.display = "none";
+        try {
+          verifyCodeBtn.disabled = true;
+          verifyCodeBtn.textContent = "驗證中...";
 
-        // Show the rest of the form
-        formFields.classList.remove("form-fields-hidden");
-        formFields.classList.add("form-fields-visible");
+          const params = new URLSearchParams({
+            action: "signup_verify_code",
+            account: email,
+            token: code,
+            verificationCode: code,
+          });
 
-        // Make all fields required
-        document.getElementById("password").required = true;
-        document.getElementById("phone").required = true;
-        document.getElementById("name").required = true;
-        document.getElementById("region").required = true;
+          const data = await postToSignupApi(params);
 
-        showStatus(
-          "驗證成功！請填寫其他資訊 Verification successful! Please fill in other information",
-        );
+          if (!data.success) {
+            alert(data.message || data.error || "驗證失敗 Verification failed.");
+            return;
+          }
 
-        setTimeout(() => {
-          hideStatus();
-        }, 2000);
+          isVerified = true;
+          verificationCodeBox.style.display = "none";
+          emailInput.readOnly = true;
+          sendVerificationBtn.disabled = true;
+          sendVerificationBtn.textContent = "已驗證 Verified";
+
+          formFields.classList.remove("form-fields-hidden");
+          formFields.classList.add("form-fields-visible");
+
+          document.getElementById("password").required = true;
+          document.getElementById("phone").required = true;
+          document.getElementById("name").required = true;
+          document.getElementById("region").required = true;
+
+          showStatus(
+            "驗證成功！請填寫其他資訊 Verification successful! Please fill in other information",
+          );
+
+          setTimeout(() => {
+            hideStatus();
+          }, 2000);
+        } catch (error) {
+          alert("網絡錯誤，請稍後再試 Network error, please try again later");
+          console.error("Verify code error:", error);
+        } finally {
+          verifyCodeBtn.disabled = false;
+          verifyCodeBtn.textContent = "確認 Verify";
+        }
       }
+
+      verifyCodeBtn.addEventListener("click", function () {
+        verifyCode();
+      });
 
       // Allow Enter key to verify code
       verificationCodeInput.addEventListener("keypress", function (e) {
@@ -533,9 +671,10 @@
           return;
         }
 
-        if (password.length < 8) {
+        const passwordError = validatePassword(password);
+        if (passwordError) {
           e.preventDefault();
-          alert("密碼至少需要 8 碼 Password must be at least 8 characters");
+          alert(passwordError);
           return;
         }
 
@@ -545,15 +684,16 @@
           return;
         }
 
-        // Prepare form data with verification code
-        const formData = new FormData();
-        formData.append("action", "register");
-        formData.append("account", account);
-        formData.append("password", password);
-        formData.append("phone", phone);
-        formData.append("name", name);
-        formData.append("region", region);
-        formData.append("verificationCode", verificationCode);
+        const params = new URLSearchParams({
+          action: "register",
+          account: account,
+          password: password,
+          phone: phone,
+          name: name,
+          region: region,
+          token: verificationCode,
+          verificationCode: verificationCode,
+        });
 
         e.preventDefault();
 
@@ -564,16 +704,7 @@
 
         clearTimeout(timeoutTimer);
 
-        // Submit to backend
-        fetch(
-          "https://script.google.com/macros/s/AKfycbxLLxgXIqKYGOlwLXwHCpNqJSXwFx8Mhr13nc4gMrbd8XctycrTf7tlEumEFpmxPkng/exec",
-          {
-            redirect: "follow",
-            method: "POST",
-            body: formData,
-          },
-        )
-          .then((response) => response.json())
+        postToSignupApi(params)
           .then((data) => {
             clearTimeout(timeoutTimer);
 
