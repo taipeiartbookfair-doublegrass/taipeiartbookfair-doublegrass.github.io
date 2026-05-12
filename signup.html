@@ -266,27 +266,23 @@
             </button>
           </div>
 
-          <div
-            class="input-box"
-            id="verification-code-box"
-            style="display: none"
-          >
-            <label for="verification-code">驗證碼 Verification Code</label>
-            <div class="verification-actions">
+          <div id="form-fields" class="form-fields-hidden">
+            <div class="input-box" id="verification-code-box">
+              <label for="verification-code">驗證碼 Verification Code</label>
               <input
                 type="text"
                 id="verification-code"
                 name="verificationCode"
                 inputmode="numeric"
                 autocomplete="one-time-code"
+                placeholder="6-digit code from email"
               />
-              <button id="verify-code-btn" type="button">
-                確認 Verify
-              </button>
+              <div class="verification-hint" style="font-size: 11px; color: #666; margin-top: 4px">
+                請輸入信中信內驗證碼，填寫下方資料後按「註冊」一併送出。<br />
+                Enter the code from your email, fill the form below, then press Sign Up.
+              </div>
             </div>
-          </div>
 
-          <div id="form-fields" class="form-fields-hidden">
             <div class="input-box">
               <label for="password">密碼 Password</label>
               <input
@@ -719,46 +715,16 @@
       );
       const verificationCodeInput =
         document.getElementById("verification-code");
-      const verifyCodeBtn = document.getElementById("verify-code-btn");
       const formFields = document.getElementById("form-fields");
 
       let submitted = false;
       let timeoutTimer = null;
       let verificationEmail = "";
       let isVerified = false;
-      const SEND_CODE_COOLDOWN_MS = 60000;
-      let sendCodeCooldownTimer = null;
-
-      function clearSendCodeCooldown() {
-        if (sendCodeCooldownTimer) {
-          clearInterval(sendCodeCooldownTimer);
-          sendCodeCooldownTimer = null;
-        }
-      }
 
       function setSendVerificationButtonDefault() {
         sendVerificationBtn.disabled = false;
         sendVerificationBtn.textContent = "發送驗證碼 Send Verification Code";
-      }
-
-      function startSendCodeCooldown() {
-        clearSendCodeCooldown();
-        const deadline = Date.now() + SEND_CODE_COOLDOWN_MS;
-        function tick() {
-          const leftSec = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
-          if (leftSec <= 0) {
-            clearSendCodeCooldown();
-            if (!isVerified) {
-              setSendVerificationButtonDefault();
-            }
-            return;
-          }
-          sendVerificationBtn.disabled = true;
-          sendVerificationBtn.textContent =
-            "請 " + leftSec + " 秒後再試 / Resend in " + leftSec + "s";
-        }
-        tick();
-        sendCodeCooldownTimer = setInterval(tick, 1000);
       }
 
       function showStatus(message) {
@@ -826,19 +792,11 @@
       });
 
       async function postToSignupApi(params) {
-        const actionValue = params.get("action");
-        let requestUrl = SIGNUP_API_URL;
-        if (actionValue) {
-          const joiner = requestUrl.indexOf("?") === -1 ? "?" : "&";
-          requestUrl =
-            requestUrl + joiner + "action=" + encodeURIComponent(actionValue);
-        }
-
-        const response = await fetch(requestUrl, {
+        const response = await fetch(SIGNUP_API_URL, {
           redirect: "follow",
           method: "POST",
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+            "Content-Type": "text/plain;charset=utf-8",
           },
           body: params.toString(),
         });
@@ -854,12 +812,20 @@
         }
       }
 
+      function isAccountNotFoundMessage(msg) {
+        const s = String(msg || "").toLowerCase();
+        return (
+          s.indexOf("not found") !== -1 ||
+          s.indexOf("does not exist") !== -1 ||
+          s.indexOf("不存在") !== -1 ||
+          s.indexOf("找不到") !== -1
+        );
+      }
+
       function resetVerificationState() {
-        clearSendCodeCooldown();
         isVerified = false;
         verificationEmail = "";
         verificationCodeInput.value = "";
-        verificationCodeBox.style.display = "none";
         formFields.classList.remove("form-fields-visible");
         formFields.classList.add("form-fields-hidden");
         [
