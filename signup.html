@@ -249,6 +249,13 @@
         color: palegreen;
       }
 
+      .input-box input:disabled,
+      .input-box select:disabled {
+        background-color: #e8e8e8;
+        color: #555;
+        cursor: not-allowed;
+      }
+
       ::selection {
         color: palegreen;
         background-color: olive;
@@ -314,8 +321,8 @@
                 </button>
               </div>
               <div class="verification-hint" style="font-size: 11px; color: #666; margin-top: 4px">
-                請輸入信內驗證碼，按「確認驗證碼」檢查是否正確；通過後再填寫下方資料並按「註冊」。<br />
-                Enter the code from email, press Verify to validate; then complete the form and Sign Up.
+                請輸入信內驗證碼並按「確認驗證碼」；通過後才可填寫密碼與聯絡資料。<br />
+                Enter the code from email and press Verify; password and contact fields unlock after success.
               </div>
             </div>
 
@@ -752,13 +759,22 @@
       const resendCodeBtn = document.getElementById("resend-code-btn");
       const formFields = document.getElementById("form-fields");
 
-      const RESEND_COOLDOWN_SEC = 60;
+      const RESEND_COOLDOWN_SEC = 300;
+      const REGISTRATION_FIELD_IDS = [
+        "password",
+        "country-code",
+        "phone",
+        "last-name",
+        "first-name",
+        "region",
+      ];
 
       let submitted = false;
       let timeoutTimer = null;
       let verificationEmail = "";
       let codeWasSent = false;
       let serverEmailVerified = false;
+      let verificationSectionComplete = false;
       let resendCooldownTimerId = null;
       let resendCooldownEnd = 0;
 
@@ -852,20 +868,67 @@
         }
       }
 
-      function clearResendCooldown() {
+      function setRegistrationFieldsLocked(lock) {
+        REGISTRATION_FIELD_IDS.forEach(function (id) {
+          const el = document.getElementById(id);
+          if (el) el.disabled = !!lock;
+        });
+      }
+
+      function stopResendCooldownTimer() {
         if (resendCooldownTimerId) {
           clearInterval(resendCooldownTimerId);
           resendCooldownTimerId = null;
         }
         resendCooldownEnd = 0;
+      }
+
+      function resetResendCooldownUi() {
+        stopResendCooldownTimer();
         if (resendCodeBtn) {
           resendCodeBtn.disabled = false;
           resendCodeBtn.textContent = "重寄驗證碼 Resend";
         }
       }
 
+      function lockVerificationAfterSuccess() {
+        verificationSectionComplete = true;
+        stopResendCooldownTimer();
+        if (verificationCodeInput) {
+          verificationCodeInput.disabled = true;
+        }
+        if (verifyCodeBtn) {
+          verifyCodeBtn.disabled = true;
+          verifyCodeBtn.textContent = "已確認 Verified";
+        }
+        if (resendCodeBtn) {
+          resendCodeBtn.disabled = true;
+          resendCodeBtn.textContent =
+            "已驗證，無法重寄 / Verified (resend locked)";
+        }
+      }
+
+      function unlockVerificationControls() {
+        verificationSectionComplete = false;
+        if (verificationCodeInput) {
+          verificationCodeInput.disabled = false;
+        }
+        if (verifyCodeBtn) {
+          verifyCodeBtn.disabled = false;
+          verifyCodeBtn.textContent = "確認驗證碼 Verify";
+        }
+        resetResendCooldownUi();
+      }
+
       function updateResendCooldownLabel() {
         if (!resendCodeBtn) return;
+        if (verificationSectionComplete) {
+          resendCodeBtn.disabled = true;
+          resendCodeBtn.textContent =
+            "已驗證，無法重寄 / Verified (resend locked)";
+          stopResendCooldownTimer();
+          return;
+        }
         const sec = Math.max(
           0,
           Math.ceil((resendCooldownEnd - Date.now()) / 1000),
@@ -885,7 +948,7 @@
       }
 
       function startResendCooldown() {
-        clearResendCooldown();
+        stopResendCooldownTimer();
         resendCooldownEnd = Date.now() + RESEND_COOLDOWN_SEC * 1000;
         updateResendCooldownLabel();
         resendCooldownTimerId = setInterval(updateResendCooldownLabel, 500);
@@ -894,9 +957,11 @@
       function resetVerificationState() {
         codeWasSent = false;
         serverEmailVerified = false;
+        verificationSectionComplete = false;
         verificationEmail = "";
         verificationCodeInput.value = "";
-        clearResendCooldown();
+        unlockVerificationControls();
+        setRegistrationFieldsLocked(false);
         formFields.classList.remove("form-fields-visible");
         formFields.classList.add("form-fields-hidden");
         [
@@ -978,6 +1043,7 @@
             document.getElementById("first-name").required = true;
             document.getElementById("region").required = true;
 
+            setRegistrationFieldsLocked(true);
             startResendCooldown();
             verificationCodeInput.focus();
             showStatus(
@@ -1018,6 +1084,9 @@
 
       verifyCodeBtn.addEventListener("click", async function (event) {
         event.preventDefault();
+        if (verificationSectionComplete) {
+          return;
+        }
         if (!codeWasSent || !verificationEmail) {
           return;
         }
@@ -1038,6 +1107,8 @@
           const data = await postToSignupApi(params);
           if (data.success) {
             serverEmailVerified = true;
+            lockVerificationAfterSuccess();
+            setRegistrationFieldsLocked(false);
             showStatus(
               "驗證碼正確，請填寫下方資料後按「註冊」。\nCode verified. Complete the form below, then Sign Up.",
             );
@@ -1056,13 +1127,18 @@
               : "連線錯誤，請稍後再試 Network error, please try again later",
           );
         } finally {
-          verifyCodeBtn.disabled = false;
-          verifyCodeBtn.textContent = "確認驗證碼 Verify";
+          if (!verificationSectionComplete) {
+            verifyCodeBtn.disabled = false;
+            verifyCodeBtn.textContent = "確認驗證碼 Verify";
+          }
         }
       });
 
       resendCodeBtn.addEventListener("click", async function (event) {
         event.preventDefault();
+        if (verificationSectionComplete) {
+          return;
+        }
         if (!codeWasSent || !verificationEmail || resendCodeBtn.disabled) {
           return;
         }
