@@ -504,3 +504,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   syncOpenCallIframeByRegion();
 });
+
+// 接收 open call iframe 的投稿完成訊號 → 整頁 reload
+window.addEventListener("message", function (e) {
+  if (!e.data || e.data.type !== "opencall-submitted") return;
+  window.location.reload();
+});

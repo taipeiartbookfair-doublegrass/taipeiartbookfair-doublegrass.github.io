@@ -193,6 +193,24 @@ document.addEventListener("DOMContentLoaded", async function () {
     console.error("get_user_info network error:", error);
   }
 
+  // 已投稿：改變 sidebar OPEN CALL 按鈕狀態
+  if (apiData["報名編號"]) {
+    const openCallBtn = document.getElementById("sidebar-open-call");
+    if (openCallBtn) {
+      const p = openCallBtn.querySelector("p");
+      if (p) {
+        p.innerHTML = "OPEN<br />CALL";
+        p.style.color = "darkgray";
+        p.style.cursor = "default";
+      }
+      openCallBtn.onclick = function (e) {
+        e.preventDefault();
+        alert("您已完成投稿。\nYou have already submitted.");
+        return false;
+      };
+    }
+  }
+
   // 對應 id 填入資料
   document.getElementById("brand-name").textContent = apiData["品牌"] || "";
   const brandNameOriginalEl = document.getElementById("brand-name-original");

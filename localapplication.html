@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -259,8 +259,7 @@
           <label for="participatedin_Yes" class="form-label">
             <span class="from-label-header">是，我參與過</span>
             我曾以攤主身份參與
-            <span class="from-label-description-header">
-            </span>
+            <span class="from-label-description-header"> </span>
           </label>
           <input
             type="radio"
@@ -273,8 +272,7 @@
           <label for="participatedin_Firsttime" class="form-label">
             <span class="from-label-header">否，我第一次</span>
             我第一次當攤主
-            <span class="from-label-description-header">
-            </span>
+            <span class="from-label-description-header"> </span>
           </label>
         </div>
 
@@ -381,7 +379,7 @@
             type="checkbox"
             class="form-input-checkbox"
             name="entry.1734398784"
-              id="ParticipatedYears_2025"
+            id="ParticipatedYears_2025"
             value="2025"
           />
           <label for="ParticipatedYears_2025" class="form-label">
@@ -420,7 +418,8 @@
             <span class="from-label-header">ㄧ般書攤</span>
             <span class="from-label-sub-header">5,000 元（含稅）</span><br />
             <span class="from-label-description-header">
-              • 基礎設備：桌面（120*60cm) 1 個、椅子 2 張、工作證 2 張、草率簿 1 本（含露出一面）
+              • 基礎設備：桌面（120*60cm) 1 個、椅子 2 張、工作證 2 張、草率簿 1
+              本（含露出一面）
             </span>
           </label>
 
@@ -439,7 +438,8 @@
             <span class="from-label-header">非書（創作）攤</span>
             <span class="from-label-sub-header">8,000 元（含稅）</span><br />
             <span class="from-label-description-header">
-              • 基礎設備：桌面（120*60cm) 1 個、椅子 2 張、工作證 2 張、草率簿 1 本（含露出一面）
+              • 基礎設備：桌面（120*60cm) 1 個、椅子 2 張、工作證 2 張、草率簿 1
+              本（含露出一面）
             </span>
           </label>
 
@@ -477,7 +477,8 @@
             <span class="from-label-header">策展攤</span>
             <span class="from-label-sub-header">50,000 元（含稅）</span><br />
             <span class="from-label-description-header">
-              • 基礎設備：3M*3M空間、桌面（120*60cm) 2 個、椅子 4 張、工作證 6 張、草率簿 1 本（含露出一面）
+              • 基礎設備：3M*3M空間、桌面（120*60cm) 2 個、椅子 4 張、工作證 6
+              張、草率簿 1 本（含露出一面）
             </span>
           </label>
 
@@ -496,7 +497,8 @@
             <span class="from-label-header">食物酒水攤</span>
             <span class="from-label-sub-header">13,000 元（含稅）</span><br />
             <span class="from-label-description-header">
-              • 基礎設備：桌面（180*60cm) 1 個、椅子 2 張、工作證 2 張、草率簿 1 本（含露出一面）
+              • 基礎設備：桌面（180*60cm) 1 個、椅子 2 張、工作證 2 張、草率簿 1
+              本（含露出一面）
             </span>
           </label>
         </div>
@@ -536,7 +538,7 @@
             name="entry.2022316464"
             required
             style="color: grey"
-            onchange="this.style.color = this.value ? 'black' : 'grey';"
+            onchange="this.style.color = this.value ? 'black' : 'grey'"
           >
             <option value="" disabled selected hidden>請選擇身份類別</option>
             <option value="a0 Creator">a0 Creator 創作者</option>
@@ -570,7 +572,6 @@
             required
           />
         </div>
-
 
         <!--Product Links-->
         <div
@@ -716,7 +717,8 @@
         <!-- 十年特場 -->
         <div class="column">
           <span class="from-header">是否有公開實體空間可以張貼海報？</span>
-          請填上收件資訊並附上 Google Map 網址，我們將會加入至草率季友好地圖。我們將於寄送本屆海報至您的空間，協助一起擴散草率季:)
+          請填上收件資訊並附上 Google Map
+          網址，我們將會加入至草率季友好地圖。我們將於寄送本屆海報至您的空間，協助一起擴散草率季:)
         </div>
 
         <div class="column layout-form-column-grid-1">
@@ -728,7 +730,6 @@
             maxlength="1000"
           ></textarea>
         </div>
-      
 
         <!--Further Questions-->
         <div class="column">
@@ -813,5 +814,82 @@
     <script src="js/yes.js"></script>
     <script src="js/password.js"></script>
     <!-- <script src="hide.js"></script> -->
+
+    <script>
+      (function () {
+        var OPENCALL_API_URL =
+          "https://script.google.com/macros/s/AKfycbwFJ-rBJSRhynhW8OuMeWJXtlPirQh2WYFSMN2wPVSuLCHjBFs7J-U_DW8N_AlUkSOB/exec"; // ← 填入 opencall-api.gs 部署後的 URL
+
+        function getCookieVal(name) {
+          var m = document.cookie.match("(?:^|;)\\s*" + name + "=([^;]*)");
+          return m ? decodeURIComponent(m[1]) : "";
+        }
+
+        var form = document.getElementById("BoothApplication");
+        var submitBtn = document.getElementById("submitButton");
+        if (!form || !OPENCALL_API_URL) return;
+
+        form.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = "提交中...";
+          }
+
+          var params = new URLSearchParams();
+          params.append("action", "submit_opencall");
+          params.append("account", getCookieVal("account"));
+          params.append("isOverseas", "0");
+          params.append("_region", getCookieVal("region"));
+          // 從 parent dashboard DOM 取 name / phone
+          try {
+            params.append(
+              "_name",
+              window.parent.document
+                .getElementById("contact-person")
+                ?.textContent?.trim() || "",
+            );
+            params.append(
+              "_phone",
+              window.parent.document
+                .getElementById("phone")
+                ?.textContent?.trim() || "",
+            );
+          } catch (_) {}
+
+          // 收集所有表單欄位（跳過 file input）
+          var fd = new FormData(form);
+          fd.forEach(function (val, key) {
+            if (key !== "file" && key !== "category") params.append(key, val);
+          });
+
+          try {
+            var res = await fetch(OPENCALL_API_URL, {
+              redirect: "follow",
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: params.toString(),
+            });
+            var data = await res.json();
+
+            if (data.success) {
+              window.parent.postMessage({ type: "opencall-submitted" }, "*");
+            } else {
+              alert("提交失敗，請稍後再試。\n" + (data.error || ""));
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "提交";
+              }
+            }
+          } catch (err) {
+            alert("網路錯誤，請稍後再試。");
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = "提交";
+            }
+          }
+        });
+      })();
+    </script>
   </body>
 </html>
