@@ -223,8 +223,30 @@
 
       .verification-actions button {
         width: auto;
-        min-width: 110px;
+        min-width: 100px;
         font-size: 0.75rem;
+        flex-shrink: 0;
+      }
+
+      .verification-resend-row {
+        margin-top: 6px;
+      }
+
+      .verification-resend-row button {
+        width: 100%;
+        font-size: 0.75rem;
+        padding: 6px;
+      }
+
+      button.btn-secondary {
+        background-color: white;
+        color: black;
+        border: 1px solid black;
+      }
+
+      button.btn-secondary:hover:not(:disabled) {
+        background-color: olive;
+        color: palegreen;
       }
 
       ::selection {
@@ -269,17 +291,31 @@
           <div id="form-fields" class="form-fields-hidden">
             <div class="input-box" id="verification-code-box">
               <label for="verification-code">驗證碼 Verification Code</label>
-              <input
-                type="text"
-                id="verification-code"
-                name="verificationCode"
-                inputmode="numeric"
-                autocomplete="one-time-code"
-                placeholder="6-digit code from email"
-              />
+              <div class="verification-actions">
+                <input
+                  type="text"
+                  id="verification-code"
+                  name="verificationCode"
+                  inputmode="numeric"
+                  autocomplete="one-time-code"
+                  placeholder="6-digit code from email"
+                />
+                <button type="button" id="verify-code-btn">
+                  確認驗證碼 Verify
+                </button>
+              </div>
+              <div class="verification-resend-row">
+                <button
+                  type="button"
+                  id="resend-code-btn"
+                  class="btn-secondary"
+                >
+                  重寄驗證碼 Resend
+                </button>
+              </div>
               <div class="verification-hint" style="font-size: 11px; color: #666; margin-top: 4px">
-                請輸入信中信內驗證碼，填寫下方資料後按「註冊」一併送出。<br />
-                Enter the code from your email, fill the form below, then press Sign Up.
+                請輸入信內驗證碼，按「確認驗證碼」檢查是否正確；通過後再填寫下方資料並按「註冊」。<br />
+                Enter the code from email, press Verify to validate; then complete the form and Sign Up.
               </div>
             </div>
 
@@ -712,12 +748,19 @@
       const emailInput = document.getElementById("email");
       const verificationCodeInput =
         document.getElementById("verification-code");
+      const verifyCodeBtn = document.getElementById("verify-code-btn");
+      const resendCodeBtn = document.getElementById("resend-code-btn");
       const formFields = document.getElementById("form-fields");
+
+      const RESEND_COOLDOWN_SEC = 60;
 
       let submitted = false;
       let timeoutTimer = null;
       let verificationEmail = "";
-      let isVerified = false;
+      let codeWasSent = false;
+      let serverEmailVerified = false;
+      let resendCooldownTimerId = null;
+      let resendCooldownEnd = 0;
 
       function setSendVerificationButtonDefault() {
         sendVerificationBtn.disabled = false;
@@ -809,10 +852,51 @@
         }
       }
 
+      function clearResendCooldown() {
+        if (resendCooldownTimerId) {
+          clearInterval(resendCooldownTimerId);
+          resendCooldownTimerId = null;
+        }
+        resendCooldownEnd = 0;
+        if (resendCodeBtn) {
+          resendCodeBtn.disabled = false;
+          resendCodeBtn.textContent = "重寄驗證碼 Resend";
+        }
+      }
+
+      function updateResendCooldownLabel() {
+        if (!resendCodeBtn) return;
+        const sec = Math.max(
+          0,
+          Math.ceil((resendCooldownEnd - Date.now()) / 1000),
+        );
+        if (sec <= 0) {
+          resendCodeBtn.disabled = false;
+          resendCodeBtn.textContent = "重寄驗證碼 Resend";
+          if (resendCooldownTimerId) {
+            clearInterval(resendCooldownTimerId);
+            resendCooldownTimerId = null;
+          }
+          return;
+        }
+        resendCodeBtn.disabled = true;
+        resendCodeBtn.textContent =
+          sec + " 秒後可重寄 / Resend in " + sec + "s";
+      }
+
+      function startResendCooldown() {
+        clearResendCooldown();
+        resendCooldownEnd = Date.now() + RESEND_COOLDOWN_SEC * 1000;
+        updateResendCooldownLabel();
+        resendCooldownTimerId = setInterval(updateResendCooldownLabel, 500);
+      }
+
       function resetVerificationState() {
-        isVerified = false;
+        codeWasSent = false;
+        serverEmailVerified = false;
         verificationEmail = "";
         verificationCodeInput.value = "";
+        clearResendCooldown();
         formFields.classList.remove("form-fields-visible");
         formFields.classList.add("form-fields-hidden");
         [
@@ -836,7 +920,7 @@
         if (emailInput.readOnly) {
           return;
         }
-        if (isVerified || verificationEmail) {
+        if (codeWasSent || verificationEmail) {
           resetVerificationState();
           hideStatus();
         }
@@ -846,7 +930,7 @@
       sendVerificationBtn.addEventListener("click", async function (event) {
         event.preventDefault();
 
-        if (isVerified) {
+        if (codeWasSent) {
           return;
         }
 
@@ -876,7 +960,8 @@
 
           if (data.success) {
             verificationEmail = email;
-            isVerified = true;
+            codeWasSent = true;
+            serverEmailVerified = false;
             verificationCodeInput.value = "";
 
             emailInput.readOnly = true;
@@ -893,13 +978,14 @@
             document.getElementById("first-name").required = true;
             document.getElementById("region").required = true;
 
+            startResendCooldown();
             verificationCodeInput.focus();
             showStatus(
               "驗證碼已寄至 " +
                 email +
-                "。請輸入信中信內驗證碼並填寫下方資料後按「註冊」。\nCode sent to " +
+                "。請按「確認驗證碼」檢查碼是否正確，再填寫下方資料並按「註冊」。\nCode sent to " +
                 email +
-                ". Enter the code from email, complete the form, then Sign Up.",
+                ". Press Verify to check the code, then complete the form and Sign Up.",
             );
           } else {
             alert(
@@ -921,7 +1007,7 @@
               hint;
           alert(msg);
         } finally {
-          if (!isVerified) {
+          if (!codeWasSent) {
             setSendVerificationButtonDefault();
           } else if (sendVerificationBtn.textContent === "發送中... Sending...") {
             sendVerificationBtn.disabled = true;
@@ -930,19 +1016,123 @@
         }
       });
 
+      verifyCodeBtn.addEventListener("click", async function (event) {
+        event.preventDefault();
+        if (!codeWasSent || !verificationEmail) {
+          return;
+        }
+        const code = verificationCodeInput.value.trim();
+        if (!code) {
+          alert("請輸入驗證碼 Please enter verification code");
+          return;
+        }
+        verifyCodeBtn.disabled = true;
+        verifyCodeBtn.textContent = "確認中...";
+        try {
+          const params = new URLSearchParams({
+            action: "signup_verify_code",
+            account: verificationEmail,
+            token: code,
+            verificationCode: code,
+          });
+          const data = await postToSignupApi(params);
+          if (data.success) {
+            serverEmailVerified = true;
+            showStatus(
+              "驗證碼正確，請填寫下方資料後按「註冊」。\nCode verified. Complete the form below, then Sign Up.",
+            );
+          } else {
+            alert(
+              data.message ||
+                data.error ||
+                "驗證碼錯誤或已過期 Invalid or expired code",
+            );
+          }
+        } catch (error) {
+          console.error("Verify code error:", error);
+          alert(
+            error && error.message
+              ? String(error.message)
+              : "連線錯誤，請稍後再試 Network error, please try again later",
+          );
+        } finally {
+          verifyCodeBtn.disabled = false;
+          verifyCodeBtn.textContent = "確認驗證碼 Verify";
+        }
+      });
+
+      resendCodeBtn.addEventListener("click", async function (event) {
+        event.preventDefault();
+        if (!codeWasSent || !verificationEmail || resendCodeBtn.disabled) {
+          return;
+        }
+        resendCodeBtn.disabled = true;
+        const prevLabel = resendCodeBtn.textContent;
+        resendCodeBtn.textContent = "寄送中... Sending...";
+        try {
+          const signupParams = new URLSearchParams({
+            action: "signup_send_email",
+            account: verificationEmail,
+          });
+          const data = await postToSignupApi(signupParams);
+          if (data.success) {
+            serverEmailVerified = false;
+            verificationCodeInput.value = "";
+            startResendCooldown();
+            showStatus(
+              "已重新寄送驗證碼至 " +
+                verificationEmail +
+                "。\nVerification code resent to " +
+                verificationEmail +
+                ".",
+            );
+            verificationCodeInput.focus();
+          } else {
+            alert(
+              data.message ||
+                data.error ||
+                "重寄失敗，請稍後再試 Resend failed, please try again later",
+            );
+            resendCodeBtn.textContent = prevLabel;
+            updateResendCooldownLabel();
+          }
+        } catch (error) {
+          console.error("Resend error:", error);
+          alert(
+            error && error.message
+              ? String(error.message)
+              : "連線錯誤，請稍後再試 Network error, please try again later",
+          );
+          resendCodeBtn.textContent = prevLabel;
+          updateResendCooldownLabel();
+        }
+      });
+
       verificationCodeInput.addEventListener("keypress", function (e) {
-        if (e.key === "Enter" && isVerified) {
+        if (e.key === "Enter" && codeWasSent) {
           e.preventDefault();
-          submitBtn.click();
+          if (serverEmailVerified) {
+            submitBtn.click();
+          } else {
+            verifyCodeBtn.click();
+          }
         }
       });
 
       // Form submission
       signupForm.addEventListener("submit", function (e) {
-        if (!isVerified || !verificationEmail) {
+        if (!codeWasSent || !verificationEmail) {
           e.preventDefault();
           alert(
             "請先按「發送驗證碼」收信後再註冊 Please press Send Verification Code first.",
+          );
+          return;
+        }
+
+        if (!serverEmailVerified) {
+          e.preventDefault();
+          alert(
+            "請先按「確認驗證碼」通過驗證後再註冊 Please press Verify and pass code check before Sign Up.",
           );
           return;
         }
