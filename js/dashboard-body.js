@@ -505,8 +505,47 @@ document.addEventListener("DOMContentLoaded", function () {
   syncOpenCallIframeByRegion();
 });
 
-// 接收 open call iframe 的投稿完成訊號 → 整頁 reload
+// 接收 open call iframe 的投稿完成訊號
+// 仿照 edit-profile.js：等待 Apps Script 寫入完成後再 reload
 window.addEventListener("message", function (e) {
   if (!e.data || e.data.type !== "opencall-submitted") return;
-  window.location.reload();
+
+  const POLL_DELAY = 2000;   // 第一次等待 2 秒
+  const POLL_INTERVAL = 1500; // 每次輪詢間隔
+  const POLL_MAX = 6;         // 最多輪詢 6 次（共約 11 秒）
+
+  const accountVal = (typeof getCookie === "function") ? getCookie("account") : "";
+
+  function poll(attempt) {
+    if (!accountVal) { window.location.reload(); return; }
+
+    const params = new URLSearchParams({
+      action: "get_dashboard_info",
+      account: accountVal,
+    }).toString();
+
+    fetch(apiUrl, {
+      redirect: "follow",
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: params,
+    })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        // 確認 post 欄位已寫入（有攤商資料）才 reload
+        if (data.success && data.data && data.data["post"]) {
+          window.location.reload();
+        } else if (attempt < POLL_MAX) {
+          setTimeout(function() { poll(attempt + 1); }, POLL_INTERVAL);
+        } else {
+          // 超時仍 reload，讓使用者看到最新狀態
+          window.location.reload();
+        }
+      })
+      .catch(function() {
+        window.location.reload();
+      });
+  }
+
+  setTimeout(function() { poll(1); }, POLL_DELAY);
 });
