@@ -119,6 +119,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   const params = new URLSearchParams({
     action: "get_dashboard_info",
     account: account,
+    _t: Date.now(),
   }).toString();
 
   try {
@@ -153,6 +154,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const userParams = new URLSearchParams({
       action: "get_user_info",
       account: account,
+      _t: Date.now(),
     }).toString();
 
     const userRes = await fetch(apiUrl, {
