@@ -175,8 +175,9 @@ document.addEventListener("DOMContentLoaded", async function () {
         userData.data["account"] || "";
       document.getElementById("phone").textContent =
         userData.data["phone"] || "";
-      document.getElementById("nationality2").textContent =
-        userData.data["region"] || "";
+      const nationality2El = document.getElementById("nationality2");
+      if (nationality2El)
+        nationality2El.textContent = userData.data["region"] || "";
     } else {
       // 後端明確回 success: false（例如帳號不存在）才視為 session 失效
       alert(
@@ -222,7 +223,8 @@ document.addEventListener("DOMContentLoaded", async function () {
   document.getElementById("role").textContent = apiData["身份類別"] || "";
   document.getElementById("live-event-schedule-reminder").textContent =
     apiData["活動場次資訊"] || "";
-  document.getElementById("nationality").textContent = region || "";
+  const nationalityEl = document.getElementById("nationality");
+  if (nationalityEl) nationalityEl.textContent = region || "";
   setSocialText("baselocation", apiData["主要創作據點"]);
   setSocialText("attendedYears", apiData["參與年份"]);
   setSocialText("website", apiData["website"]);
