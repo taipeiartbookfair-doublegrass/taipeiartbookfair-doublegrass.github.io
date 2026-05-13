@@ -171,9 +171,17 @@ button:disabled {
   color: plum;
 }
 
+.verification-hint,
+.small-note {
+  font-size: 11px;
+  color: #666;
+  margin-top: 4px;
+}
+
 .phone-row {
   display: flex;
   gap: 8px;
+  margin-bottom: 8px;
 }
 
 .phone-row .input-box {
@@ -182,7 +190,7 @@ button:disabled {
 }
 
 .phone-row .input-box:first-child {
-  flex: 0.6;
+  flex: 0 0 80px;
 }
 
 .name-row {
@@ -193,6 +201,50 @@ button:disabled {
 .name-row .input-box {
   flex: 1;
   margin-bottom: 0;
+}
+
+.verification-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.verification-actions input {
+  flex: 1;
+}
+
+.verification-actions button {
+  width: auto;
+  min-width: 100px;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.verification-resend-row {
+  margin-top: 6px;
+}
+
+.verification-resend-row button {
+  width: 100%;
+  font-size: 0.75rem;
+  padding: 6px;
+}
+
+button.btn-secondary {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+}
+
+button.btn-secondary:hover:not(:disabled) {
+  background-color: olive;
+  color: palegreen;
+}
+
+.input-box input:disabled,
+.input-box select:disabled {
+  background-color: #e8e8e8;
+  color: #555;
+  cursor: not-allowed;
 }
 
 ::selection {
