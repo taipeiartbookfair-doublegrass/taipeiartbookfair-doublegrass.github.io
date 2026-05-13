@@ -10,6 +10,8 @@ const apiUrl =
   "https://script.google.com/macros/s/AKfycbyRV_uiklsvHWPeBblxTz47OlTnQ-IeKIxifYZ1D-8ZzHdljVMEbXwsKGO84Agon7mU8g/exec";
 const publishApiUrl =
   "https://script.google.com/macros/s/AKfycbwL1g0fpahfuau7g8vuF1Oya0aAS2QvIj0S0EL6rXuajWzYVfgviUm64EmR95xwRMPEQg/exec";
+const contactApiUrl =
+  "https://script.google.com/macros/s/AKfycbyqCjo1RMfql2pSCtRXHh71I0FTiPhBqrXPUjFC_PJFwLIKJyzEYQ5WQSUqZO4A8bRv/exec";
 
 document.addEventListener("DOMContentLoaded", async function () {
   if (window.startFakeLoading) window.startFakeLoading();
@@ -141,10 +143,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       apiData = data.data;
     } else {
       // 尚未投稿（沒有 application_id）也能進入頁面，等投稿系統開放後再補資料
-      console.log(
-        "No application info yet:",
-        data.message || data.error || ""
-      );
+      console.log("No application info yet:", data.message || data.error || "");
     }
   } catch (error) {
     console.error("get_dashboard_info network error:", error);
@@ -181,7 +180,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     } else {
       // 後端明確回 success: false（例如帳號不存在）才視為 session 失效
       alert(
-        "登入狀態失效，請重新登入。\nSession expired, please log in again."
+        "登入狀態失效，請重新登入。\nSession expired, please log in again.",
       );
       setCookie("account", "", -1);
       setCookie("region", "", -1);
@@ -1550,6 +1549,22 @@ Please follow the instructions below to create your materials, and upload the co
       }
     }
   });
+
+  // Contact section — 獨立 API，格式：{ section1: "...", section2: "..." }
+  if (contactApiUrl) {
+    try {
+      const contactRes = await fetch(contactApiUrl);
+      const contactData = await contactRes.json();
+      const s1 = document.getElementById("contact-section-1-desc");
+      const s2 = document.getElementById("contact-section-2-desc");
+      if (s1 && contactData.section1)
+        s1.innerHTML = processAfterMessage(contactData.section1);
+      if (s2 && contactData.section2)
+        s2.innerHTML = processAfterMessage(contactData.section2);
+    } catch (e) {
+      console.warn("Failed to load contact content:", e);
+    }
+  }
 
   if (window.setLoading) window.setLoading(1);
   if (window.hideLoading) window.hideLoading();
