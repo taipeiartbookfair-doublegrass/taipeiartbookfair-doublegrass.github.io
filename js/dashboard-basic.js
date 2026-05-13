@@ -1065,11 +1065,10 @@ Please follow the instructions below to create your materials, and upload the co
       }
 
       // Visa logic:
-      // - nationality CN => show visaCN
+      // - show visaCN to everyone
       // - other non-TW nationalities => show overseavisa ONLY for English booth types
-      if (nationality === "CN") {
-        if (visaCN) visaCN.style.display = "block";
-      } else if (nationality !== "TW" && isEnglishBooth) {
+      if (visaCN) visaCN.style.display = "block";
+      if (nationality !== "TW" && isEnglishBooth) {
         if (overseavisa) overseavisa.style.display = "block";
       }
     } else if (!rawResult || rawResult === "" || rawResult === "0") {
@@ -1095,9 +1094,8 @@ Please follow the instructions below to create your materials, and upload the co
         manualBoothappearance.style.display = "block";
         registrationStatus.style.display = "block";
         boothnumber.style.display = "table-row";
-        if (nationality === "CN") {
-          if (visaCN) visaCN.style.display = "block";
-        } else if (nationality !== "TW" && isEnglishBooth) {
+        if (visaCN) visaCN.style.display = "block";
+        if (nationality !== "TW" && isEnglishBooth) {
           if (overseavisa) overseavisa.style.display = "block";
         }
         // boothappearance.style.display = "block";
@@ -1106,9 +1104,8 @@ Please follow the instructions below to create your materials, and upload the co
         billinginfo.style.display = "block";
         registrationStatus.style.display = "block";
         boothnumber.style.display = "table-row";
-        if (nationality === "CN") {
-          if (visaCN) visaCN.style.display = "block";
-        } else if (nationality !== "TW" && isEnglishBooth) {
+        if (visaCN) visaCN.style.display = "block";
+        if (nationality !== "TW" && isEnglishBooth) {
           if (overseavisa) overseavisa.style.display = "block";
         }
       }
@@ -1124,9 +1121,8 @@ Please follow the instructions below to create your materials, and upload the co
         if (nationality !== "TW") {
           foreignShipping.style.display = "block";
         }
-        if (nationality === "CN") {
-          if (visaCN) visaCN.style.display = "block";
-        } else if (nationality !== "TW" && isEnglishBooth) {
+        if (visaCN) visaCN.style.display = "block";
+        if (nationality !== "TW" && isEnglishBooth) {
           if (overseavisa) overseavisa.style.display = "block";
         }
         familyticket.style.display = "block";
@@ -1567,7 +1563,6 @@ Please follow the instructions below to create your materials, and upload the co
       }
     }
   });
-
 
   if (window.setLoading) window.setLoading(1);
   if (window.hideLoading) window.hideLoading();
