@@ -818,7 +818,7 @@
     <script>
       (function () {
         var OPENCALL_API_URL =
-          "https://script.google.com/macros/s/AKfycbwFJ-rBJSRhynhW8OuMeWJXtlPirQh2WYFSMN2wPVSuLCHjBFs7J-U_DW8N_AlUkSOB/exec"; // ← 填入 opencall-api.gs 部署後的 URL
+          "https://script.google.com/macros/s/AKfycbwJ20h4SdL7n9OV9rvSsblz9NeEISoNQbjHTp83JegH7Ft2ztad3xuJMnVmKLAVxyZ6/exec"; // ← 填入 opencall-api.gs 部署後的 URL
 
         function getCookieVal(name) {
           var m = document.cookie.match("(?:^|;)\\s*" + name + "=([^;]*)");
@@ -831,6 +831,17 @@
 
         form.addEventListener("submit", async function (e) {
           e.preventDefault();
+
+          // 等待 upload.js 的檔案上傳完成（若有的話）
+          if (window._opencallUploadPromise) {
+            try {
+              await window._opencallUploadPromise;
+            } catch (_) {
+              // 上傳失敗或未選擇檔案，upload.js 已處理提示，直接取消
+              return;
+            }
+          }
+
           if (submitBtn) {
             submitBtn.disabled = true;
             submitBtn.textContent = "提交中...";
