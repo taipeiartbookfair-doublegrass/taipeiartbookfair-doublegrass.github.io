@@ -809,16 +809,6 @@
         }
       }
 
-      function isAccountNotFoundMessage(msg) {
-        const s = String(msg || "").toLowerCase();
-        return (
-          s.indexOf("not found") !== -1 ||
-          s.indexOf("does not exist") !== -1 ||
-          s.indexOf("不存在") !== -1 ||
-          s.indexOf("找不到") !== -1
-        );
-      }
-
       function resetVerificationState() {
         isVerified = false;
         verificationEmail = "";
@@ -852,7 +842,7 @@
         }
       });
 
-      // Step 1: Send code (same transport as forgot password: text/plain + forgot_password_send_email; if account not in DB, try signup_send_email)
+      // Step 1: Send code via Apps Script signup_send_email (account must not exist; server validates and sends mail)
       sendVerificationBtn.addEventListener("click", async function (event) {
         event.preventDefault();
 
@@ -878,22 +868,11 @@
           sendVerificationBtn.disabled = true;
           sendVerificationBtn.textContent = "發送中... Sending...";
 
-          const forgotParams = new URLSearchParams({
-            action: "forgot_password_send_email",
+          const signupParams = new URLSearchParams({
+            action: "signup_send_email",
             account: email,
           });
-          let data = await postToSignupApi(forgotParams);
-
-          if (
-            !data.success &&
-            isAccountNotFoundMessage(data.message || data.error)
-          ) {
-            const signupParams = new URLSearchParams({
-              action: "signup_send_email",
-              account: email,
-            });
-            data = await postToSignupApi(signupParams);
-          }
+          const data = await postToSignupApi(signupParams);
 
           if (data.success) {
             verificationEmail = email;
