@@ -175,8 +175,9 @@ document.addEventListener("DOMContentLoaded", async function () {
         userData.data["account"] || "";
       document.getElementById("phone").textContent =
         userData.data["phone"] || "";
-      document.getElementById("nationality2").textContent =
-        userData.data["region"] || "";
+      const nationality2El = document.getElementById("nationality2");
+      if (nationality2El)
+        nationality2El.textContent = userData.data["region"] || "";
     } else {
       // 後端明確回 success: false（例如帳號不存在）才視為 session 失效
       alert(
@@ -222,7 +223,8 @@ document.addEventListener("DOMContentLoaded", async function () {
   document.getElementById("role").textContent = apiData["身份類別"] || "";
   document.getElementById("live-event-schedule-reminder").textContent =
     apiData["活動場次資訊"] || "";
-  document.getElementById("nationality").textContent = region || "";
+  const nationalityEl = document.getElementById("nationality");
+  if (nationalityEl) nationalityEl.textContent = region || "";
   setSocialText("baselocation", apiData["主要創作據點"]);
   setSocialText("attendedYears", apiData["參與年份"]);
   setSocialText("website", apiData["website"]);
@@ -1065,11 +1067,10 @@ Please follow the instructions below to create your materials, and upload the co
       }
 
       // Visa logic:
-      // - nationality CN => show visaCN
+      // - show visaCN to everyone
       // - other non-TW nationalities => show overseavisa ONLY for English booth types
-      if (nationality === "CN") {
-        if (visaCN) visaCN.style.display = "block";
-      } else if (nationality !== "TW" && isEnglishBooth) {
+      if (visaCN) visaCN.style.display = "block";
+      if (nationality !== "TW" && isEnglishBooth) {
         if (overseavisa) overseavisa.style.display = "block";
       }
     } else if (!rawResult || rawResult === "" || rawResult === "0") {
@@ -1095,9 +1096,8 @@ Please follow the instructions below to create your materials, and upload the co
         manualBoothappearance.style.display = "block";
         registrationStatus.style.display = "block";
         boothnumber.style.display = "table-row";
-        if (nationality === "CN") {
-          if (visaCN) visaCN.style.display = "block";
-        } else if (nationality !== "TW" && isEnglishBooth) {
+        if (visaCN) visaCN.style.display = "block";
+        if (nationality !== "TW" && isEnglishBooth) {
           if (overseavisa) overseavisa.style.display = "block";
         }
         // boothappearance.style.display = "block";
@@ -1106,9 +1106,8 @@ Please follow the instructions below to create your materials, and upload the co
         billinginfo.style.display = "block";
         registrationStatus.style.display = "block";
         boothnumber.style.display = "table-row";
-        if (nationality === "CN") {
-          if (visaCN) visaCN.style.display = "block";
-        } else if (nationality !== "TW" && isEnglishBooth) {
+        if (visaCN) visaCN.style.display = "block";
+        if (nationality !== "TW" && isEnglishBooth) {
           if (overseavisa) overseavisa.style.display = "block";
         }
       }
@@ -1124,9 +1123,8 @@ Please follow the instructions below to create your materials, and upload the co
         if (nationality !== "TW") {
           foreignShipping.style.display = "block";
         }
-        if (nationality === "CN") {
-          if (visaCN) visaCN.style.display = "block";
-        } else if (nationality !== "TW" && isEnglishBooth) {
+        if (visaCN) visaCN.style.display = "block";
+        if (nationality !== "TW" && isEnglishBooth) {
           if (overseavisa) overseavisa.style.display = "block";
         }
         familyticket.style.display = "block";
@@ -1567,7 +1565,6 @@ Please follow the instructions below to create your materials, and upload the co
       }
     }
   });
-
 
   if (window.setLoading) window.setLoading(1);
   if (window.hideLoading) window.hideLoading();
