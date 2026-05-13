@@ -416,7 +416,8 @@ async function loadUploadStatusFromAPI() {
             day: "2-digit",
             hour: "2-digit",
             minute: "2-digit",
-          });
+            timeZone: "Asia/Taipei",
+          }) + " (GMT+8)";
 
           // 主頁面狀態更新：隱藏按鈕、顯示完成訊息
           if (openBtn) openBtn.style.display = "none";
@@ -519,7 +520,7 @@ Object.keys(uploadStatusMap).forEach((key) => {
 
         const file = fileInput.files[0];
         const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
-        const successDetail = `${conf.successMsg}\n\n檔案資訊 File Info:\n- 檔名 Filename: ${file.name}\n- 大小 Size: ${fileSizeMB} MB\n- 上傳時間 Upload Time: ${uploadResult.uploadTime}\n\n請保留此頁面截圖作為上傳憑證。\nPlease keep a screenshot of this page as proof of upload.\n\n重新登入後，若狀態消失，請檢查瀏覽器是否清除了快取。\nIf the status disappears after re-login, please check if your browser cleared the cache.`;
+        const successDetail = `${conf.successMsg}\n${file.name} (${fileSizeMB} MB)\n${uploadResult.uploadTime}\n\n請截圖保留此頁面作為憑證。\nPlease screenshot this page as proof.`;
         alert(successDetail);
       } else {
         alert(uploadResult.errorMessage || conf.failMsg);
@@ -719,7 +720,8 @@ const handleFileUpload = async (
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
-    });
+      timeZone: "Asia/Taipei",
+    }) + " (GMT+8)";
     // 儲存 ISO 時間戳記以便檢查過期
     const uploadTimestamp = now.toISOString();
 
