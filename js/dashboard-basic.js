@@ -696,13 +696,11 @@ document.addEventListener("DOMContentLoaded", async function () {
   setConditionalAcceptence(boothType);
 
 
-  // 電力資訊（single source of truth）
-  // deadlineCN / deadlineEN 由 publishTimes API 傳入，例如 "1/9（五）" / "Jan 9 (Fri)"
+  // 電力資訊（deadlineCN / deadlineEN 由 publishTimes API 傳入）
   function updateElectricityList(boothType, deadlineCN, deadlineEN) {
     const electricityTitle = document.getElementById("electricity-title");
     const electricityList = document.querySelector("#electricity-title + ul");
-    const regulationEl = document.getElementById("electricity-regulation");
-    if (!electricityList || !electricityTitle || !regulationEl) return;
+    if (!electricityList || !electricityTitle) return;
 
     const isForeign = (region || "").trim().toUpperCase() !== "TW";
     const isInstallation =
@@ -762,39 +760,14 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
     }
 
-    // 設定下方「電力需求」文字（單一來源）
-    let regulationHtml = "";
-    if (isForeign && isInstallation) {
-      regulationHtml = `
-        Edit via the <strong>Edit</strong> button (top-right). Please list equipment name & wattage in detail. Example:<br />
-        Microwave / 1100W / 1 unit<br />
-        Electric kettle / 1500W / 1 unit<br />
-        Electric fan / 65W / 1 unit<br /><br />
-        📌 Unregistered appliances are NOT permitted on site. Repeated violations will be subject to fines as specified in the Exhibitor’s Manual.<br />
-        📌 If 220v is required, an additional fee of NT$1000 will be charged — please state this in the form.<br />
-        📌 For safety, do not use transformers; the Organizer does not provide voltage conversion services.
-      `;
-    } else if (isForeign) {
-      // 其他國外攤位：簡短英文提示
-      regulationHtml = `
-        Please refer to the event guidelines. If you have electricity needs, bring an extension cord and coordinate with neighbors.
-      `;
-    } else {
-      // 國內（中文）
-      const shopline220vLink = isFood
-        ? `<br /><br />🛒 <strong>食物攤商 220v 加購：</strong><a href="https://nmhw.taipeiartbookfair.com/products/加購電力需求" target="_blank" style="color:#c00; font-weight:bold;">點此前往 Shopline 加購 220v 用電（NT$1000）</a>`
-        : "";
-      regulationHtml = `
-        於右上角 <strong>編輯 Edit</strong> 做修改。請務必詳列設備名稱與瓦數，範例如下：<br />
-        微波爐／1100W／1個<br />
-        熱水壺／1500W／1個<br />
-        電扇／65W／1個<br /><br />
-        📌 未事先申報之電器不得於現場使用，如於現場發現並屢勸不聽，將依《攤主手冊》規定處以罰款。<br />
-        📌 如需使用 220v 電壓，將收取費用 NT$1000，並請於表單中註明。<br />
-        📌 為維護安全，請勿使用變壓器，主辦單位不提供電壓轉換服務。${shopline220vLink}
-      `;
+
+    // 電力編輯區的截止日期提示（electricity-edit-deadline-notice）
+    const deadlineNotice = document.getElementById("electricity-edit-deadline-notice");
+    if (deadlineNotice && ddlCN !== "—") {
+      deadlineNotice.textContent = isForeign
+        ? `Editing deadline: ${ddlEN} 23:59`
+        : `截止日期：${ddlCN} 23:59`;
     }
-    regulationEl.innerHTML = regulationHtml;
 
     // 統一控制該 row 的顯示（single place）
     const electricityRow = document.getElementById("electricity-row");
@@ -1366,7 +1339,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           fmtDeadlineLongEN(deadline),
         );
       }
-      if (sectionId === "edit-button-row") {
+      if (sectionId === "electricity-row") {
         updateElectricityList(
           boothType,
           fmtDeadlineCN(deadline),
@@ -1410,6 +1383,22 @@ document.addEventListener("DOMContentLoaded", async function () {
         setTimeout(() => overlay.classList.add("active"), 10);
         section.classList.add("disabled");
         section.style.opacity = 1;
+      }
+      // electricity-regulation 的說明文字不受時間鎖定，截止後仍寫入
+      if (sectionId === "electricity-row") {
+        const isEnglish = isEnglishBoothType(boothType);
+        const msg = isEnglish && info.afterMessageEn ? info.afterMessageEn : info.afterMessage;
+        if (msg && desc) desc.innerHTML = processAfterMessage(msg);
+        // 鐵捲門降到 edit-button-row（編輯按鈕那列）
+        const editButtonRow = document.getElementById("edit-button-row");
+        if (editButtonRow && !editButtonRow.querySelector(".overlay-closed")) {
+          editButtonRow.style.pointerEvents = "none";
+          const overlay = document.createElement("div");
+          overlay.className = "overlay-closed";
+          overlay.textContent = "Close";
+          editButtonRow.appendChild(overlay);
+          setTimeout(() => overlay.classList.add("active"), 10);
+        }
       }
     }
     // 公布期間
