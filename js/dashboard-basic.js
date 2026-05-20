@@ -419,7 +419,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
 
-  //改這裡！！阿寧！在這裡 fk
+  //改這裡！！阿寧！在這裡 meow
   // boothType 設備、價錢、付款、電力、付款連結產生
   function updateBoothInfo(boothType) {
     let price = "";
