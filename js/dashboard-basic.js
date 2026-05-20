@@ -696,13 +696,11 @@ document.addEventListener("DOMContentLoaded", async function () {
   setConditionalAcceptence(boothType);
 
 
-  // 電力資訊（single source of truth）
-  // deadlineCN / deadlineEN 由 publishTimes API 傳入，例如 "1/9（五）" / "Jan 9 (Fri)"
+  // 電力資訊（deadlineCN / deadlineEN 由 publishTimes API 傳入）
   function updateElectricityList(boothType, deadlineCN, deadlineEN) {
     const electricityTitle = document.getElementById("electricity-title");
     const electricityList = document.querySelector("#electricity-title + ul");
-    const regulationEl = document.getElementById("electricity-regulation");
-    if (!electricityList || !electricityTitle || !regulationEl) return;
+    if (!electricityList || !electricityTitle) return;
 
     const isForeign = (region || "").trim().toUpperCase() !== "TW";
     const isInstallation =
@@ -795,6 +793,14 @@ document.addEventListener("DOMContentLoaded", async function () {
       `;
     }
     regulationEl.innerHTML = regulationHtml;
+
+    // 電力編輯區的截止日期提示（electricity-edit-deadline-notice）
+    const deadlineNotice = document.getElementById("electricity-edit-deadline-notice");
+    if (deadlineNotice && ddlCN !== "—") {
+      deadlineNotice.textContent = isForeign
+        ? `Editing deadline: ${ddlEN} 23:59`
+        : `截止日期：${ddlCN} 23:59`;
+    }
 
     // 統一控制該 row 的顯示（single place）
     const electricityRow = document.getElementById("electricity-row");
@@ -1366,7 +1372,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           fmtDeadlineLongEN(deadline),
         );
       }
-      if (sectionId === "edit-button-row") {
+      if (sectionId === "electricity-row") {
         updateElectricityList(
           boothType,
           fmtDeadlineCN(deadline),
@@ -1410,6 +1416,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         setTimeout(() => overlay.classList.add("active"), 10);
         section.classList.add("disabled");
         section.style.opacity = 1;
+      }
+      // electricity-regulation 的說明文字不受時間鎖定，截止後仍寫入
+      if (sectionId === "electricity-row") {
+        const isEnglish = isEnglishBoothType(boothType);
+        const msg = isEnglish && info.afterMessageEn ? info.afterMessageEn : info.afterMessage;
+        if (msg && desc) desc.innerHTML = processAfterMessage(msg);
       }
     }
     // 公布期間
