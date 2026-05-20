@@ -217,7 +217,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (sidebarDashboard) {
       sidebarDashboard.style.pointerEvents = "none";
       const p = sidebarDashboard.querySelector("p");
-      if (p) { p.style.color = "darkgray"; p.style.cursor = "default"; }
+      if (p) {
+        p.style.color = "darkgray";
+        p.style.cursor = "default";
+      }
     }
   }
 
@@ -416,6 +419,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
 
+  //改這裡！！阿寧！在這裡
   // boothType 設備、價錢、付款、電力、付款連結產生
   function updateBoothInfo(boothType) {
     let price = "";
@@ -634,13 +638,18 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   // 動態切換同意書區塊語言（說明文字由試算表 afterMessage 控制）
   function setDeclarationLanguage(boothType) {
-    var declardownloadLink = document.getElementById("declaration-download-link");
-    var declarationAgreeText = document.getElementById("declaration-agree-text");
+    var declardownloadLink = document.getElementById(
+      "declaration-download-link",
+    );
+    var declarationAgreeText = document.getElementById(
+      "declaration-agree-text",
+    );
     if (boothType && declardownloadLink) {
       if (isEnglishBoothType(boothType)) {
         declardownloadLink.innerHTML = "Exhibitor Declaration";
         if (declarationAgreeText) {
-          declarationAgreeText.innerHTML = "I have read and agree to the Exhibitor Declaration";
+          declarationAgreeText.innerHTML =
+            "I have read and agree to the Exhibitor Declaration";
         }
         const confirmBtn = document.getElementById("confirmBtnDeclaration");
         if (confirmBtn) confirmBtn.textContent = "Confirm";
@@ -694,7 +703,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
   setConditionalAcceptence(boothType);
-
 
   // 電力資訊（deadlineCN / deadlineEN 由 publishTimes API 傳入）
   function updateElectricityList(boothType, deadlineCN, deadlineEN) {
@@ -760,9 +768,10 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
     }
 
-
     // 電力編輯區的截止日期提示（electricity-edit-deadline-notice）
-    const deadlineNotice = document.getElementById("electricity-edit-deadline-notice");
+    const deadlineNotice = document.getElementById(
+      "electricity-edit-deadline-notice",
+    );
     if (deadlineNotice && ddlCN !== "—") {
       deadlineNotice.textContent = isForeign
         ? `Editing deadline: ${ddlEN} 23:59`
@@ -842,7 +851,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     boothnumber.style.display = "none";
     liveEventTime.style.display = "none";
 
-
     //勾勾區的鐵門
     if (declarationChecked) {
       agreementsection.style.position = "relative";
@@ -898,7 +906,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         registrationStatus.style.display = "block";
         // 正確顯示 tr，避免 Safari 重算錯誤
         boothnumber.style.display = "table-row";
-
       } else {
         registrationStatusEl.textContent = getStatusText(false);
         billinginfo.style.display = "block";
@@ -940,7 +947,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (nationality !== "TW" && isEnglishBooth) {
           if (overseavisa) overseavisa.style.display = "block";
         }
-
       } else {
         registrationStatusEl.textContent = getStatusText(false);
         billinginfo.style.display = "block";
@@ -971,7 +977,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         manualBoothappearance.style.display = "block";
         registrationStatus.style.display = "block";
         boothnumber.style.display = "table-row";
-
       } else {
         registrationStatusEl.textContent = getStatusText(false);
         billinginfo.style.display = "block";
@@ -1387,7 +1392,10 @@ document.addEventListener("DOMContentLoaded", async function () {
       // electricity-regulation 的說明文字不受時間鎖定，截止後仍寫入
       if (sectionId === "electricity-row") {
         const isEnglish = isEnglishBoothType(boothType);
-        const msg = isEnglish && info.afterMessageEn ? info.afterMessageEn : info.afterMessage;
+        const msg =
+          isEnglish && info.afterMessageEn
+            ? info.afterMessageEn
+            : info.afterMessage;
         if (msg && desc) desc.innerHTML = processAfterMessage(msg);
         // 鐵捲門降到 edit-button-row（編輯按鈕那列）
         const editButtonRow = document.getElementById("edit-button-row");
