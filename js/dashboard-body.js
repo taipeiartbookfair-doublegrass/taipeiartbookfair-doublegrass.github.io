@@ -532,8 +532,8 @@ window.addEventListener("message", function (e) {
     })
       .then(function(r) { return r.json(); })
       .then(function(data) {
-        // 確認 post 欄位已寫入（有攤商資料）才 reload
-        if (data.success && data.data && data.data["post"]) {
+        // 確認報名編號已寫入才 reload
+        if (data.success && data.data && data.data["報名編號"]) {
           window.location.reload();
         } else if (attempt < POLL_MAX) {
           setTimeout(function() { poll(attempt + 1); }, POLL_INTERVAL);

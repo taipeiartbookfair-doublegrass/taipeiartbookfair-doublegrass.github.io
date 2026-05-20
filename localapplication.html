@@ -83,7 +83,6 @@
             placeholder="English name"
             maxlength="80"
             required
-            pattern="^[\p{L}\p{N}\s!&quot;#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]+$"
             title="請勿輸入特殊符號"
           />
         </div>
@@ -98,7 +97,6 @@
             name="entry.2674519284"
             placeholder="例如：中文、日文表記等（無則可空白）"
             maxlength="80"
-            pattern="^[\p{L}\p{N}\s!&quot;#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]*$"
             title="請勿輸入特殊符號；可不填"
           />
         </div>
@@ -621,7 +619,7 @@
             >。 </span
           ><br />
           <div class="upload-container">
-            <input type="file" id="fileInput" name="file" />
+            <input type="file" id="fileInput" name="file" accept=".pdf,application/pdf" />
             <input
               type="hidden"
               name="entry.715764736"
@@ -653,7 +651,7 @@
             >。 </span
           ><br />
           <div class="upload-container">
-            <input type="file" id="fileInput2" name="file" />
+            <input type="file" id="fileInput2" name="file" accept=".pdf,application/pdf" />
             <input
               type="hidden"
               name="entry.1801583093"
@@ -687,7 +685,7 @@
             >。 </span
           ><br />
           <div class="upload-container">
-            <input type="file" id="fileInput3" name="file" />
+            <input type="file" id="fileInput3" name="file" accept=".pdf,application/pdf" />
             <input
               type="hidden"
               name="entry.715764736"
@@ -874,17 +872,24 @@
             if (key !== "file" && key !== "category") params.append(key, val);
           });
 
+          var controller = new AbortController();
+          var timeoutId = setTimeout(function () {
+            controller.abort();
+          }, 15000);
+
           try {
             var res = await fetch(OPENCALL_API_URL, {
+              signal: controller.signal,
               redirect: "follow",
               method: "POST",
               headers: { "Content-Type": "application/x-www-form-urlencoded" },
               body: params.toString(),
             });
+            clearTimeout(timeoutId);
             var data = await res.json();
 
             if (data.success) {
-              window.parent.postMessage({ type: "opencall-submitted" }, "*");
+              window.parent.location.reload();
             } else {
               alert("提交失敗，請稍後再試。\n" + (data.error || ""));
               if (submitBtn) {
@@ -893,11 +898,8 @@
               }
             }
           } catch (err) {
-            alert("網路錯誤，請稍後再試。");
-            if (submitBtn) {
-              submitBtn.disabled = false;
-              submitBtn.textContent = "提交";
-            }
+            clearTimeout(timeoutId);
+            window.parent.location.reload();
           }
         });
       })();

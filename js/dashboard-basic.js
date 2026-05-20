@@ -192,8 +192,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     console.error("get_user_info network error:", error);
   }
 
-  // 已投稿：改變 sidebar OPEN CALL 按鈕狀態
   if (apiData["報名編號"]) {
+    // 已投稿：顯示攤商面板，並鎖住 OPEN CALL 按鈕
+    if (window.showDashboardSection) window.showDashboardSection();
+    if (window.setSidebarActive) window.setSidebarActive("dashboard");
+
     const openCallBtn = document.getElementById("sidebar-open-call");
     if (openCallBtn) {
       const p = openCallBtn.querySelector("p");
@@ -207,6 +210,14 @@ document.addEventListener("DOMContentLoaded", async function () {
         alert("您已完成投稿。\nYou have already submitted.");
         return false;
       };
+    }
+  } else {
+    // 未投稿：攤商管理按鈕禁用，面板不顯示
+    const sidebarDashboard = document.getElementById("sidebar-dashboard");
+    if (sidebarDashboard) {
+      sidebarDashboard.style.pointerEvents = "none";
+      const p = sidebarDashboard.querySelector("p");
+      if (p) { p.style.color = "darkgray"; p.style.cursor = "default"; }
     }
   }
 

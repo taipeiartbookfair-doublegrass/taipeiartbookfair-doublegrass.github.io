@@ -87,7 +87,6 @@
             placeholder="e.g. Studio Name in English"
             maxlength="80"
             required
-            pattern="^[\p{L}\p{N}\s!&quot;#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]+$"
             title="Please do not enter special characters."
           />
         </div>
@@ -107,7 +106,6 @@
             name="entry.2674519285"
             placeholder="e.g. name in your language or script (leave blank if same as English)"
             maxlength="80"
-            pattern="^[\p{L}\p{N}\s!&quot;#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]*$"
             title="Please do not enter special characters; may be left blank."
           />
         </div>
@@ -899,7 +897,7 @@
             them into <u>one PDF file</u>. </span
           ><br />
           <div class="upload-container">
-            <input type="file" id="fileInput" name="file" />
+            <input type="file" id="fileInput" name="file" accept=".pdf,application/pdf" />
             <input
               type="hidden"
               name="entry.715764736"
@@ -934,7 +932,7 @@
             them into <u>one PDF file</u>. </span
           ><br />
           <div class="upload-container">
-            <input type="file" id="fileInput2" name="file" />
+            <input type="file" id="fileInput2" name="file" accept=".pdf,application/pdf" />
             <input
               type="hidden"
               name="entry.1801583093"
@@ -975,7 +973,7 @@
           </span>
           <br />
           <div class="upload-container">
-            <input type="file" id="fileInput3" name="file" />
+            <input type="file" id="fileInput3" name="file" accept=".pdf,application/pdf" />
             <input
               type="hidden"
               name="entry.715764736"
@@ -1190,17 +1188,24 @@
             if (key !== "file" && key !== "category") params.append(key, val);
           });
 
+          var controller = new AbortController();
+          var timeoutId = setTimeout(function () {
+            controller.abort();
+          }, 15000);
+
           try {
             var res = await fetch(OPENCALL_API_URL, {
+              signal: controller.signal,
               redirect: "follow",
               method: "POST",
               headers: { "Content-Type": "application/x-www-form-urlencoded" },
               body: params.toString(),
             });
+            clearTimeout(timeoutId);
             var data = await res.json();
 
             if (data.success) {
-              window.parent.postMessage({ type: "opencall-submitted" }, "*");
+              window.parent.location.reload();
             } else {
               alert(
                 "Submission failed. Please try again.\n" + (data.error || ""),
@@ -1211,11 +1216,8 @@
               }
             }
           } catch (err) {
-            alert("Network error. Please try again.");
-            if (submitBtn) {
-              submitBtn.disabled = false;
-              submitBtn.textContent = "Submit";
-            }
+            clearTimeout(timeoutId);
+            window.parent.location.reload();
           }
         });
       })();
