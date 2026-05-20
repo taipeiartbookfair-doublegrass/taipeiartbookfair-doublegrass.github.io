@@ -205,7 +205,7 @@
                     style="margin-top: 0.5em; font-size: 1rem"
                     id="live-event-schedule-desc"
                   >
-                    我們將會在此列出你所報名現場提供的活動服務場次資訊，相關活動內容已寄到你的信箱，不要忘了提早15分鐘到相對應的區域報到喔。We will list here the session information for the on-site activity services you registered for. Details about the activities have already been sent to your email. Please remember to arrive at the designated area 15 minutes early for check-in.
+                    你報名的現場活動資訊將列於此，相關內容已寄至你的信箱，別忘了提前 15 分鐘到場報到喔！Your registered session details will be listed here. Please arrive 15 minutes early for check-in
                   </div>
                   <hr
                     style="
@@ -1039,10 +1039,10 @@
               </tr>
 
               <!-- 中國簽證資料上傳 Visa Upload -->
-              <tr style="display: none" id="visaCN">
+              <tr style="display: none;background-color: mintcream" id="visaCN">
                 <td style="border-top: none; width: 55vw;">
-          <span class="label">簽證申請 Visa Support</span><br />
-                  <div id="visa-upload" style="background-color: mintcream">
+                <span class="label">入台證申請</span><br />
+                  <div id="visa-upload">
                     
                   </div>
                 </td>
@@ -1139,14 +1139,7 @@
                 >
                   <span class="label">寄件服務 Shipping Service</span>
                   <div id="foreigner-form" style="margin-top: 0.5rem">
-                    For those who would like to send their items in advance: To
-                    ensure your items arrive safely and on time, please complete
-                    the shipping service form first and follow its instructions.
-                    It is important that your package
-                    <u>arrives before</u> by 2/15 (Sun.). at the
-                    designated address. <br /><br />
-                    Late or unregistered shipments will not be delivered to the
-                    venue.
+                    
                   </div>
                 </td>
                 <!-- 寄件表格 -->
@@ -1168,7 +1161,13 @@
               </tr>
 
               <tr id="media-live-event-section" style="display: none">
-                <td colspan="1" style="border-top: none; border-right: none">
+                <td colspan="2"
+                  style="
+                    border-top: none;
+                    width: 20%;
+                    border-left: 1px solid black;
+                  "
+                >
                   <span class="label">現場活動徵集 Program Open Call</span>
                   <div id="live-even-annouce-time">
                     <div
@@ -1178,20 +1177,10 @@
                       
                     </div>
                   </div>
+                <div id="ddl-media-live-event-form-section" class="ddl"></div>
+
                 </td>
-                <td
-                  colspan="1"
-                  style="
-                    border-top: none;
-                    width: 20%;
-                    border-left: 1px dashed black;
-                  "
-                >
-                  <div id="media-live-event-form-section">
-                    
-                  </div>
-                  <div id="ddl-media-live-event-form-section" class="ddl"></div>
-                </td>
+                
               </tr>
 
               <tr id="catalog-section" style="display: none">
