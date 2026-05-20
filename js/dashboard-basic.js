@@ -632,29 +632,20 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
   setBillingInfoLanguage(boothType);
 
-  // 動態切換同意書區塊語言
+  // 動態切換同意書區塊語言（說明文字由試算表 afterMessage 控制）
   function setDeclarationLanguage(boothType) {
-    var declardownloadLink = document.getElementById(
-      "declaration-download-link",
-    );
-    var declarationdesc = document.getElementById("declaration-desc");
-    var declarationAgreeText = document.getElementById(
-      "declaration-agree-text",
-    );
-    if (boothType && declardownloadLink && declarationdesc) {
+    var declardownloadLink = document.getElementById("declaration-download-link");
+    var declarationAgreeText = document.getElementById("declaration-agree-text");
+    if (boothType && declardownloadLink) {
       if (isEnglishBoothType(boothType)) {
         declardownloadLink.innerHTML = "Exhibitor Declaration";
-        declarationdesc.innerHTML =
-          "Click the checkbox below to open and confirm the declaration.";
         if (declarationAgreeText) {
-          declarationAgreeText.innerHTML =
-            "I have read and agree to the Exhibitor Declaration";
+          declarationAgreeText.innerHTML = "I have read and agree to the Exhibitor Declaration";
         }
         const confirmBtn = document.getElementById("confirmBtnDeclaration");
         if (confirmBtn) confirmBtn.textContent = "Confirm";
       } else {
         declardownloadLink.innerHTML = "參展同意書";
-        declarationdesc.innerHTML = "請點擊下方勾選框，閱讀並確認同意書。";
         if (declarationAgreeText) {
           declarationAgreeText.innerHTML =
             "我已閱讀並同意參展同意書<br/>I have read and agree to the Exhibitor Declaration";
@@ -663,21 +654,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
   setDeclarationLanguage(boothType);
-
-  // 動態Billing Notice 區塊語言
-  function setBillingNoticeLanguage(boothType) {
-    var billingNoticedesc = document.getElementById("billing-notice");
-    if (boothType && billingNoticedesc) {
-      if (isEnglishBoothType(boothType)) {
-        billingNoticedesc.innerHTML =
-          "-  Please complete all payments in accordance with the instructions above. If payment is incorrect, late, or made via non-designated methods, the Organizer reserves the right to <b>cancel participation without refund.</b><br>- For all matters related to registration, payment, and participation, <b>TPABF reserves the final right of review, adjustment, and interpretation.</b><br>- In the event of cancellation due to force majeure (including natural disasters, pandemics, or policy changes), the Organizer will announce further arrangements separately.";
-      } else {
-        billingNoticedesc.innerHTML =
-          "- 請務必依繳費說明完成付款流程。如未依規定完成付款（如繳納錯誤金額、超過期限、未依指定方式匯款等），主辦單位將不保留參展資格，亦不提供退款。- 所有報名、繳費及參展相關事宜，草率季保留最終審核、調整及解釋之權利。<br>- 若因不可抗力（如天災、疫情、政策變動等）導致活動取消，主辦單位將另行公告後續處理方式。";
-      }
-    }
-  }
-  setBillingNoticeLanguage(boothType);
 
   // 動態勾勾區塊語言還有攤商編號說明搭便車
   // deadlineCN / deadlineEN 可由 publishTimes API 傳入覆蓋預設值
@@ -719,124 +695,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
   setConditionalAcceptence(boothType);
 
-  // 動態切換草率簿區塊語言
-  function setCatalogLanguage(boothType) {
-    var catalogdownloadLink = document.getElementById("catalog-download-link");
-    var catalogdesc = document.getElementById("catalog-desc");
-    if (boothType && catalogdownloadLink && catalogdesc) {
-      if (isEnglishBoothType(boothType)) {
-        catalogdownloadLink.innerHTML = "Template Download";
-        catalogdesc.innerHTML =
-          "Each exhibitor is entitled to a one-page feature in this year's <i>TPABF Catalog</i>. Late submissions will be considered as forfeiting the opportunity.<br /><br />📌 Submission requirements: <br />1. <b>Image file</b>: PDF format, final size <b>120 × 195 mm</b>, with <b>5 mm bleed</b>. Please use <b>black and white</b> only.<br />2. <b>Text content</b>: Please edit and complete the information on the left side of the exhibitor info sheet.<br />";
-      } else {
-        catalogdownloadLink.innerHTML = "公版下載";
-        catalogdesc.innerHTML =
-          "每個參展單位可於本屆《草率簿 TPABF Catalog》中獲得一面頁面露出，逾期未繳交者將視同放棄刊登權益。<br /><br />📌 繳交內容如下：<br />1. <b>圖檔</b>：PDF 格式，完稿尺寸 120 × 195 mm，需包含 5 mm 出血，色彩請設為黑白。<br />2. <b>文字資料</b>：請依左方參展資訊進行修改與補充。<br />";
-      }
-    }
-  }
-  setCatalogLanguage(boothType);
-
-  // 動態切換親友票區塊語言
-  function setTicketLanguage(boothType) {
-    var ticketlink = document.getElementById("ticket-link");
-    var familyticketdesc = document.getElementById("familyticket-desc");
-    if (boothType && ticketlink && familyticketdesc) {
-      if (isEnglishBoothType(boothType)) {
-        ticketlink.innerHTML = "Ticket Link";
-        familyticketdesc.innerHTML =
-          "◆ Pre-Sale Discount ◆  1/19-2/15｜ NT$350<br>• Select Pre-Sale Ticket and enter the exhibitor discount code to purchase<br><br>◆ Fast Pass Discount ◆ 2/16-3/8｜ NT$400<br>Enjoy fast-track entry with priority access. No need to queue in the general admission line<br>• Select Fast Pass Ticket and enter the exhibitor discount code to purchase<br>(For detailed usage instructions, please refer to the ticketing page.)<br>⚠️ Limited quantity, available while supplies last<br><br>Your exclusive discount code:<br>";
-      } else {
-        ticketlink.innerHTML = "購票連結";
-        familyticketdesc.innerHTML =
-          "◆ 預售優惠◆ 1/19-2/15｜NT$350<br>• 點選預售票並輸入攤商優惠代碼即可購買<br><br>◆ 快速通關優惠◆ 2/16-3/8｜NT$400<br>享有入場快速通關權益，現場可免排一般入場隊伍<br>• 點選快速通關票並輸入攤商優惠代碼即可購買<br>(詳細使用說明請見售票網頁)<br>⚠️數量有限，售完為止<br><br>您的專屬優惠序號：<br>";
-      }
-    }
-  }
-  setTicketLanguage(boothType);
-
-  // 動態切換現場活動區塊語言
-  function setLiveEventLanguage(boothType) {
-    var liveEventLink = document.getElementById("live-event-signup-link");
-    var liveEventdesc = document.getElementById("live-event-desc");
-    var liveEventScheduledesc = document.getElementById(
-      "live-event-schedule-desc",
-    );
-    if (boothType && liveEventLink && liveEventdesc) {
-      if (isEnglishBoothType(boothType)) {
-        liveEventLink.innerHTML = "Sign Up Form";
-        liveEventdesc.innerHTML =
-          "Want to engage with visitors more directly? Propose on-site programs such as short talks, performances, or workshops!";
-        liveEventScheduledesc.innerHTML =
-          "Your registered on-site program sessions will be listed here. Details have been emailed to you. Please check in at the designated area 15 minutes before your session.";
-      } else {
-        liveEventLink.innerHTML = " 報名表單";
-        liveEventdesc.innerHTML =
-          "想與大家更近距離互動？我們開放以下形式的現場活動徵集：短講、表演、工作坊等。";
-        liveEventScheduledesc.innerHTML =
-          "我們將會在此列出你所報名現場提供的活動服務場次資訊，相關活動內容已寄到你的信箱，不要忘了提早15分鐘到相對應的區域報到喔。";
-      }
-    }
-  }
-  setLiveEventLanguage(boothType);
-
-  // 動態切換攤主手冊區塊語言
-  function setManualLanguage(boothType) {
-    var manualdownloadLink = document.getElementById("manual-link");
-    var manualdesc = document.getElementById("manual-desc");
-    if (boothType && manualdownloadLink && manualdesc) {
-      if (isEnglishBoothType(boothType)) {
-        manualdownloadLink.innerHTML = "Download Manual";
-        manualdesc.innerHTML =
-          "Please read carefully and prepare accordingly. This includes all exhibitor information: event schedule, details, guidelines, booth types, and on-site regulations. <br />";
-      } else {
-        manualdownloadLink.innerHTML = "下載手冊";
-        manualdesc.innerHTML =
-          "請務必詳閱並依說明準備。內含展會流程、細節、注意事項與攤位樣式、現場規範等所有參展須知。<br /";
-      }
-    }
-  }
-  setManualLanguage(boothType);
-
-  // 動態切換媒體上傳區塊語言
-  function setMediaUploadLanguage(boothType) {
-    var mediaziplink = document.getElementById("media-zip-link");
-    var mediamaterialdesc = document.getElementById("material-download-desc");
-    var materialuploaddesc = document.getElementById("material-upload-desc");
-
-    if (!mediaziplink || !mediamaterialdesc || !materialuploaddesc) return;
-
-    if (isEnglishBoothType(boothType)) {
-      mediaziplink.innerHTML = "Download";
-      mediamaterialdesc.innerHTML =
-        "Media Kit<br>You're welcome to use the 2026 TPABF key visual assets — click here to download.";
-      materialuploaddesc.innerHTML = `<strong>Marketing Material Upload</strong><br>
-Please follow the instructions below to create your materials, and upload the completed images/text as a ZIP file. The file size should not exceed 20MB.<br><br>
-📌 The ZIP file should include:<br>
-1. Image for social media post: JPG × 1<br>
-2. Image for Stories: JPG × 1<br>
-3. Threads introduction images: JPG / PNG × 5<br>
-4. Threads introduction text: DOCX / TXT × 1<br><br>
-<strong>Deadline：</strong>1/23（Fri.）（GMT+8 24:00）<br><br>
-⚠️ Late submissions will not be accepted. Please do not send files via email.<br>
-*If materials are not submitted by the deadline, social media exposure may not be arranged. Thank you ;)`;
-    } else {
-      mediaziplink.innerHTML = "下載";
-      mediamaterialdesc.innerHTML =
-        "視覺素材包<br>歡迎使用 2026 草率季主視覺素材，點此下載檔案。";
-      materialuploaddesc.innerHTML = `<strong>行銷素材檔案上傳</strong><br>
-請依照以下製作說明，並將製作完成的圖／文打包為 zip上傳。檔案大小請勿超過 20MB。<br><br>
-📌壓縮檔需包含：<br>
-1. 社群貼文用圖：JPG × 1<br>
-2. 限時動態用圖：JPG × 1<br>
-3. Threads 介紹圖：JPG / PNG × 5<br>
-4. Threads 介紹文：DOCX / TXT × 1<br><br>
-截止日期：1/23（五）（GMT+8 24:00）<br>
-⚠️逾期不接受補交，請勿將檔案傳至email<br>
-*若未於期限內可能無法安排社群曝光，敬請留意;)`;
-    }
-  }
-  setMediaUploadLanguage(boothType);
 
   // 電力資訊（single source of truth）
   // deadlineCN / deadlineEN 由 publishTimes API 傳入，例如 "1/9（五）" / "Jan 9 (Fri)"
@@ -1010,7 +868,7 @@ Please follow the instructions below to create your materials, and upload the co
     registrationStatus.style.display = "none";
     boothnumber.style.display = "none";
     liveEventTime.style.display = "none";
-    // boothappearance.style.display = "none";
+
 
     //勾勾區的鐵門
     if (declarationChecked) {
@@ -1067,7 +925,7 @@ Please follow the instructions below to create your materials, and upload the co
         registrationStatus.style.display = "block";
         // 正確顯示 tr，避免 Safari 重算錯誤
         boothnumber.style.display = "table-row";
-        // boothappearance.style.display = "block";
+
       } else {
         registrationStatusEl.textContent = getStatusText(false);
         billinginfo.style.display = "block";
@@ -1109,7 +967,7 @@ Please follow the instructions below to create your materials, and upload the co
         if (nationality !== "TW" && isEnglishBooth) {
           if (overseavisa) overseavisa.style.display = "block";
         }
-        // boothappearance.style.display = "block";
+
       } else {
         registrationStatusEl.textContent = getStatusText(false);
         billinginfo.style.display = "block";
@@ -1140,7 +998,7 @@ Please follow the instructions below to create your materials, and upload the co
         manualBoothappearance.style.display = "block";
         registrationStatus.style.display = "block";
         boothnumber.style.display = "table-row";
-        // boothappearance.style.display = "block";
+
       } else {
         registrationStatusEl.textContent = getStatusText(false);
         billinginfo.style.display = "block";
