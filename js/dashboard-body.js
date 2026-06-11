@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const sidebarIds = [
       "sidebar-dashboard",
       "sidebar-open-call",
+      "sidebar-consignment",
       "sidebar-contact",
       "sidebar-faq",
       "sidebar-account",
@@ -59,18 +60,18 @@ document.addEventListener("DOMContentLoaded", function () {
         const html = p.innerHTML.replace(/<mark>([\s\S]*?)<\/mark>/g, "$1");
         p.innerHTML = html;
       }
-      // 還原帳號管理顏色
+      // 還原帳號管理顏色；已被標為 disabled (darkgray) 的不覆蓋
       if (id === "sidebar-account") {
         p.style.backgroundColor = "blueviolet";
         p.style.color = "ghostwhite";
-      } else {
+      } else if (p.style.color !== "darkgray") {
         p.style.backgroundColor = "";
         p.style.color = "";
       }
     });
 
     // 只給目前選到的加 <mark>
-    if (section === "dashboard" || section === "open-call" || section === "contact" || section === "faq") {
+    if (section === "dashboard" || section === "open-call" || section === "consignment" || section === "contact" || section === "faq") {
       const a = document.getElementById("sidebar-" + section);
       if (a) {
         const p = a.querySelector("p");
@@ -129,7 +130,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const editAccountPage = document.getElementById("edit-account-page");
     const faq = document.getElementById("faq");
     const contact = document.getElementById("contact-method");
-    const allSections = [mid, right, account, editAccountPage, faq, contact];
+    const openCallGated = document.getElementById("open-call-gated");
+    const consignmentForm = document.getElementById("consignment-form");
+    const allSections = [mid, right, account, editAccountPage, faq, contact, openCallGated, consignmentForm];
     
     // 移除所有 active class 和 inline style
     allSections.forEach(el => {
@@ -222,7 +225,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const faq = document.getElementById("faq");
     const contact = document.getElementById("contact-method");
     const openCallForm = document.getElementById("open-call-form");
-    const allSections = [editBrandPage, mid, right, editPage, account, faq, contact, openCallForm];
+    const openCallGated = document.getElementById("open-call-gated");
+    const consignmentForm = document.getElementById("consignment-form");
+    const allSections = [editBrandPage, mid, right, editPage, account, faq, contact, openCallForm, openCallGated, consignmentForm];
     
     // 移除所有 active class 和 inline style
     allSections.forEach(el => {
@@ -255,7 +260,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const faq = document.getElementById("faq");
     const contact = document.getElementById("contact-method");
     const openCallForm = document.getElementById("open-call-form");
-    const allSections = [editBrandPage, mid, right, editPage, account, faq, contact, openCallForm];
+    const openCallGated = document.getElementById("open-call-gated");
+    const consignmentForm = document.getElementById("consignment-form");
+    const allSections = [editBrandPage, mid, right, editPage, account, faq, contact, openCallForm, openCallGated, consignmentForm];
     
     // 移除所有 active class 和 inline style
     allSections.forEach(el => {
@@ -288,7 +295,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const faq = document.getElementById("faq");
     const contact = document.getElementById("contact-method");
     const openCallForm = document.getElementById("open-call-form");
-    const allSections = [editBrandPage, mid, right, editPage, account, faq, contact, openCallForm];
+    const openCallGated = document.getElementById("open-call-gated");
+    const consignmentForm = document.getElementById("consignment-form");
+    const allSections = [editBrandPage, mid, right, editPage, account, faq, contact, openCallForm, openCallGated, consignmentForm];
     
     // 移除所有 active class 和 inline style
     allSections.forEach(el => {
@@ -367,7 +376,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const faq = document.getElementById("faq");
     const contact = document.getElementById("contact-method");
     const openCallForm = document.getElementById("open-call-form");
-    const allSections = [editBrandPage, mid, right, editPage, account, faq, contact];
+    const openCallGated = document.getElementById("open-call-gated");
+    const consignmentForm = document.getElementById("consignment-form");
+    const allSections = [editBrandPage, mid, right, editPage, account, faq, contact, openCallGated, consignmentForm];
     
     // 移除所有 active class 和 inline style
     allSections.forEach(el => {
@@ -392,6 +403,80 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
+  window.showOpenCallGated = function showOpenCallGated() {
+    const editBrandPage = document.getElementById("edit-brand-page");
+    const mid = document.querySelector(".mid");
+    const right = document.querySelector(".right");
+    const editPage = document.getElementById("edit-account-page");
+    const account = document.querySelector(".account");
+    const faq = document.getElementById("faq");
+    const contact = document.getElementById("contact-method");
+    const openCallForm = document.getElementById("open-call-form");
+    const openCallGated = document.getElementById("open-call-gated");
+    const consignmentForm = document.getElementById("consignment-form");
+    const allSections = [editBrandPage, mid, right, editPage, account, faq, contact, openCallForm, consignmentForm];
+
+    allSections.forEach(el => {
+      if (el) {
+        el.classList.remove("mobile-active");
+        if (isMobile) {
+          el.style.display = "";
+        } else {
+          el.style.display = "none";
+        }
+      }
+    });
+
+    if (openCallGated) {
+      if (isMobile) {
+        openCallGated.classList.add("mobile-active");
+      } else {
+        openCallGated.style.display = "table-cell";
+      }
+    }
+  };
+
+  window.showConsignmentForm = function showConsignmentForm() {
+    const editBrandPage = document.getElementById("edit-brand-page");
+    const mid = document.querySelector(".mid");
+    const right = document.querySelector(".right");
+    const editPage = document.getElementById("edit-account-page");
+    const account = document.querySelector(".account");
+    const faq = document.getElementById("faq");
+    const contact = document.getElementById("contact-method");
+    const openCallForm = document.getElementById("open-call-form");
+    const openCallGated = document.getElementById("open-call-gated");
+    const consignmentForm = document.getElementById("consignment-form");
+    const allSections = [editBrandPage, mid, right, editPage, account, faq, contact, openCallForm, openCallGated];
+
+    allSections.forEach(el => {
+      if (el) {
+        el.classList.remove("mobile-active");
+        if (isMobile) {
+          el.style.display = "";
+        } else {
+          el.style.display = "none";
+        }
+      }
+    });
+
+    if (consignmentForm) {
+      if (isMobile) {
+        consignmentForm.classList.add("mobile-active");
+      } else {
+        consignmentForm.style.display = "table-cell";
+      }
+    }
+
+    // Send user data to the consignment iframe
+    const csIframe = document.getElementById("consignment-iframe");
+    if (csIframe && csIframe.contentWindow) {
+      const name  = (document.getElementById("contact-person") || {}).textContent?.trim() || "";
+      const email = (document.getElementById("email") || {}).textContent?.trim() || "";
+      try { csIframe.contentWindow.postMessage({ type: "cs-user-data", name, email }, "*"); } catch (e) {}
+    }
+  };
+
   window.showDashboardSection = function showDashboardSection() {
     const editBrandPage = document.getElementById("edit-brand-page");
     const mid = document.querySelector(".mid");
@@ -401,7 +486,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const faq = document.getElementById("faq");
     const contact = document.getElementById("contact-method");
     const openCallForm = document.getElementById("open-call-form");
-    const allSections = [editBrandPage, editPage, account, faq, contact, openCallForm];
+    const openCallGated = document.getElementById("open-call-gated");
+    const consignmentForm = document.getElementById("consignment-form");
+    const allSections = [editBrandPage, editPage, account, faq, contact, openCallForm, openCallGated, consignmentForm];
     
     // 移除所有 active class 和 inline style
     allSections.forEach(el => {
@@ -494,7 +581,9 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("edit-account-page"),
       document.querySelector(".account"),
       document.getElementById("faq"),
-      document.getElementById("contact-method")
+      document.getElementById("contact-method"),
+      document.getElementById("open-call-gated"),
+      document.getElementById("consignment-form"),
     ];
     allSections.forEach(el => {
       if (el) {
