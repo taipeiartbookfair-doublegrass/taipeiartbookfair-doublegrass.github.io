@@ -84,6 +84,18 @@
           </a>
           <hr class="sidebar-hr" />
           <a
+            id="sidebar-consignment"
+            href="#"
+            style="text-decoration: none; color: black"
+            onclick="showConsignmentForm(); setSidebarActive('consignment'); return false;"
+          >
+            <p>
+              寄售申請<br>
+              Consignment
+            </p>
+          </a>
+          <hr class="sidebar-hr" />
+          <a
             id="sidebar-dashboard"
             href="#"
             style="text-decoration: none; color: black"
@@ -1402,6 +1414,38 @@
           </div>
         </td>
 
+        <!-- Open Call Gated (closed period + invite password) -->
+        <td class="admin" id="open-call-gated" style="display: none; padding: 0;">
+          <div class="scroll-inner" style="min-height:100%; background-color: blue; padding: 2em 1.4em; box-sizing: border-box;">
+            <div style="background: whitesmoke; border-radius: 3rem; padding: 2.4em 2.8em; max-width: 560px; margin: 0 auto; font-family: 'Poppins', sans-serif;">
+
+              <p id="opencall-gated-status-msg" style="margin: 0 0 1.4em; font-size: 0.95rem; line-height: 1.8;"></p>
+
+              <!-- Password gate (only shown when closed + password exists) -->
+              <div id="opencall-invite-gate" style="display: none;">
+                <p style="margin: 0 0 0.8em; font-size: 0.88rem; line-height: 1.7;">
+                  <span id="opencall-gate-zh">如您已收到邀請，請輸入邀請密碼以繼續填寫表單。</span>
+                  <span id="opencall-gate-en" style="display: none;">If you have received an invitation, please enter the invite code below to access the form.</span>
+                </p>
+                <div style="display: flex; gap: 0.6em; align-items: center; flex-wrap: wrap;">
+                  <input type="password" id="opencall-invite-password-input"
+                    placeholder="邀請密碼 Invite Code"
+                    style="flex: 1; min-width: 160px; padding: 0.4em 0.8em; border: 1px solid #000; font-size: 0.9rem; font-family: inherit; background: white;"
+                    onkeydown="if(event.key==='Enter') verifyOpenCallInvite();">
+                  <button type="button" id="opencall-invite-verify-btn"
+                    onclick="verifyOpenCallInvite()"
+                    style="padding: 0.4em 1.2em; background: #000; color: #fff; border: none; cursor: pointer; font-size: 0.88rem; font-family: inherit;">
+                    確認 Verify
+                  </button>
+                </div>
+                <div id="opencall-invite-status" style="margin-top: 0.6em; font-size: 0.83rem;"></div>
+              </div>
+
+            </div>
+          </div>
+        </td>
+        <!-- /Open Call Gated -->
+
         <td class="admin" id="open-call-form" style="display: none">
           <div class="scroll-inner opencall-dashboard-host">
             <iframe
@@ -1418,6 +1462,18 @@
             ></iframe>
           </div>
         </td>
+
+        <!-- 寄售申請 Consignment Form -->
+        <td class="admin" id="consignment-form" style="display:none; padding:0;">
+          <iframe
+            id="consignment-iframe"
+            title="寄售申請 Consignment"
+            src="consignment.html"
+            style="width:100%; height:100vh; border:none; display:block;"
+          ></iframe>
+        </td>
+
+
       </tr>
     </table>
     <!-- ── Clickwrap Consent Modal ── -->
@@ -1492,7 +1548,6 @@
       </div>
     </div>
     <!-- ── /Clickwrap Consent Modal ── -->
-
 
     <script src="js/dashboardupload/upload_dashboard.js?v=20260512c"></script>
     <script src="js/dashboard-body.js?v=20260513a"></script>

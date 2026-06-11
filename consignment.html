@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>寄售申請 Consignment — 草率季 TPABF</title>
+    <link rel="stylesheet" href="css/font.css" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: "Poppins", sans-serif;
+      }
+      body {
+        min-height: 100%;
+        background-color: #a9a9a9;
+        background-image:
+          linear-gradient(rgba(0, 0, 0, 0.13) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 0, 0, 0.13) 1px, transparent 1px);
+        background-size: 7px 7px;
+        padding: 1.4em 1.2em 6em;
+      }
+      .cs-card {
+        background: whitesmoke;
+        border: 1.5px solid #444;
+        border-radius: 2.5rem;
+        padding: 1.8em 2em;
+        max-width: 780px;
+        margin: 0 auto;
+      }
+      .cs-lang-row {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 0.4em;
+        margin-bottom: 1.2em;
+        font-size: 0.78rem;
+        color: #666;
+      }
+      .cs-lang-btn {
+        padding: 2px 12px;
+        border-radius: 999px;
+        border: 1.5px solid #555;
+        cursor: pointer;
+        font-size: 0.78rem;
+        transition:
+          background 0.15s,
+          color 0.15s;
+      }
+      .cs-lang-btn.active {
+        background: #333;
+        color: whitesmoke;
+      }
+      .cs-lang-btn:not(.active) {
+        background: transparent;
+        color: #444;
+      }
+      .cs-divider {
+        border: none;
+        height: 2px;
+        background-image: repeating-linear-gradient(
+          90deg,
+          #888 0px,
+          #888 4px,
+          transparent 4px,
+          transparent 8px
+        );
+        margin: 1.4em 0;
+      }
+      .cs-pill {
+        display: inline-block;
+        font-weight: 700;
+        font-size: 0.82rem;
+        background: #333;
+        color: whitesmoke;
+        border-radius: 999px;
+        padding: 0.22em 1.1em;
+        margin-bottom: 0.7em;
+        letter-spacing: 0.03em;
+      }
+      .cs-pill.light {
+        background: transparent;
+        color: #444;
+        border: 1.5px solid #666;
+      }
+      .cs-intro-heading {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #222;
+        margin: 0 0 0.3em;
+      }
+      .cs-book-card {
+        background: #fff;
+        border: 1.5px solid #999;
+        border-radius: 1.4rem;
+        padding: 1.1em 1.3em;
+        margin-bottom: 1em;
+      }
+      .cs-book-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.9em;
+      }
+      .cs-field-row {
+        display: flex;
+        gap: 1em;
+        margin-bottom: 0.65em;
+        flex-wrap: wrap;
+      }
+      .cs-field {
+        flex: 1;
+        min-width: 140px;
+        display: flex;
+        flex-direction: column;
+        gap: 0.2em;
+      }
+      .cs-field.full {
+        flex-basis: 100%;
+      }
+      .cs-label {
+        font-size: 0.75rem;
+        color: #555;
+        font-weight: 600;
+      }
+      .cs-req {
+        color: #b00;
+      }
+      .cs-field input,
+      .cs-field select,
+      .cs-field textarea {
+        border: 1px solid #bbb;
+        border-radius: 0.5rem;
+        padding: 0.3em 0.5em;
+        font-size: 0.83rem;
+        font-family: inherit;
+        background: whitesmoke;
+        width: 100%;
+      }
+      .cs-field textarea {
+        resize: vertical;
+      }
+      .cs-field-hint {
+        font-size: 0.7rem;
+        color: #888;
+        margin-top: 1px;
+      }
+      .cs-lang-checks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 12px;
+        padding: 6px 0 2px;
+      }
+      .cs-check-label {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.82rem;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .cs-check-label input[type="checkbox"] {
+        cursor: pointer;
+      }
+      .cs-add-btn {
+        display: block;
+        width: 100%;
+        padding: 0.5em;
+        border: 1.5px dashed #888;
+        border-radius: 1rem;
+        background: transparent;
+        color: #555;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-family: inherit;
+        margin: 0.2em 0 1.4em;
+        transition:
+          border-color 0.15s,
+          color 0.15s;
+      }
+      .cs-add-btn:hover {
+        border-color: #333;
+        color: #222;
+      }
+      .cs-submit-btn {
+        padding: 0.45em 2em;
+        background: #333;
+        color: whitesmoke;
+        border: none;
+        border-radius: 999px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-family: inherit;
+        letter-spacing: 0.04em;
+        transition: background 0.15s;
+      }
+      .cs-submit-btn:hover {
+        background: #000;
+      }
+      .cs-notice {
+        background: #e8e8e8;
+        border: 1px solid #bbb;
+        border-radius: 0.8rem;
+        padding: 0.7em 1em;
+        font-size: 0.78rem;
+        color: #444;
+        line-height: 1.6;
+      }
+      .cs-remove-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        color: #aaa;
+        padding: 0;
+        line-height: 1;
+      }
+      .cs-remove-btn:hover {
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Language toggle -->
+    <div class="cs-lang-row">
+      語言 Language：
+      <button
+        id="consignment-lang-zh"
+        type="button"
+        class="cs-lang-btn active"
+        onclick="setConsignmentLang('zh')"
+      >
+        中文
+      </button>
+      <button
+        id="consignment-lang-en"
+        type="button"
+        class="cs-lang-btn"
+        onclick="setConsignmentLang('en')"
+      >
+        English
+      </button>
+    </div>
+
+    <div class="cs-card">
+      <!-- Intro -->
+      <p class="cs-intro-heading zh">誠摯邀請你的作品上架草率季的書店 :)</p>
+      <p class="cs-intro-heading en" style="display: none">
+        The Taipei Art Book Fair bookstore sincerely invites your work. :)
+      </p>
+      <p
+        class="zh"
+        style="
+          font-size: 0.83rem;
+          color: #555;
+          margin: 0 0 0.4em;
+          line-height: 1.7;
+        "
+      >
+        <strong>Pretty Fly Books by 草率季</strong>
+        是由草率季創立的實體書店，不僅把出版品帶進台灣書店系統，也會跟著草率季參加各種國際書展。<br />
+        實體書店預計 2026 年 7
+        月正式開啟。徵件以「書籍出版品」為主，其他形式作品暫不開放。<br />
+        <em>營業時間：12:00–19:00（二–日）　地點：西門新宿 1F</em>
+      </p>
+      <p
+        class="en"
+        style="
+          font-size: 0.83rem;
+          color: #555;
+          margin: 0 0 0.4em;
+          line-height: 1.7;
+          display: none;
+        "
+      >
+        <strong>Pretty Fly Books by TPABF</strong> is a physical bookstore
+        initiated by TPABF, participating in international art book fairs
+        alongside TPABF. Physical store opens July 2026. This open call focuses
+        on printed publications only.<br />
+        <em
+          >Opening Hours: 12:00–19:00 (Tue–Sun)　Location: Ximending Shinjuku
+          1F</em
+        >
+      </p>
+
+      <hr class="cs-divider" />
+
+      <!-- Terms -->
+      <span class="cs-pill zh">寄售條款</span>
+      <span class="cs-pill en" style="display: none">Consignment Terms</span>
+      <div
+        class="zh"
+        style="
+          font-size: 0.83rem;
+          color: #444;
+          margin: 0.4em 0 0;
+          line-height: 1.8;
+        "
+      >
+        收益分配：藝術家 <strong>65%</strong> / TPABF
+        <strong>35%</strong>　　結帳週期：每半年一次<br />
+        <a href="dashboard/consignment-terms.pdf" target="_blank"
+          >寄售條款參考 →</a
+        >
+      </div>
+      <div
+        class="en"
+        style="
+          font-size: 0.83rem;
+          color: #444;
+          margin: 0.4em 0 0;
+          line-height: 1.8;
+          display: none;
+        "
+      >
+        Revenue Split: Artist <strong>65%</strong> / TPABF
+        <strong>35%</strong>　　Payment Cycle: Every six months<br />
+        <a href="dashboard/consignment-terms.pdf" target="_blank"
+          >Download Consignment Terms →</a
+        >
+      </div>
+
+      <hr class="cs-divider" />
+
+      <form id="consignment-main-form" autocomplete="off">
+        <!-- Book list -->
+        <span class="cs-pill zh">書籍清冊</span>
+        <span class="cs-pill en" style="display: none">Book List</span>
+        <p
+          class="zh"
+          style="font-size: 0.78rem; color: #666; margin: 0.3em 0 0.8em"
+        >
+          （可手動增加書籍）
+        </p>
+        <p
+          class="en"
+          style="
+            font-size: 0.78rem;
+            color: #666;
+            margin: 0.3em 0 0.8em;
+            display: none;
+          "
+        >
+          (You may add multiple books)
+        </p>
+
+        <div id="consignment-book-list"></div>
+
+        <button
+          type="button"
+          id="consignment-add-book-btn"
+          class="cs-add-btn"
+          onclick="addConsignmentBook()"
+        >
+          <span class="zh">＋ 新增書籍</span
+          ><span class="en" style="display: none">＋ Add Another Book</span>
+        </button>
+
+        <hr class="cs-divider" />
+
+        <!-- Agreement -->
+        <span class="cs-pill zh">合約書</span>
+        <span class="cs-pill en" style="display: none"
+          >Consignment Agreement</span
+        >
+        <p
+          class="zh"
+          style="font-size: 0.82rem; color: #555; margin: 0.5em 0 0.7em"
+        >
+          請點擊下方按鈕閱讀並確認寄售合約書。
+        </p>
+        <p
+          class="en"
+          style="
+            font-size: 0.82rem;
+            color: #555;
+            margin: 0.5em 0 0.7em;
+            display: none;
+          "
+        >
+          Please click the button below to read and confirm the Consignment
+          Agreement.
+        </p>
+        <button
+          id="consignment-open-modal-btn"
+          type="button"
+          style="
+            padding: 0.35em 1.3em;
+            background: #333;
+            color: whitesmoke;
+            border: none;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.82em;
+            font-family: inherit;
+            letter-spacing: 0.03em;
+          "
+        >
+          閱讀並確認 Read &amp; Confirm →
+        </button>
+        <input
+          type="checkbox"
+          id="consignment-agree-checkbox"
+          style="display: none"
+        />
+        <span
+          id="consignment-agree-status"
+          style="
+            color: #2a7a2a;
+            font-size: 0.8em;
+            display: block;
+            margin-top: 0.4em;
+          "
+        ></span>
+
+        <hr class="cs-divider" />
+
+        <!-- Delivery -->
+        <span class="cs-pill zh">寄送資訊</span>
+        <span class="cs-pill en" style="display: none">Delivery Method</span>
+        <div class="cs-notice" style="margin-top: 0.6em">
+          <span class="zh">
+            商品交付方式：寄送／親送至工作室 Shakyfloor<br />
+            收件資訊：114030 台北市內湖區南京東路六段 368 號 2
+            樓　草率季股份有限公司　收<br />
+            電話：0911-908-155　　收件時間：工作日（一–五）10:00–19:00
+          </span>
+          <span class="en" style="display: none">
+            Delivery by shipping or in person to our studio Shakyfloor.<br />
+            Taipei Art Book Fair Co., Ltd.　2F., No. 368, Sec. 6, Nanjing E.
+            Rd., Neihu Dist., Taipei City 114030<br />
+            Tel: +886-911-908-155　　Weekdays (Mon–Fri) 10:00–19:00
+          </span>
+        </div>
+
+        <hr class="cs-divider" />
+
+        <!-- Message -->
+        <span class="cs-pill light zh">留言區</span>
+        <span class="cs-pill light en" style="display: none">Message Box</span>
+        <p
+          class="zh"
+          style="font-size: 0.78rem; color: #666; margin: 0.4em 0 0.5em"
+        >
+          如有其他問題、意見或想對我們說的話，請在此留言。（選填）
+        </p>
+        <p
+          class="en"
+          style="
+            font-size: 0.78rem;
+            color: #666;
+            margin: 0.4em 0 0.5em;
+            display: none;
+          "
+        >
+          Questions, suggestions, or anything you'd like to share. (Optional)
+        </p>
+        <textarea
+          id="consignment-message"
+          rows="3"
+          style="
+            width: 100%;
+            border: 1px solid #bbb;
+            border-radius: 0.8rem;
+            padding: 0.4em 0.7em;
+            font-size: 0.83rem;
+            font-family: inherit;
+            resize: vertical;
+            background: whitesmoke;
+          "
+          placeholder="選填 / Optional"
+        ></textarea>
+
+        <hr class="cs-divider" />
+
+        <!-- Submit -->
+        <div
+          style="
+            font-size: 0.78rem;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 1em;
+          "
+        >
+          <span class="zh"
+            >實際寄售的品項及數量將以信件確認。若有任何問題，請來信
+            <a href="mailto:nmhw@double-grass.com">nmhw@double-grass.com</a
+            ><br />
+            寄件前請妥善包裝，運送過程中因包裝不當造成損壞，需由寄件方自行承擔。</span
+          >
+          <span class="en" style="display: none"
+            >Final consignment details will be confirmed by email. Questions:
+            <a href="mailto:nmhw@double-grass.com">nmhw@double-grass.com</a
+            ><br />
+            Please package all items properly. NMHW is not responsible for
+            damage caused by insufficient packaging during transit.</span
+          >
+        </div>
+        <label
+          style="
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5em;
+            font-size: 0.8rem;
+            color: #333;
+            cursor: pointer;
+            margin-bottom: 1.2em;
+          "
+        >
+          <input
+            type="checkbox"
+            id="consignment-final-agree"
+            style="margin-top: 0.2em; flex-shrink: 0"
+            required
+          />
+          <span class="zh"
+            >按下提交前，請再次確認您輸入的資料。提交後將無法修改，如需修改請再次提交。我們收到後將寄出確認信件，如未收到請檢查垃圾信箱。</span
+          >
+          <span class="en" style="display: none"
+            >Please double-check your information before submitting. After
+            submission you will receive a confirmation email. If you don't see
+            it, check your spam folder.</span
+          >
+        </label>
+
+        <div
+          style="display: flex; align-items: center; gap: 1em; flex-wrap: wrap"
+        >
+          <button
+            type="submit"
+            id="consignment-submit-btn"
+            class="cs-submit-btn"
+          >
+            <span class="zh">提交 Submit</span
+            ><span class="en" style="display: none">Submit</span>
+          </button>
+          <span
+            id="consignment-submit-status"
+            style="font-size: 0.83rem"
+          ></span>
+        </div>
+      </form>
+    </div>
+    <!-- /cs-card -->
+
+    <!-- Consent Modal -->
+    <div
+      id="consignment-consent-modal"
+      role="dialog"
+      aria-modal="true"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.65);
+        z-index: 9999;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      "
+    >
+      <div
+        style="
+          background: #fff;
+          max-width: 700px;
+          margin: 4vh auto 4vh;
+          border: 1px solid #000;
+          position: relative;
+          font-family: inherit;
+        "
+      >
+        <div
+          style="
+            background: #000;
+            color: #fff;
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <span style="font-size: 0.85rem; font-weight: bold"
+            >寄售合約書 Consignment Agreement</span
+          >
+          <button
+            id="consignment-modal-close-btn"
+            type="button"
+            style="
+              background: none;
+              border: none;
+              color: #fff;
+              font-size: 1.3rem;
+              cursor: pointer;
+              line-height: 1;
+              padding: 0 2px;
+            "
+          >
+            ✕
+          </button>
+        </div>
+        <div style="padding: 0.8em 0.8em 0">
+          <iframe
+            id="consignment-modal-pdf"
+            width="100%"
+            height="480"
+            style="border: 1px solid #ddd; display: block"
+          ></iframe>
+        </div>
+        <div
+          style="
+            padding: 0.8em 1em 1.2em;
+            border-top: 1px solid #eee;
+            margin-top: 0.8em;
+          "
+        >
+          <p style="font-size: 0.78rem; color: #777; margin: 0 0 0.7em">
+            以下資料來自您的登入帳號，不可修改。<br />The following information
+            is from your account and cannot be modified.
+            <span style="margin-left: 1em; color: #aaa"
+              >版本 Version:
+              <span
+                id="consignment-modal-version"
+                style="font-family: monospace"
+              ></span
+            ></span>
+          </p>
+          <div
+            style="
+              display: flex;
+              gap: 1em;
+              flex-wrap: wrap;
+              margin-bottom: 0.9em;
+            "
+          >
+            <div style="flex: 1; min-width: 140px">
+              <label
+                style="
+                  font-size: 0.75rem;
+                  color: #888;
+                  display: block;
+                  margin-bottom: 3px;
+                "
+                >姓名 Name</label
+              >
+              <input
+                id="consignment-modal-name"
+                type="text"
+                readonly
+                tabindex="-1"
+                style="
+                  width: 100%;
+                  border: 1px solid #ccc;
+                  padding: 5px 7px;
+                  background: #f5f5f5;
+                  font-size: 0.85rem;
+                  box-sizing: border-box;
+                  cursor: default;
+                "
+              />
+            </div>
+            <div style="flex: 2; min-width: 180px">
+              <label
+                style="
+                  font-size: 0.75rem;
+                  color: #888;
+                  display: block;
+                  margin-bottom: 3px;
+                "
+                >Email</label
+              >
+              <input
+                id="consignment-modal-email"
+                type="text"
+                readonly
+                tabindex="-1"
+                style="
+                  width: 100%;
+                  border: 1px solid #ccc;
+                  padding: 5px 7px;
+                  background: #f5f5f5;
+                  font-size: 0.85rem;
+                  box-sizing: border-box;
+                  cursor: default;
+                "
+              />
+            </div>
+          </div>
+          <label
+            id="consignment-modal-agree-label"
+            style="
+              display: flex;
+              align-items: flex-start;
+              gap: 0.5em;
+              cursor: pointer;
+              font-size: 0.85rem;
+              line-height: 1.5;
+              margin-bottom: 0.9em;
+              user-select: none;
+            "
+          >
+            <input
+              type="checkbox"
+              id="consignment-modal-checkbox"
+              style="margin-top: 0.2em; flex-shrink: 0; cursor: pointer"
+            />
+            <span
+              >我已閱讀上述寄售合約書全文，並同意遵守其中所有條款。<br />I have
+              read the full Consignment Agreement above and agree to all its
+              terms.</span
+            >
+          </label>
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              gap: 1em;
+              flex-wrap: wrap;
+            "
+          >
+            <button
+              id="consignment-modal-confirm-btn"
+              type="button"
+              disabled
+              style="
+                padding: 0.4em 1.8em;
+                background: #ccc;
+                color: #fff;
+                border: none;
+                border-radius: 3px;
+                font-size: 0.9rem;
+                cursor: not-allowed;
+                transition:
+                  background 0.15s,
+                  cursor 0.15s;
+              "
+            >
+              確認同意 Confirm
+            </button>
+            <span
+              id="consignment-modal-status"
+              style="font-size: 0.8rem; color: #c00"
+            ></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="js/cookie.js?v=20260512c"></script>
+    <script src="js/consignment.js?v=20260611a"></script>
+  </body>
+</html>

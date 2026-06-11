@@ -1430,6 +1430,117 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   });
 
+  // ── Open Call schedule gate ─────────────────────────────────────────────────
+  const ocSchedule = publishTimes["opencall-schedule"];
+  const hasSubmitted = !!apiData["報名編號"];
+
+  if (ocSchedule && !hasSubmitted) {
+    const now = new Date();
+    const openTime  = ocSchedule.openTime  ? new Date(ocSchedule.openTime)  : null;
+    const closeTime = ocSchedule.closeTime ? new Date(ocSchedule.closeTime) : null;
+    const hasPassword = !!ocSchedule.hasPassword;
+
+    const openCallBtn = document.getElementById("sidebar-open-call");
+
+    if (openTime && now < openTime) {
+      // ── Before open: grey out ──────────────────────────────────────────────
+      if (openCallBtn) {
+        const p = openCallBtn.querySelector("p");
+        if (p) { p.style.color = "darkgray"; p.style.cursor = "default"; }
+        openCallBtn.onclick = function (e) {
+          e.preventDefault();
+          const openStr = openTime.toLocaleDateString("zh-TW", { month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" });
+          alert(`Open Call 尚未開放，預計於 ${openStr} 起開放。\nOpen Call is not yet available. It will open on ${openTime.toLocaleString()}.`);
+          return false;
+        };
+      }
+    } else if (closeTime && now > closeTime) {
+      // ── After close ────────────────────────────────────────────────────────
+      if (hasPassword) {
+        // Password gate: show gated section on click
+        if (openCallBtn) {
+          openCallBtn.onclick = function (e) {
+            e.preventDefault();
+            if (window.showOpenCallGated) window.showOpenCallGated();
+            if (window.setSidebarActive) window.setSidebarActive("open-call");
+            return false;
+          };
+        }
+
+        // Populate the gated section message
+        const msgEl = document.getElementById("opencall-gated-status-msg");
+        if (msgEl) {
+          msgEl.innerHTML = "Open Call 申請已截止。<br>Open Call has closed.";
+        }
+        const gateEl = document.getElementById("opencall-invite-gate");
+        if (gateEl) gateEl.style.display = "block";
+      } else {
+        // No password: just grey out the button
+        if (openCallBtn) {
+          const p = openCallBtn.querySelector("p");
+          if (p) { p.style.color = "darkgray"; p.style.cursor = "default"; }
+          openCallBtn.onclick = function (e) {
+            e.preventDefault();
+            alert("Open Call 申請已截止。\nOpen Call has closed.");
+            return false;
+          };
+        }
+      }
+    }
+    // else: within open period — leave as normal
+  }
+
+  // ── Invite password verification (called from HTML button) ─────────────────
+  window.verifyOpenCallInvite = async function () {
+    const input = document.getElementById("opencall-invite-password-input");
+    const statusEl = document.getElementById("opencall-invite-status");
+    const verifyBtn = document.getElementById("opencall-invite-verify-btn");
+    if (!input || !statusEl) return;
+
+    const password = input.value.trim();
+    if (!password) {
+      statusEl.style.color = "#c00";
+      statusEl.textContent = "請輸入邀請密碼。Please enter the invite code.";
+      return;
+    }
+
+    verifyBtn.disabled = true;
+    statusEl.style.color = "#555";
+    statusEl.textContent = "驗證中… Verifying…";
+
+    try {
+      const res = await fetch(apiUrl, {
+        redirect: "follow",
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: new URLSearchParams({
+          action: "verify_opencall_password",
+          account: (typeof getCookie === "function") ? getCookie("account") : "",
+          password,
+        }).toString(),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        statusEl.style.color = "green";
+        statusEl.textContent = "✓ 驗證成功！Verified! Loading form…";
+        setTimeout(() => {
+          if (window.showOpenCallForm) window.showOpenCallForm();
+          if (window.setSidebarActive) window.setSidebarActive("open-call");
+        }, 600);
+      } else {
+        statusEl.style.color = "#c00";
+        statusEl.textContent = "密碼不正確。Incorrect invite code.";
+        verifyBtn.disabled = false;
+      }
+    } catch (err) {
+      statusEl.style.color = "#c00";
+      statusEl.textContent = "網路錯誤，請稍後再試。Network error, please try again.";
+      verifyBtn.disabled = false;
+    }
+  };
+  // ── /Open Call schedule gate ─────────────────────────────────────────────────
+
   if (window.setLoading) window.setLoading(1);
   if (window.hideLoading) window.hideLoading();
   if (window.stopFakeLoading) window.stopFakeLoading();
