@@ -831,9 +831,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     const isEnglishBooth = isEnglishBoothType(boothType);
     function getStatusText(confirmed) {
       if (isEnglishBooth) {
-        return confirmed ? "Confirmed" : "Unfulfilled";
+        return confirmed ? "Complete" : "Incomplete";
       } else {
-        return confirmed ? "成立" : "未完成";
+        return confirmed ? "完成" : "未完成";
       }
     }
 
