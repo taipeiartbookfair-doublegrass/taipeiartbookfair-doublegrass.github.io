@@ -207,7 +207,9 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
       openCallBtn.onclick = function (e) {
         e.preventDefault();
-        alert("您已完成投稿。\nYou have already submitted.");
+        alert(
+          "你已完成徵件投稿，如需修改資料請至下方攤商管理進行修改。\nYou have already submitted　your application. If you need to modify your information, please go to the Panel section in the sidebar.",
+        );
         return false;
       };
     }
@@ -829,9 +831,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     const isEnglishBooth = isEnglishBoothType(boothType);
     function getStatusText(confirmed) {
       if (isEnglishBooth) {
-        return confirmed ? "Confirmed" : "Unfulfilled";
+        return confirmed ? "Complete" : "Incomplete";
       } else {
-        return confirmed ? "成立" : "未完成";
+        return confirmed ? "完成" : "未完成";
       }
     }
 
@@ -1436,8 +1438,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   if (ocSchedule && !hasSubmitted) {
     const now = new Date();
-    const openTime  = ocSchedule.openTime  ? new Date(ocSchedule.openTime)  : null;
-    const closeTime = ocSchedule.closeTime ? new Date(ocSchedule.closeTime) : null;
+    const openTime = ocSchedule.openTime ? new Date(ocSchedule.openTime) : null;
+    const closeTime = ocSchedule.closeTime
+      ? new Date(ocSchedule.closeTime)
+      : null;
     const hasPassword = !!ocSchedule.hasPassword;
 
     const openCallBtn = document.getElementById("sidebar-open-call");
@@ -1446,11 +1450,21 @@ document.addEventListener("DOMContentLoaded", async function () {
       // ── Before open: grey out ──────────────────────────────────────────────
       if (openCallBtn) {
         const p = openCallBtn.querySelector("p");
-        if (p) { p.style.color = "darkgray"; p.style.cursor = "default"; }
+        if (p) {
+          p.style.color = "darkgray";
+          p.style.cursor = "default";
+        }
         openCallBtn.onclick = function (e) {
           e.preventDefault();
-          const openStr = openTime.toLocaleDateString("zh-TW", { month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" });
-          alert(`Open Call 尚未開放，預計於 ${openStr} 起開放。\nOpen Call is not yet available. It will open on ${openTime.toLocaleString()}.`);
+          const openStr = openTime.toLocaleDateString("zh-TW", {
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+          alert(
+            `Open Call 尚未開放，預計於 ${openStr} 起開放。\nOpen Call is not yet available. It will open on ${openTime.toLocaleString()}.`,
+          );
           return false;
         };
       }
@@ -1478,7 +1492,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         // No password: just grey out the button
         if (openCallBtn) {
           const p = openCallBtn.querySelector("p");
-          if (p) { p.style.color = "darkgray"; p.style.cursor = "default"; }
+          if (p) {
+            p.style.color = "darkgray";
+            p.style.cursor = "default";
+          }
           openCallBtn.onclick = function (e) {
             e.preventDefault();
             alert("Open Call 申請已截止。\nOpen Call has closed.");
@@ -1515,7 +1532,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: new URLSearchParams({
           action: "verify_opencall_password",
-          account: (typeof getCookie === "function") ? getCookie("account") : "",
+          account: typeof getCookie === "function" ? getCookie("account") : "",
           password,
         }).toString(),
       });
@@ -1535,7 +1552,8 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
     } catch (err) {
       statusEl.style.color = "#c00";
-      statusEl.textContent = "網路錯誤，請稍後再試。Network error, please try again.";
+      statusEl.textContent =
+        "網路錯誤，請稍後再試。Network error, please try again.";
       verifyBtn.disabled = false;
     }
   };
