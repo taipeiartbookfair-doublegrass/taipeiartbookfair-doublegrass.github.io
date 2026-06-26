@@ -1526,10 +1526,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     statusEl.textContent = "驗證中… Verifying…";
 
     try {
-      const res = await fetch(apiUrl, {
+      const res = await fetch(publishApiUrl, {
         redirect: "follow",
         method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({
           action: "verify_opencall_password",
           account: typeof getCookie === "function" ? getCookie("account") : "",

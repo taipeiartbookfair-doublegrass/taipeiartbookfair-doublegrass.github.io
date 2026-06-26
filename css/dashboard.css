@@ -224,7 +224,7 @@ h3 {
   font-size: 0.75rem;
 }
 .pay-button {
-  background: #000;
+  background: olivedrab;
   color: #fff;
   text-align: center;
   padding: 10px;
@@ -508,7 +508,8 @@ html::-webkit-scrollbar-thumb:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  background: repeating-linear-gradient(
+  background:
+    repeating-linear-gradient(
       to bottom,
       #3e3e3e 0px,
       #aaa 6px,
@@ -589,7 +590,7 @@ html::-webkit-scrollbar-thumb:hover {
     box-sizing: border-box;
     background-color: aliceblue;
   }
-  .sidebar-middle{
+  .sidebar-middle {
     display: none !important;
   }
   .sidebar-logo {
@@ -621,7 +622,6 @@ html::-webkit-scrollbar-thumb:hover {
     overflow-x: hidden;
     box-sizing: border-box;
   }
-
 
   .sidebar a,
   .sidebar > a,
@@ -657,7 +657,7 @@ html::-webkit-scrollbar-thumb:hover {
     width: 100%;
   }
   /* 手機版：所有內容區塊預設隱藏 */
-  .mid, 
+  .mid,
   .right,
   .account,
   .admin,
@@ -745,10 +745,10 @@ html::-webkit-scrollbar-thumb:hover {
   #barcode-row[style*="display: none"] {
     display: none !important;
   }
-  .open-call-schedule{
+  .open-call-schedule {
     display: none !important;
   }
-  
+
   /* 手機版：schedule 表格使用 flex，讓日期和項目對齊 */
   #open-call-schedule table {
     width: 100%;
@@ -787,7 +787,7 @@ html::-webkit-scrollbar-thumb:hover {
     margin-top: -2px;
     border-top: none;
     padding-top: 0.5em;
-    font-size: .8rem;
+    font-size: 0.8rem;
   }
   /* 讓 rotated 文字在手機版正常顯示 */
   #open-call-schedule .rotated {
@@ -883,7 +883,7 @@ html::-webkit-scrollbar-thumb:hover {
   }
   .label,
   .labelAQ {
-    font-size: .8rem !important;
+    font-size: 0.8rem !important;
     padding: 2px 4px;
   }
   h3 {
@@ -934,19 +934,19 @@ html::-webkit-scrollbar-thumb:hover {
     overflow-y: auto !important;
     box-sizing: border-box;
   }
-  
+
   /* 確保 sidebar 在手機版中始終是 static，不會變成 fixed */
   .sidebar,
   .sidebar.mobile-active {
     position: static !important;
   }
-  
+
   /* 確保 admin/contact section 不會影響 sidebar */
   .admin.mobile-active,
   #contact-method.mobile-active {
     position: relative !important;
   }
-  
+
   /* 條碼樣式 */
   #barcode-canvas {
     width: 100% !important;

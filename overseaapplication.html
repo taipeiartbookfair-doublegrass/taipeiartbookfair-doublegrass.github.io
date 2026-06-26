@@ -43,8 +43,12 @@
     </script>
     <style>
       @keyframes oc-marquee {
-        from { transform: translateX(100vw); }
-        to   { transform: translateX(-100%); }
+        from {
+          transform: translateX(100vw);
+        }
+        to {
+          transform: translateX(-100%);
+        }
       }
       #oc-schedule-banner span {
         display: inline-block;
@@ -56,30 +60,63 @@
   </head>
   <body>
     <!-- Open Call schedule banner — populated from publishApiUrl -->
-    <div id="oc-schedule-banner" style="display:none; background:#000; color:#fff; overflow:hidden; font-size:0.78rem; line-height:1; padding:6px 0; position:sticky; top:0; z-index:300; width:100%; box-sizing:border-box;">
+    <div
+      id="oc-schedule-banner"
+      style="
+        display: none;
+        background: #000;
+        color: #fff;
+        overflow: hidden;
+        font-size: 0.78rem;
+        line-height: 1;
+        padding: 6px 0;
+        position: sticky;
+        top: 0;
+        z-index: 300;
+        width: 100%;
+        box-sizing: border-box;
+      "
+    >
       <span id="oc-schedule-banner-text"></span>
     </div>
     <script>
       (function () {
-        var API = "https://script.google.com/macros/s/AKfycbwL1g0fpahfuau7g8vuF1Oya0aAS2QvIj0S0EL6rXuajWzYVfgviUm64EmR95xwRMPEQg/exec";
+        var API =
+          "https://script.google.com/macros/s/AKfycbwL1g0fpahfuau7g8vuF1Oya0aAS2QvIj0S0EL6rXuajWzYVfgviUm64EmR95xwRMPEQg/exec";
         function fmt(iso) {
           if (!iso) return "—";
           var d = new Date(iso);
-          return d.getFullYear() + "."
-            + String(d.getMonth() + 1).padStart(2, "0") + "."
-            + String(d.getDate()).padStart(2, "0")
-            + "  " + String(d.getHours()).padStart(2, "0") + ":"
-            + String(d.getMinutes()).padStart(2, "0");
+          return (
+            d.getFullYear() +
+            "." +
+            String(d.getMonth() + 1).padStart(2, "0") +
+            "." +
+            String(d.getDate()).padStart(2, "0") +
+            "  " +
+            String(d.getHours()).padStart(2, "0") +
+            ":" +
+            String(d.getMinutes()).padStart(2, "0")
+          );
         }
-        fetch(API).then(function (r) { return r.json(); }).then(function (data) {
-          var s = data["opencall-schedule"];
-          if (!s || (!s.openTime && !s.closeTime)) return;
-          var chunk = "✦  申請開放 Open Call  " + fmt(s.openTime)
-            + "  →  截止 Deadline  " + fmt(s.closeTime)
-            + "  (GMT+8)　　　　";
-          document.getElementById("oc-schedule-banner-text").textContent = chunk + chunk;
-          document.getElementById("oc-schedule-banner").style.display = "block";
-        }).catch(function () {});
+        fetch(API)
+          .then(function (r) {
+            return r.json();
+          })
+          .then(function (data) {
+            var s = data["opencall-schedule"];
+            if (!s || (!s.openTime && !s.closeTime)) return;
+            var chunk =
+              "✦  申請開放 Open Call  " +
+              fmt(s.openTime) +
+              "  →  截止 Deadline  " +
+              fmt(s.closeTime) +
+              "  (GMT+8)　　　　";
+            document.getElementById("oc-schedule-banner-text").textContent =
+              chunk + chunk;
+            document.getElementById("oc-schedule-banner").style.display =
+              "block";
+          })
+          .catch(function () {});
       })();
     </script>
 
@@ -127,7 +164,8 @@
             placeholder="e.g. Studio Name in English"
             maxlength="80"
             required
-            title="Please do not enter special characters."
+            pattern="^[a-zA-Z\u0100-\u024F0-9\s\-_]*$"
+            title="Latin letters with diacritics (e.g., ñ, ü, ğ), numbers, spaces, hyphens, and underscores are allowed."
           />
         </div>
         <div class="column">
@@ -948,7 +986,12 @@
             them into <u>one PDF file</u>. </span
           ><br />
           <div class="upload-container">
-            <input type="file" id="fileInput" name="file" accept=".pdf,application/pdf" />
+            <input
+              type="file"
+              id="fileInput"
+              name="file"
+              accept=".pdf,application/pdf"
+            />
             <input
               type="hidden"
               name="entry.715764736"
@@ -983,7 +1026,12 @@
             them into <u>one PDF file</u>. </span
           ><br />
           <div class="upload-container">
-            <input type="file" id="fileInput2" name="file" accept=".pdf,application/pdf" />
+            <input
+              type="file"
+              id="fileInput2"
+              name="file"
+              accept=".pdf,application/pdf"
+            />
             <input
               type="hidden"
               name="entry.1801583093"
@@ -1024,7 +1072,12 @@
           </span>
           <br />
           <div class="upload-container">
-            <input type="file" id="fileInput3" name="file" accept=".pdf,application/pdf" />
+            <input
+              type="file"
+              id="fileInput3"
+              name="file"
+              accept=".pdf,application/pdf"
+            />
             <input
               type="hidden"
               name="entry.715764736"

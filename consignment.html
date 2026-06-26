@@ -393,7 +393,7 @@
           type="button"
           style="
             padding: 0.35em 1.3em;
-            background: #333;
+            background: olivedrab;
             color: whitesmoke;
             border: none;
             border-radius: 999px;
@@ -623,8 +623,7 @@
           "
         >
           <p style="font-size: 0.78rem; color: #777; margin: 0 0 0.7em">
-            以下資料來自您的登入帳號，不可修改。<br />The following information
-            is from your account and cannot be modified.
+            姓名及信箱來自您的登入帳號，不可修改。寄售單位及電話請自行填寫。<br />Name and email are from your account and cannot be modified. Please fill in your organization and phone number.
             <span style="margin-left: 1em; color: #aaa"
               >版本 Version:
               <span
@@ -638,7 +637,7 @@
               display: flex;
               gap: 1em;
               flex-wrap: wrap;
-              margin-bottom: 0.9em;
+              margin-bottom: 0.7em;
             "
           >
             <div style="flex: 1; min-width: 140px">
@@ -690,6 +689,65 @@
                   font-size: 0.85rem;
                   box-sizing: border-box;
                   cursor: default;
+                "
+              />
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              gap: 1em;
+              flex-wrap: wrap;
+              margin-bottom: 0.9em;
+            "
+          >
+            <div style="flex: 1; min-width: 140px">
+              <label
+                style="
+                  font-size: 0.75rem;
+                  color: #555;
+                  display: block;
+                  margin-bottom: 3px;
+                  font-weight: 600;
+                "
+                >寄售單位 Organization <span style="color: #b00">*</span></label
+              >
+              <input
+                id="consignment-modal-unit"
+                type="text"
+                placeholder="必填 required"
+                style="
+                  width: 100%;
+                  border: 1px solid #ccc;
+                  padding: 5px 7px;
+                  background: #fff;
+                  font-size: 0.85rem;
+                  box-sizing: border-box;
+                "
+              />
+            </div>
+            <div style="flex: 1; min-width: 140px">
+              <label
+                style="
+                  font-size: 0.75rem;
+                  color: #555;
+                  display: block;
+                  margin-bottom: 3px;
+                  font-weight: 600;
+                "
+                >電話 Phone <span style="color: #b00">*</span></label
+              >
+              <input
+                id="consignment-modal-phone"
+                type="text"
+                placeholder="必填 required"
+                style="
+                  width: 100%;
+                  border: 1px solid #ccc;
+                  padding: 5px 7px;
+                  background: #fff;
+                  font-size: 0.85rem;
+                  box-sizing: border-box;
                 "
               />
             </div>

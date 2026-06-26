@@ -168,21 +168,21 @@ function sendConfirmationEmail(account, books) {
 
   var bookList = books.map(function (b, i) {
     var title = b.title_zh || b.title_en || "(無書名)";
-    return "  " + (i + 1) + ". " + title + "（" + b.brand + "）× " + b.qty + " 本";
+    return (i + 1) + ". " + title + " (" + b.brand + ") × " + b.qty + " 本 (copies)";
   }).join("\n");
 
   GmailApp.sendEmail(
     account,
     "【草率季 Pretty Fly Books】寄售申請確認 Consignment Application Received",
-    "您好，\n\n我們已收到您的寄售申請，以下為您提交的書籍清單：\n\n" +
+    "Dear,\n\n" +
+    "我們已收到您的寄售申請，以下為您提交的書籍清單：\n" +
+    "We have received your consignment application. Below is the list of books you submitted:\n\n" +
     bookList + "\n\n" +
-    "實際寄售品項及數量將以信件確認。如有任何問題，請來信 nmhw@double-grass.com\n\n" +
-    "草率季 / Taipei Art Book Fair\n" +
-    "─────────────────────────────\n" +
-    "Dear Submitter,\n\nWe have received your consignment application:\n\n" +
-    bookList + "\n\n" +
-    "Final details will be confirmed by email. Questions: nmhw@double-grass.com\n\n" +
-    "Taipei Art Book Fair"
+    "實際寄售品項及數量將另以信件確認。如有任何疑問，請來信 nmhw@double-grass.com 與我們聯繫。\n" +
+    "The final consignment items and quantities will be confirmed in a separate email. If you have any questions, please contact us at nmhw@double-grass.com.\n\n" +
+    "BR,\n\n" +
+    "草率季 TPABF Team\n" +
+    "hooroo@double-grass.com"
   );
 }
 
