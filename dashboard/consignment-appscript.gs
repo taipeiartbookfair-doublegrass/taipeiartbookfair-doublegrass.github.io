@@ -1,6 +1,6 @@
 // ════════════════════════════════════════════════════════════════════════════
 //  Pretty Fly Books — 寄售申請 Apps Script
-//  貼到「寄售合約」試算表的擴充功能 > Apps Script（獨立試算表，不共用攤商合約）
+//  貼到「NMHW&zinewall書籍商品總表」試算表的擴充功能 > Apps Script
 //
 //  部署方式:
 //  1. 擴充功能 > Apps Script > 貼上此程式碼
@@ -8,10 +8,6 @@
 //     - 以誰的身份執行：我
 //     - 誰可以存取：任何人
 //  3. 複製部署 URL → 貼回 js/consignment.js 的 CONSIGNMENT_API_URL
-//
-//  工作表結構:
-//  - 第一個工作表（或 SHEET_NAME 指定者）：書籍清冊
-//  - "ConsentLog" 工作表：合約同意紀錄（自動建立）
 // ════════════════════════════════════════════════════════════════════════════
 
 var SHEET_NAME  = "";   // 留空 = 使用第一個工作表；否則填工作表名稱
@@ -42,45 +38,15 @@ function doPost(e) {
     if (params.action === "submit_consignment") {
       return handleConsignmentSubmit(params);
     }
-    if (params.action === "save_consent") {
-      return handleSaveConsent(params);
-    }
     return jsonResponse({ error: "Unknown action: " + params.action });
   } catch (err) {
     return jsonResponse({ error: err.toString() });
   }
 }
 
-// ── 合約同意紀錄 ──────────────────────────────────────────────────────────────
-function handleSaveConsent(params) {
-  var ss    = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName("ConsentLog");
-  if (!sheet) {
-    sheet = ss.insertSheet("ConsentLog");
-    sheet.appendRow(["時間戳記 Timestamp", "帳號 Account", "姓名 Name", "Email", "寄售單位 Organization", "電話 Phone", "合約版本 Version"]);
-    sheet.setFrozenRows(1);
-  }
-
-  sheet.appendRow([
-    new Date().toLocaleString("zh-TW", { timeZone: "Asia/Taipei" }),
-    params.userId  || "",
-    params.name    || "",
-    params.email   || "",
-    params.unit    || "",
-    params.phone   || "",
-    params.frontendVersion || "",
-  ]);
-
-  return jsonResponse({ success: true });
-}
-
 // ── 表單送出 ──────────────────────────────────────────────────────────────────
 function handleConsignmentSubmit(params) {
   var account     = params.account     || "";
-  var name        = params.name        || "";
-  var email       = params.email       || account;
-  var unit        = params.unit        || "";
-  var phone       = params.phone       || "";
   var message     = params.message     || "";
   var submittedAt = params.submittedAt || new Date().toISOString();
   var books       = JSON.parse(params.books || "[]");
@@ -186,31 +152,29 @@ function handleConsignmentSubmit(params) {
     set(COL.category_zh,   CATEGORY_ZH[book.category] || "");
     set(COL.collab,        "寄售");
     set(COL.supplier_note, message);
-    set(COL.our_note,      "帳號:" + account + "  姓名:" + name + "  單位:" + unit + "  電話:" + phone + "  送出:" + submittedAt);
+    set(COL.our_note,      "帳號:" + account + "  送出:" + submittedAt);
 
     sheet.getRange(nextRow, 1, 1, lastCol).setValues([row]);
   }
 
-  try { sendConfirmationEmail(email || account, name, unit, books); } catch (e) {}
+  try { sendConfirmationEmail(account, books); } catch (e) {}
 
   return jsonResponse({ success: true, count: books.length });
 }
 
 // ── 確認信 ────────────────────────────────────────────────────────────────────
-function sendConfirmationEmail(email, name, unit, books) {
-  if (!email || !email.includes("@")) return;
+function sendConfirmationEmail(account, books) {
+  if (!account || !account.includes("@")) return;
 
   var bookList = books.map(function (b, i) {
     var title = b.title_zh || b.title_en || "(無書名)";
     return (i + 1) + ". " + title + " (" + b.brand + ") × " + b.qty + " 本 (copies)";
   }).join("\n");
 
-  var salutation = "Dear" + (name ? " " + name : "") + ",";
-
   GmailApp.sendEmail(
-    email,
+    account,
     "【草率季 Pretty Fly Books】寄售申請確認 Consignment Application Received",
-    salutation + "\n\n" +
+    "Dear,\n\n" +
     "我們已收到您的寄售申請，以下為您提交的書籍清單：\n" +
     "We have received your consignment application. Below is the list of books you submitted:\n\n" +
     bookList + "\n\n" +

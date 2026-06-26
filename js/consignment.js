@@ -1,5 +1,9 @@
 // ── Consignment Form ──────────────────────────────────────────────────────────
 const CONSIGNMENT_API_URL =
+  "https://script.google.com/macros/s/AKfycbzT1DmsigwaQ6OwwpSARcJtkFH_NDRmFmXrfkG3npW3A6zz2O_1eaa7OI6zJzRYss0_/exec";
+
+// Consent audit trail — separate spreadsheet from booth contracts
+const CONSIGNMENT_CONSENT_API_URL =
   "https://script.google.com/macros/s/AKfycbxnl2fdytNjxJFmXeuT_nVmjqMQAQ91CBBBef6rgXrkOTAvBDB8X17qInVn8qGR3XqM/exec";
 
 // User data supplied by parent dashboard via postMessage (name + email)
@@ -246,7 +250,7 @@ function saveConsignmentConsentRecord() {
   const userId = typeof getCookie === "function" ? getCookie("account") : "";
   if (!userId) return;
 
-  fetch(CONSIGNMENT_API_URL, {
+  fetch(CONSIGNMENT_CONSENT_API_URL, {
     redirect: "follow",
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -489,10 +493,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const payload = new URLSearchParams({
         action: "submit_consignment",
         account,
-        name: _csUser.name,
-        email: _csUser.email,
-        unit: _csUser.unit,
-        phone: _csUser.phone,
         books: JSON.stringify(books),
         message,
         submittedAt: new Date().toISOString(),
