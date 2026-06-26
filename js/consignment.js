@@ -1,13 +1,10 @@
 // ── Consignment Form ──────────────────────────────────────────────────────────
 const CONSIGNMENT_API_URL =
-  "https://script.google.com/macros/s/AKfycbzT1DmsigwaQ6OwwpSARcJtkFH_NDRmFmXrfkG3npW3A6zz2O_1eaa7OI6zJzRYss0_/exec";
-
-// Consent audit trail API (same as 攤主合約, different frontendVersion)
-const CONSENT_API_URL =
-  "https://script.google.com/macros/s/AKfycbxQqppVyIedlyrGFVDrEwmo0qjFeCvVS4VlPrrTLArszrj0i2-9mtfMTP8zASRwBp9l4g/exec";
+  "https://script.google.com/macros/s/AKfycbxnl2fdytNjxJFmXeuT_nVmjqMQAQ91CBBBef6rgXrkOTAvBDB8X17qInVn8qGR3XqM/exec";
 
 // User data supplied by parent dashboard via postMessage (name + email)
-let _csUser = { name: "", email: "" };
+// unit and phone are filled by the user in the agreement modal
+let _csUser = { name: "", email: "", unit: "", phone: "" };
 window.addEventListener("message", function (e) {
   if (e.data && e.data.type === "cs-user-data") {
     _csUser.name = e.data.name || "";
@@ -249,7 +246,7 @@ function saveConsignmentConsentRecord() {
   const userId = typeof getCookie === "function" ? getCookie("account") : "";
   if (!userId) return;
 
-  fetch(CONSENT_API_URL, {
+  fetch(CONSIGNMENT_API_URL, {
     redirect: "follow",
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -258,6 +255,8 @@ function saveConsignmentConsentRecord() {
       userId,
       name: _csUser.name,
       email: _csUser.email,
+      unit: _csUser.unit,
+      phone: _csUser.phone,
       frontendVersion: CONSIGNMENT_AGREEMENT_PDF,
     }).toString(),
   }).catch(function () {});
@@ -270,6 +269,8 @@ function openConsignmentModal() {
   const modal = document.getElementById("consignment-consent-modal");
   const nameInput = document.getElementById("consignment-modal-name");
   const emailInput = document.getElementById("consignment-modal-email");
+  const unitInput = document.getElementById("consignment-modal-unit");
+  const phoneInput = document.getElementById("consignment-modal-phone");
   const pdfFrame = document.getElementById("consignment-modal-pdf");
   const versionEl = document.getElementById("consignment-modal-version");
   const modalCb = document.getElementById("consignment-modal-checkbox");
@@ -278,9 +279,13 @@ function openConsignmentModal() {
   const statusEl = document.getElementById("consignment-modal-status");
   if (!modal) return;
 
-  // Fill in user info supplied by parent via postMessage
+  // Fill in read-only user info from account
   if (nameInput) nameInput.value = _csUser.name;
   if (emailInput) emailInput.value = _csUser.email;
+
+  // Restore previously entered unit/phone if modal is reopened
+  if (unitInput) unitInput.value = _csUser.unit;
+  if (phoneInput) phoneInput.value = _csUser.phone;
 
   if (pdfFrame) pdfFrame.src = CONSIGNMENT_AGREEMENT_PDF;
   if (versionEl) versionEl.textContent = CONSIGNMENT_AGREEMENT_PDF;
@@ -316,9 +321,25 @@ function openConsignmentModal() {
     confirmBtn.onclick = function () {
       if (!modalCb || !modalCb.checked) return;
 
+      const unit = unitInput ? unitInput.value.trim() : "";
+      const phone = phoneInput ? phoneInput.value.trim() : "";
+      if (!unit || !phone) {
+        if (statusEl) {
+          statusEl.textContent = "請填寫寄售單位及電話。Please fill in organization and phone.";
+        }
+        return;
+      }
+
+      // Save unit and phone into user state
+      _csUser.unit = unit;
+      _csUser.phone = phone;
+
       // Mark the hidden checkbox in the form as agreed
       const formCb = document.getElementById("consignment-agree-checkbox");
       if (formCb) formCb.checked = true;
+
+      // Log consent to consignment's own spreadsheet
+      saveConsignmentConsentRecord();
 
       // Update UI: hide open button, show status
       const openBtn = document.getElementById("consignment-open-modal-btn");
@@ -468,6 +489,10 @@ document.addEventListener("DOMContentLoaded", function () {
       const payload = new URLSearchParams({
         action: "submit_consignment",
         account,
+        name: _csUser.name,
+        email: _csUser.email,
+        unit: _csUser.unit,
+        phone: _csUser.phone,
         books: JSON.stringify(books),
         message,
         submittedAt: new Date().toISOString(),
