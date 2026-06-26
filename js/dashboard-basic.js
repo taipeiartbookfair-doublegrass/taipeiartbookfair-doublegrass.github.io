@@ -760,7 +760,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         electricityList.innerHTML = `
           <li>供應一般電源110v</li>
           <li><mark>${ddlCN}</mark>前需提供電力需求申請：</li>
-          <li style="margin-left:1em">條列使用電器設備＆瓦數</li>
+          <li style="margin-left:1em">條列使用電器設備&瓦數</li>
           <li style="margin-left:1em">不接受現場臨時申請</li>
           <li style="margin-left:1em">不得使用變壓器，220v 需以 NT$1000 加購</li>
         `;

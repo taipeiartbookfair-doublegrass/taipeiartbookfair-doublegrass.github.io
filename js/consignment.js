@@ -35,6 +35,34 @@ window.setConsignmentLang = function (lang) {
   }
 };
 
+function normalizeSizeValue(value) {
+  const trimmed = (value || "").trim();
+  if (!trimmed) return "";
+  return /cm$/i.test(trimmed) ? trimmed : `${trimmed} cm`;
+}
+
+function normalizePagesValue(value) {
+  const trimmed = (value || "").trim();
+  if (!trimmed) return "";
+  return /pages?$/i.test(trimmed) ? trimmed : `${trimmed} Pages`;
+}
+
+function attachBookUnitHandlers(entry, idx) {
+  const sizeInput = entry.querySelector(`[name="size_${idx}"]`);
+  const pagesInput = entry.querySelector(`[name="pages_${idx}"]`);
+
+  if (sizeInput) {
+    sizeInput.addEventListener("blur", function () {
+      this.value = normalizeSizeValue(this.value);
+    });
+  }
+  if (pagesInput) {
+    pagesInput.addEventListener("blur", function () {
+      this.value = normalizePagesValue(this.value);
+    });
+  }
+}
+
 // ── Book entry template ────────────────────────────────────────────────────────
 let bookCount = 0;
 
@@ -44,13 +72,13 @@ window.addConsignmentBook = function () {
   const container = document.getElementById("consignment-book-list");
 
   const CATEGORIES = [
-    "illustration & comic",
+    "illustration&comic",
     "photography",
     "magazine",
-    "art & design",
-    "experimental & conceptual",
-    "project & curatorial",
-    "writing & literature",
+    "art&design",
+    "experimental&conceptual",
+    "project&curatorial",
+    "writing&literature",
   ];
 
   const LANGUAGES = [
@@ -79,12 +107,13 @@ window.addConsignmentBook = function () {
   const catOptions = CATEGORIES.map(
     (c) => `<option value="${c}">${c}</option>`,
   ).join("");
-  const langCheckboxes = LANGUAGES.filter((l) => l !== "Other 其他")
-    .map(
-      (l) =>
-        `<label class="cs-check-label"><input type="checkbox" name="lang_opt_${idx}" value="${l}"> ${l}</label>`,
-    )
-    .join("") +
+  const langCheckboxes =
+    LANGUAGES.filter((l) => l !== "Other 其他")
+      .map(
+        (l) =>
+          `<label class="cs-check-label"><input type="checkbox" name="lang_opt_${idx}" value="${l}"> ${l}</label>`,
+      )
+      .join("") +
     `<label class="cs-check-label"><input type="checkbox" name="lang_other_${idx}" value="Other 其他" onchange="var t=document.getElementById('lang-other-text-${idx}');t.style.display=this.checked?'block':'none';"> Other 其他</label>` +
     `<input type="text" id="lang-other-text-${idx}" name="lang_other_text_${idx}" placeholder="請填入 please specify" style="display:none;margin-top:4px;width:100%;box-sizing:border-box;">`;
 
@@ -180,7 +209,7 @@ window.addConsignmentBook = function () {
       <div class="cs-field">
         <label class="cs-label zh">頁數 <span class="cs-req">*</span></label>
         <label class="cs-label en" style="display:none;">Pages <span class="cs-req">*</span></label>
-        <input type="number" name="pages_${idx}" required min="1">
+        <input type="text" inputmode="numeric" name="pages_${idx}" required placeholder="必填 required">
       </div>
     </div>
 
@@ -232,6 +261,7 @@ window.addConsignmentBook = function () {
   `;
 
   container.appendChild(div);
+  attachBookUnitHandlers(div, idx);
 
   // Re-apply current language to the newly added entry
   const btnZh = document.getElementById("consignment-lang-zh");
@@ -329,7 +359,8 @@ function openConsignmentModal() {
       const phone = phoneInput ? phoneInput.value.trim() : "";
       if (!unit || !phone) {
         if (statusEl) {
-          statusEl.textContent = "請填寫寄售單位及電話。Please fill in organization and phone.";
+          statusEl.textContent =
+            "請填寫寄售單位及電話。Please fill in organization and phone.";
         }
         return;
       }
@@ -457,6 +488,37 @@ document.addEventListener("DOMContentLoaded", function () {
       ).value?.trim();
       if (otherCb && otherCb.checked) langs.push(otherTxt || "Other 其他");
 
+      const rawSize = get("size");
+      const rawPages = get("pages");
+      if (!rawSize.trim()) {
+        alert(
+          `書籍 #${idx}：請填寫尺寸。
+Book #${idx}: Please provide the size.`,
+        );
+        hasError = true;
+        break;
+      }
+      if (
+        !/^[0-9]+(?:\s*[xX×]\s*[0-9]+(?:\s*[xX×]\s*[0-9]+)?)?(?:\s*cm)?$/.test(
+          rawSize.trim(),
+        )
+      ) {
+        alert(
+          `書籍 #${idx}：尺寸格式請輸入數值，例如 21 x 14 x 2。
+Book #${idx}: Please enter a valid size format, e.g. 21 x 14 x 2.`,
+        );
+        hasError = true;
+        break;
+      }
+      if (!/^[0-9]+(?:\s*pages?)?$/i.test(rawPages.trim())) {
+        alert(
+          `書籍 #${idx}：頁數請填寫正確數字。
+Book #${idx}: Please enter pages as a number.`,
+        );
+        hasError = true;
+        break;
+      }
+
       books.push({
         brand: get("brand"),
         title_en: titleEn,
@@ -467,8 +529,8 @@ document.addEventListener("DOMContentLoaded", function () {
         publisher: get("publisher"),
         category: get("category"),
         region: get("region"),
-        size: get("size") ? get("size") + " cm" : "",
-        pages: get("pages") ? get("pages") + " Pages" : "",
+        size: normalizeSizeValue(rawSize),
+        pages: normalizePagesValue(rawPages),
         year: get("year"),
         language: langs.join(", "),
         isbn: get("isbn"),
