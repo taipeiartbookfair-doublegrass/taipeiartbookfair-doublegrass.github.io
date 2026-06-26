@@ -517,6 +517,14 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("consignment-book-list").innerHTML = "";
       bookCount = 0;
       addConsignmentBook();
+
+      // Reset consent state
+      _csUser.unit = "";
+      _csUser.phone = "";
+      const openBtn = document.getElementById("consignment-open-modal-btn");
+      const agreeStatus = document.getElementById("consignment-agree-status");
+      if (openBtn) openBtn.style.display = "";
+      if (agreeStatus) agreeStatus.textContent = "";
     } catch (err) {
       statusEl.style.color = "#c00";
       statusEl.textContent = `送出失敗 Submission failed: ${err.message}`;
