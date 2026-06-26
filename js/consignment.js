@@ -25,6 +25,9 @@ window.setConsignmentLang = function (lang) {
   document.querySelectorAll(".en").forEach((el) => {
     el.style.display = isZh ? "none" : "";
   });
+  document.querySelectorAll("[data-zh][data-en]").forEach((el) => {
+    el.placeholder = isZh ? el.dataset.zh : el.dataset.en;
+  });
   const btnZh = document.getElementById("consignment-lang-zh");
   const btnEn = document.getElementById("consignment-lang-en");
   if (btnZh) {
@@ -47,21 +50,7 @@ function normalizePagesValue(value) {
   return /pages?$/i.test(trimmed) ? trimmed : `${trimmed} Pages`;
 }
 
-function attachBookUnitHandlers(entry, idx) {
-  const sizeInput = entry.querySelector(`[name="size_${idx}"]`);
-  const pagesInput = entry.querySelector(`[name="pages_${idx}"]`);
-
-  if (sizeInput) {
-    sizeInput.addEventListener("blur", function () {
-      this.value = normalizeSizeValue(this.value);
-    });
-  }
-  if (pagesInput) {
-    pagesInput.addEventListener("blur", function () {
-      this.value = normalizePagesValue(this.value);
-    });
-  }
-}
+function attachBookUnitHandlers() {}
 
 // ── Book entry template ────────────────────────────────────────────────────────
 let bookCount = 0;
@@ -205,7 +194,7 @@ window.addConsignmentBook = function () {
         <label class="cs-label zh">尺寸（cm）<span class="cs-req">*</span></label>
         <label class="cs-label en" style="display:none;">Size (cm) <span class="cs-req">*</span></label>
         <div style="display:flex;align-items:center;gap:0.4em;">
-          <input type="text" name="size_${idx}" required placeholder="長 × 寬 × 厚" style="flex:1;min-width:0;">
+          <input type="text" name="size_${idx}" required placeholder="長 × 寬 × 厚" data-zh="長 × 寬 × 厚" data-en="H × W × D" style="flex:1;min-width:0;">
           <span style="font-size:0.8rem;color:#888;white-space:nowrap;">cm</span>
         </div>
       </div>
@@ -579,7 +568,7 @@ Book #${idx}: Please enter pages as a number.`,
 
       statusEl.style.color = "green";
       statusEl.textContent =
-        "✓ 已送出！請檢查信箱確認信。Submitted! Please check your email for confirmation.";
+        "✓ 已送出喔！請檢查信箱確認信。Submitted! Please check your email for confirmation.";
       submitBtn.disabled = false;
       form.reset();
       document.getElementById("consignment-book-list").innerHTML = "";
