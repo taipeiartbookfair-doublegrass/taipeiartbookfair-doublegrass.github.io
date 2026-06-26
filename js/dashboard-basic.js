@@ -201,14 +201,14 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (openCallBtn) {
       const p = openCallBtn.querySelector("p");
       if (p) {
-        p.innerHTML = "OPEN<br />CALL";
+        p.innerHTML = "申請參展<br />OPEN CALL";
         p.style.color = "darkgray";
         p.style.cursor = "default";
       }
       openCallBtn.onclick = function (e) {
         e.preventDefault();
         alert(
-          "你已完成徵件投稿，如需修改資料請至下方攤商管理進行修改。\nYou have already submitted　your application. If you need to modify your information, please go to the Panel section in the sidebar.",
+          "您已完成徵件投稿。如需修改資料，請至側邊欄的「攤商管理」進行修改。\nYour application has been submitted. If you need to modify your information, please proceed to the Exhibitor Panel in the sidebar.",
         );
         return false;
       };
