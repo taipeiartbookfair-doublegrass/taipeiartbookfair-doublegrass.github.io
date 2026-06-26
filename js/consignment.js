@@ -204,12 +204,18 @@ window.addConsignmentBook = function () {
       <div class="cs-field">
         <label class="cs-label zh">尺寸（cm）<span class="cs-req">*</span></label>
         <label class="cs-label en" style="display:none;">Size (cm) <span class="cs-req">*</span></label>
-        <input type="text" name="size_${idx}" required placeholder="長 × 寬 × 厚">
+        <div style="display:flex;align-items:center;gap:0.4em;">
+          <input type="text" name="size_${idx}" required placeholder="長 × 寬 × 厚" style="flex:1;min-width:0;">
+          <span style="font-size:0.8rem;color:#888;white-space:nowrap;">cm</span>
+        </div>
       </div>
       <div class="cs-field">
         <label class="cs-label zh">頁數 <span class="cs-req">*</span></label>
         <label class="cs-label en" style="display:none;">Pages <span class="cs-req">*</span></label>
-        <input type="text" inputmode="numeric" name="pages_${idx}" required placeholder="必填 required">
+        <div style="display:flex;align-items:center;gap:0.4em;">
+          <input type="text" inputmode="numeric" name="pages_${idx}" required placeholder="必填 required" style="flex:1;min-width:0;">
+          <span style="font-size:0.8rem;color:#888;white-space:nowrap;">pages</span>
+        </div>
       </div>
     </div>
 
