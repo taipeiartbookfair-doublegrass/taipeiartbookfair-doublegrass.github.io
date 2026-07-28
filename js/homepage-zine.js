@@ -223,7 +223,7 @@ async function getNMHWInfo(count = 100, retryCount = 0, maxRetries = 3) {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       // 請求參數：action 指定要執行的操作，randomCount 指定需要的資料數量
-      body: `action=random&count=100`,
+      body: `action=random&count=100&source=shop`,
     });
 
     // 使用 Promise.race 來實現超時機制

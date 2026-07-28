@@ -8,9 +8,20 @@ const ZINE_WALL_API =
 // 可能的分類／年份／創作者／來自／語言欄位名（試算表表頭）
 // 分類欄位：優先使用與 BILINGUAL_PAIRS 一致的欄位
 const CATEGORY_KEYS = [
-  "分類(中)（BN）", "分類(中)(BN)", "分類(中)", "BN",
-  "分類(英)Category", "分類(英) Catagory", "分類(英)", "Category", "Catagory",
-  "分類", "類別", "category", "作品類別", "類型"
+  "分類(中)（BN）",
+  "分類(中)(BN)",
+  "分類(中)",
+  "BN",
+  "分類(英)Category",
+  "分類(英) Catagory",
+  "分類(英)",
+  "Category",
+  "Catagory",
+  "分類",
+  "類別",
+  "category",
+  "作品類別",
+  "類型",
 ];
 const YEAR_KEYS = ["年份", "年", "Year", "year", "出版年", "出版年份"];
 const CREATOR_KEYS = ["創作者", "Creator", "創作者*", "作者", "Author"];
@@ -18,26 +29,98 @@ const FROM_KEYS = ["來自", "From", "來自(英)", "來自(中)"];
 const LANGUAGE_KEYS = ["語言", "Language", "語言(英)", "語言*"];
 
 // B 欄／商店有無：試算表打勾表示商店有賣，可能欄位名
-const STORE_AVAILABLE_KEYS = ["商店", "商店販售", "有售", "販售", "B", "商店有售", "Store"];
+const STORE_AVAILABLE_KEYS = ["shop"];
 
 // Dropup 顯示的欄位：{ 顯示標籤: [可能的 key 名，對應試算表表頭] }
 const DETAIL_FIELD_MAP = {
-  "書名": ["書名", "商品名稱(英)", "商品名稱(中)", "品名", "Title", "書名(英)", "書名(中)"],
-  "創作者 Creator": ["創作者＊Creator", "創作者", "Creator", "創作者*", "作者", "Author"],
-  "出版商 Publisher": ["出版(書、印刷物)Publisher", "出版", "Publisher", "出版社", "出版社(英)", "出版社(中)", "Publishing"],
-  "分類(英) Category": ["分類(英)Category", "分類(英) Catagory", "分類(英)", "Category", "Catagory"],
+  書名: [
+    "書名",
+    "商品名稱(英)",
+    "商品名稱(中)",
+    "品名",
+    "Title",
+    "書名(英)",
+    "書名(中)",
+  ],
+  "創作者 Creator": [
+    "創作者＊Creator",
+    "創作者",
+    "Creator",
+    "創作者*",
+    "作者",
+    "Author",
+  ],
+  "出版商 Publisher": [
+    "出版(書、印刷物)Publisher",
+    "出版",
+    "Publisher",
+    "出版社",
+    "出版社(英)",
+    "出版社(中)",
+    "Publishing",
+  ],
+  "分類(英) Category": [
+    "分類(英)Category",
+    "分類(英) Catagory",
+    "分類(英)",
+    "Category",
+    "Catagory",
+  ],
   "分類(中)（BN）": ["分類(中)（BN）", "分類(中)(BN)", "分類(中)", "BN"],
-  "書籍照片＊ Photo": ["書籍照片＊", "書籍照片", "Photo", "照片", "相片*", "相片"],
+  "書籍照片＊ Photo": [
+    "書籍照片＊",
+    "書籍照片",
+    "Photo",
+    "照片",
+    "相片*",
+    "相片",
+  ],
   "來自(英)": ["來自(英)", "來自 (英)", "From (EN)", "From"],
   "來自(中)": ["來自(中)", "來自 (中)", "From (中)", "來自(中)"],
   "尺寸 Size": ["尺寸＊", "尺寸＊Size", "尺寸", "Size", "尺寸*"],
   "頁數 Pages": ["頁數＊", "頁數＊Pages", "頁數", "Pages", "Pags", "頁數*"],
-  "出版年 Year": ["出版年＊Year", "出版年＊ Year", "出版年", "Year", "年份", "年", "出版年*"],
-  "語言 Language": ["語言(英)＊", "語言(英)＊Language", "語言", "Language", "語言(英)", "語言*"],
+  "出版年 Year": [
+    "出版年＊Year",
+    "出版年＊ Year",
+    "出版年",
+    "Year",
+    "年份",
+    "年",
+    "出版年*",
+  ],
+  "語言 Language": [
+    "語言(英)＊",
+    "語言(英)＊Language",
+    "語言",
+    "Language",
+    "語言(英)",
+    "語言*",
+  ],
   "ISBN/ISSN": ["ISBN/ISSN", "ISBN", "ISSN"],
-  "內容介紹(英)＊ Intro": ["內容介紹(英)＊", "內容介紹(英)＊Intro", "內容介紹(英)", "Intro (EN)", "Intro", "內容介紹(英)*"],
-  "內容介紹(中)＊ Intro": ["內容介紹(中)＊", "內容介紹(中)＊Intro", "內容介紹(中)", "Intro (中)", "內容介紹(中)*"],
-  "篩選標籤 Filter tag": ["篩選標籤(英)", "篩選標籤(英) Filter tag", "Filter tag", "篩選標籤", "Tag", "標籤(英)", "標籤"],
+  "內容介紹(英)＊ Intro": [
+    "內容介紹(英)＊",
+    "內容介紹(英)＊Intro",
+    "內容介紹(英)",
+    "Intro (EN)",
+    "Intro",
+    "內容介紹(英)*",
+  ],
+  "內容介紹(中)＊ Intro": [
+    "內容介紹(中)＊",
+    "內容介紹(中)＊Intro",
+    "內容介紹(中)",
+    "Intro (中)",
+    "內容介紹(中)*",
+  ],
+  "篩選標籤 Filter tag": [
+    "篩選標籤(英)",
+    "篩選標籤(英) Filter tag",
+    "Filter tag",
+    "篩選標籤",
+    "Tag",
+    "標籤(英)",
+    "標籤",
+  ],
 };
 
 // 中英文欄位配對：{ 合併後的顯示標籤: [中文欄位標籤, 英文欄位標籤] }
@@ -47,9 +130,22 @@ const BILINGUAL_PAIRS = {
   "內容介紹 Description": ["內容介紹(中)＊ Intro", "內容介紹(英)＊ Intro"],
 };
 
+function generateShopUrl(item) {
+  const title =
+    item["商品名稱(英)"] || item["書名(英)"] || item["書名"] || item["品名"] || "";
+  if (!title || title.trim() === "") return null;
+  const slug = title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, "")
+    .replace(/\s+/g, "-")
+    .trim();
+  return slug ? `https://shop.taipeiartbookfair.com/products/${slug}` : null;
+}
+
 function getFirstMatch(item, keys) {
   for (const k of keys) {
-    if (item[k] != null && String(item[k]).trim() !== "") return String(item[k]).trim();
+    if (item[k] != null && String(item[k]).trim() !== "")
+      return String(item[k]).trim();
   }
   return "";
 }
@@ -85,19 +181,25 @@ function getTitle(item) {
  */
 function getSizeTier(item) {
   // 使用與 DETAIL_FIELD_MAP["尺寸 Size"] 相同的 key 列表
-  const sizeStr = getFirstMatch(item, ["尺寸＊", "尺寸＊Size", "尺寸", "Size", "尺寸*"]);
+  const sizeStr = getFirstMatch(item, [
+    "尺寸＊",
+    "尺寸＊Size",
+    "尺寸",
+    "Size",
+    "尺寸*",
+  ]);
   if (!sizeStr) return "md"; /* 無尺寸時給中等 */
-  
+
   // 解析「寬×高」格式（支援 x, ×, *, X）
   const match = sizeStr.match(/(\d+(?:\.\d+)?)\s*[x×*X]\s*(\d+(?:\.\d+)?)/);
   if (!match) return "md";
-  
+
   const w = parseFloat(match[1]);
   const h = parseFloat(match[2]);
   if (isNaN(w) || isNaN(h) || w <= 0 || h <= 0) return "md";
-  
+
   const area = w * h;
-  
+
   /* 依面積分四級（單位：cm²，可依實際書尺寸微調）：
    * sm: <200 (小書，1×1格 = 90×120px)
    * md: 200-450 (中書，2×2格 = 180×240px)
@@ -113,7 +215,7 @@ function getSizeTier(item) {
 /** 依 index 與 item 產生固定 -15～+15 度旋轉，同一張卡不變 */
 function getCardRotation(index, item) {
   const seed = index * 11 + (getTitle(item).length || 0);
-  return ((seed % 31) - 15);
+  return (seed % 31) - 15;
 }
 
 /** 從第一筆資料推測各欄位實際欄位名 */
@@ -124,40 +226,61 @@ function detectFieldKeys(records) {
   let fromKey = null;
   let languageKey = null;
   const keys = records.length ? Object.keys(records[0]) : [];
-  
+
   // 優先尋找與 BILINGUAL_PAIRS 一致的分類欄位
   // 優先順序：分類(中)（BN） > 分類(英) Category > 其他分類欄位
   const categoryZhKeys = DETAIL_FIELD_MAP["分類(中)（BN）"] || [];
   const categoryEnKeys = DETAIL_FIELD_MAP["分類(英) Category"] || [];
-  
+
   for (const k of keys) {
     const n = k.replace(/\s+/g, "").toLowerCase();
-    
+
     // 優先尋找中文分類欄位
-    if (!categoryKey && categoryZhKeys.some((c) => {
-      const cNorm = c.replace(/\s+/g, "").toLowerCase();
-      return n === cNorm || n.includes(cNorm) || cNorm.includes(n);
-    })) {
+    if (
+      !categoryKey &&
+      categoryZhKeys.some((c) => {
+        const cNorm = c.replace(/\s+/g, "").toLowerCase();
+        return n === cNorm || n.includes(cNorm) || cNorm.includes(n);
+      })
+    ) {
       categoryKey = k;
     }
     // 如果沒有中文分類，尋找英文分類欄位
-    if (!categoryKey && categoryEnKeys.some((c) => {
-      const cNorm = c.replace(/\s+/g, "").toLowerCase();
-      return n === cNorm || n.includes(cNorm) || cNorm.includes(n);
-    })) {
+    if (
+      !categoryKey &&
+      categoryEnKeys.some((c) => {
+        const cNorm = c.replace(/\s+/g, "").toLowerCase();
+        return n === cNorm || n.includes(cNorm) || cNorm.includes(n);
+      })
+    ) {
       categoryKey = k;
     }
     // 如果都沒有，使用原本的通用分類欄位搜尋
-    if (!categoryKey && CATEGORY_KEYS.some((c) => n.includes(c.replace(/\s+/g, "").toLowerCase())))
+    if (
+      !categoryKey &&
+      CATEGORY_KEYS.some((c) => n.includes(c.replace(/\s+/g, "").toLowerCase()))
+    )
       categoryKey = k;
-      
-    if (!yearKey && YEAR_KEYS.some((y) => n.includes(y.replace(/\s+/g, "").toLowerCase())))
+
+    if (
+      !yearKey &&
+      YEAR_KEYS.some((y) => n.includes(y.replace(/\s+/g, "").toLowerCase()))
+    )
       yearKey = k;
-    if (!creatorKey && CREATOR_KEYS.some((c) => n.includes(c.replace(/\s+/g, "").toLowerCase())))
+    if (
+      !creatorKey &&
+      CREATOR_KEYS.some((c) => n.includes(c.replace(/\s+/g, "").toLowerCase()))
+    )
       creatorKey = k;
-    if (!fromKey && FROM_KEYS.some((f) => n.includes(f.replace(/\s+/g, "").toLowerCase())))
+    if (
+      !fromKey &&
+      FROM_KEYS.some((f) => n.includes(f.replace(/\s+/g, "").toLowerCase()))
+    )
       fromKey = k;
-    if (!languageKey && LANGUAGE_KEYS.some((l) => n.includes(l.replace(/\s+/g, "").toLowerCase())))
+    if (
+      !languageKey &&
+      LANGUAGE_KEYS.some((l) => n.includes(l.replace(/\s+/g, "").toLowerCase()))
+    )
       languageKey = k;
   }
   return { categoryKey, yearKey, creatorKey, fromKey, languageKey };
@@ -169,7 +292,11 @@ function detectStoreKey(records) {
   const keys = Object.keys(records[0]);
   for (const k of keys) {
     const n = k.replace(/\s+/g, "").toLowerCase();
-    if (STORE_AVAILABLE_KEYS.some((s) => n.includes(s.replace(/\s+/g, "").toLowerCase())))
+    if (
+      STORE_AVAILABLE_KEYS.some((s) =>
+        n.includes(s.replace(/\s+/g, "").toLowerCase()),
+      )
+    )
       return k;
   }
   // 若試算表欄位順序固定，B 欄可能是 keys[1]
@@ -184,7 +311,15 @@ function isStoreAvailable(item, storeKey) {
   if (v === true || v === 1) return true;
   if (typeof v === "string") {
     const s = v.trim().toLowerCase();
-    return s === "true" || s === "v" || s === "y" || s === "yes" || s === "1" || s === "✓" || s === "✔";
+    return (
+      s === "true" ||
+      s === "v" ||
+      s === "y" ||
+      s === "yes" ||
+      s === "1" ||
+      s === "✓" ||
+      s === "✔"
+    );
   }
   return false;
 }
@@ -205,7 +340,8 @@ function parseApiResponse(response) {
   if (response.success && response.data) {
     if (response.data.records !== undefined) return response.data.records;
     if (Array.isArray(response.data)) return response.data;
-    if (response.data && typeof response.data === "object") return response.data;
+    if (response.data && typeof response.data === "object")
+      return response.data;
   }
   if (Array.isArray(response)) return response;
   return [];
@@ -242,11 +378,20 @@ function getFilteredRecords() {
   const language = languageSelect.value.trim();
   const year = yearSelect.value.trim();
   return allRecords.filter((r) => {
-    if (cat && categoryKey && String(r[categoryKey] || "").trim() !== cat) return false;
-    if (creator && creatorKey && String(r[creatorKey] || "").trim() !== creator) return false;
-    if (from && fromKey && String(r[fromKey] || "").trim() !== from) return false;
-    if (language && languageKey && String(r[languageKey] || "").trim() !== language) return false;
-    if (year && yearKey && String(r[yearKey] || "").trim() !== year) return false;
+    if (cat && categoryKey && String(r[categoryKey] || "").trim() !== cat)
+      return false;
+    if (creator && creatorKey && String(r[creatorKey] || "").trim() !== creator)
+      return false;
+    if (from && fromKey && String(r[fromKey] || "").trim() !== from)
+      return false;
+    if (
+      language &&
+      languageKey &&
+      String(r[languageKey] || "").trim() !== language
+    )
+      return false;
+    if (year && yearKey && String(r[yearKey] || "").trim() !== year)
+      return false;
     return true;
   });
 }
@@ -262,10 +407,15 @@ function renderCardsWithStagger(records) {
     const tier = getSizeTier(item);
     byTier[tier].push(item);
   });
-  
+
   // 交錯插入：xl → md → lg → sm → md → xl → ... 讓大小均勻分佈
   const shuffled = [];
-  const maxLen = Math.max(byTier.xl.length, byTier.lg.length, byTier.md.length, byTier.sm.length);
+  const maxLen = Math.max(
+    byTier.xl.length,
+    byTier.lg.length,
+    byTier.md.length,
+    byTier.sm.length,
+  );
   for (let i = 0; i < maxLen; i++) {
     if (byTier.xl[i]) shuffled.push(byTier.xl[i]);
     if (byTier.md[i]) shuffled.push(byTier.md[i]);
@@ -296,7 +446,8 @@ function renderCardsWithStagger(records) {
     titleEl.textContent = title || "—";
 
     const metaParts = [];
-    if (categoryKey && item[categoryKey]) metaParts.push(String(item[categoryKey]).trim());
+    if (categoryKey && item[categoryKey])
+      metaParts.push(String(item[categoryKey]).trim());
     if (yearKey && item[yearKey]) metaParts.push(String(item[yearKey]).trim());
     const metaEl = document.createElement("div");
     metaEl.className = "zine-wall-card-meta";
@@ -337,7 +488,10 @@ const dropupCounter = document.getElementById("zine-dropup-counter");
 
 function openDropup(index, filteredList) {
   dropupFilteredList = filteredList || getFilteredRecords();
-  dropupCurrentIndex = Math.max(0, Math.min(index, dropupFilteredList.length - 1));
+  dropupCurrentIndex = Math.max(
+    0,
+    Math.min(index, dropupFilteredList.length - 1),
+  );
   dropupEl.setAttribute("aria-hidden", "false");
   document.body.style.overflow = ""; /* 不鎖 body，wall 可照常滑 */
   renderDropupContent();
@@ -349,7 +503,9 @@ function openDropupWithItem(item, filteredList) {
   dropupFilteredList = filteredList || getFilteredRecords();
   // 用書名來比對（因為物件引用可能不同）
   const itemTitle = getTitle(item);
-  dropupCurrentIndex = dropupFilteredList.findIndex((r) => getTitle(r) === itemTitle);
+  dropupCurrentIndex = dropupFilteredList.findIndex(
+    (r) => getTitle(r) === itemTitle,
+  );
   if (dropupCurrentIndex === -1) {
     // 如果書名比對失敗，嘗試用物件引用比對
     dropupCurrentIndex = dropupFilteredList.findIndex((r) => r === item);
@@ -373,7 +529,7 @@ function updateCardHighlight() {
   cards.forEach((card) => card.classList.remove("zine-wall-card-selected"));
   if (dropupEl.getAttribute("aria-hidden") === "true") return;
   const selected = document.querySelector(
-    `.zine-wall-card[data-index="${dropupCurrentIndex}"]`
+    `.zine-wall-card[data-index="${dropupCurrentIndex}"]`,
   );
   if (selected) selected.classList.add("zine-wall-card-selected");
 }
@@ -396,10 +552,20 @@ function renderDropupContent() {
 
   dropupTitleEl.textContent = getTitle(item);
 
-  // 商店有無（B 欄打勾）
+  // 商店有無（shop 欄打勾）
   const hasStore = isStoreAvailable(item, storeKey);
-  dropupStoreBadge.textContent = hasStore ? "商店有售 In Store" : "商店無售 Not in Store";
-  dropupStoreBadge.className = "zine-dropup-store-badge " + (hasStore ? "has-store" : "no-store");
+  dropupStoreBadge.className =
+    "zine-dropup-store-badge " + (hasStore ? "has-store" : "no-store");
+  if (hasStore) {
+    const shopUrl = generateShopUrl(item);
+    if (shopUrl) {
+      dropupStoreBadge.innerHTML = `<a href="${shopUrl}" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">商店有售 In Store →</a>`;
+    } else {
+      dropupStoreBadge.textContent = "商店有售 In Store →";
+    }
+  } else {
+    dropupStoreBadge.textContent = "商店無售 Not in Store";
+  }
 
   // 圖片輪播：書籍照片＊ 可能多張（換行分隔）
   const photoStr = getPhoto(item);
@@ -413,10 +579,12 @@ function renderDropupContent() {
 
   dropupImagesEl.innerHTML = "";
   dropupDotsEl.innerHTML = "";
-  if (dropupDotsEl) dropupDotsEl.style.display = imageUrls.length > 1 ? "flex" : "none";
+  if (dropupDotsEl)
+    dropupDotsEl.style.display = imageUrls.length > 1 ? "flex" : "none";
   if (imageUrls.length === 0) {
     const placeholder = document.createElement("div");
-    placeholder.style.cssText = "min-height:200px;display:flex;align-items:center;justify-content:center;color:#666;";
+    placeholder.style.cssText =
+      "min-height:200px;display:flex;align-items:center;justify-content:center;color:#666;";
     placeholder.textContent = "無圖片";
     dropupImagesEl.appendChild(placeholder);
   } else {
@@ -440,7 +608,12 @@ function renderDropupContent() {
 
   function scrollDropupImage(idx) {
     const imgs = dropupImagesEl.querySelectorAll("img");
-    if (imgs[idx]) imgs[idx].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+    if (imgs[idx])
+      imgs[idx].scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "start",
+      });
   }
 
   function updateDropupDots() {
@@ -465,7 +638,8 @@ function renderDropupContent() {
     dropupPrevImg.style.display = imageUrls.length > 1 ? "" : "none";
     dropupPrevImg.onclick = () => {
       if (imageUrls.length <= 1) return;
-      dropupImageIndex = (dropupImageIndex - 1 + imageUrls.length) % imageUrls.length;
+      dropupImageIndex =
+        (dropupImageIndex - 1 + imageUrls.length) % imageUrls.length;
       scrollDropupImage(dropupImageIndex);
       updateDropupDots();
     };
@@ -484,7 +658,7 @@ function renderDropupContent() {
   dropupFieldsEl.innerHTML = "";
   const skipLabels = ["書籍照片＊ Photo", "書名"];
   const processedBilingual = new Set(); // 記錄已處理的配對欄位
-  
+
   // 定義欄位顯示順序（創作者在內容介紹之前）
   const fieldOrder = [
     "創作者 Creator",
@@ -509,23 +683,21 @@ function renderDropupContent() {
       const enKeys = DETAIL_FIELD_MAP[enLabel] || [];
       const zhVal = getFirstMatch(item, zhKeys);
       const enVal = getFirstMatch(item, enKeys);
-      
+
       if (!zhVal && !enVal) continue;
-      
-      const combinedVal = zhVal && enVal 
-        ? `${zhVal} ${enVal}` 
-        : (zhVal || enVal);
-      
+
+      const combinedVal = zhVal && enVal ? `${zhVal} ${enVal}` : zhVal || enVal;
+
       const dt = document.createElement("dt");
       dt.textContent = label;
       const dd = document.createElement("dd");
       dd.textContent = combinedVal;
       dropupFieldsEl.appendChild(dt);
       dropupFieldsEl.appendChild(dd);
-      
+
       processedBilingual.add(zhLabel);
       processedBilingual.add(enLabel);
-    } 
+    }
     // 其他單一欄位
     else if (DETAIL_FIELD_MAP[label]) {
       if (processedBilingual.has(label)) continue;
@@ -536,7 +708,7 @@ function renderDropupContent() {
       dt.textContent = label;
       const dd = document.createElement("dd");
       dd.textContent = val;
-      
+
       // 創作者欄位可點擊，點擊後篩選到相同創作者
       if (label === "創作者 Creator" && creatorKey && val) {
         dd.style.cursor = "pointer";
@@ -551,16 +723,19 @@ function renderDropupContent() {
           closeDropup();
         });
       }
-      
+
       dropupFieldsEl.appendChild(dt);
       dropupFieldsEl.appendChild(dd);
     }
   }
 
   // 上一本 / 下一本
-  if (dropupCounter) dropupCounter.textContent = `${dropupCurrentIndex + 1} / ${dropupFilteredList.length}`;
+  if (dropupCounter)
+    dropupCounter.textContent = `${dropupCurrentIndex + 1} / ${dropupFilteredList.length}`;
   if (dropupPrevBook) dropupPrevBook.disabled = dropupCurrentIndex <= 0;
-  if (dropupNextBook) dropupNextBook.disabled = dropupCurrentIndex >= dropupFilteredList.length - 1;
+  if (dropupNextBook)
+    dropupNextBook.disabled =
+      dropupCurrentIndex >= dropupFilteredList.length - 1;
 }
 
 function goPrevBook() {
@@ -618,7 +793,13 @@ async function loadAll() {
     const records = parseApiResponse(response);
     allRecords = Array.isArray(records) ? records : [];
 
-    const { categoryKey: ck, yearKey: yk, creatorKey: crk, fromKey: fk, languageKey: lk } = detectFieldKeys(allRecords);
+    const {
+      categoryKey: ck,
+      yearKey: yk,
+      creatorKey: crk,
+      fromKey: fk,
+      languageKey: lk,
+    } = detectFieldKeys(allRecords);
     categoryKey = ck;
     yearKey = yk;
     creatorKey = crk;
