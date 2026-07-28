@@ -67,9 +67,11 @@ th {
   margin: 0;
 }
 .sidebar p {
-  font-size: 0.8rem;
+  font-size: clamp(0.55rem, 0.75vw, 0.8rem);
   padding: 8px;
   margin: 0;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 .sidebar-hr {
   border: 0;
@@ -683,7 +685,23 @@ html::-webkit-scrollbar-thumb:hover {
   #faq.mobile-active,
   #contact-method.mobile-active,
   #edit-account-page.mobile-active,
-  #edit-brand-page.mobile-active {
+  #edit-brand-page.mobile-active,
+  #consignment-form.mobile-active {
+    display: block !important;
+  }
+  /* 手機版：寄售表單 iframe 填滿可視高度 */
+  #consignment-form.admin.mobile-active {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+  }
+  #consignment-form.admin.mobile-active iframe {
+    width: 100% !important;
+    height: 100dvh !important;
+    min-height: 65dvh !important;
+    border: none !important;
     display: block !important;
   }
   /* 手機版：mid section 內的表格保持完整寬度 */

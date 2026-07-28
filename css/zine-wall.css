@@ -520,15 +520,44 @@
 }
 
 @media (max-width: 768px) {
+  .zine-dropup-panel {
+    height: 80vh;
+    max-height: 80vh;
+  }
+
   .zine-dropup-body {
     grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .zine-dropup-gallery {
-    min-height: 220px;
+    min-height: 200px;
+    max-height: 40vh;
   }
 
   .zine-dropup-images img {
-    min-height: 220px;
+    min-height: 200px;
+    max-height: 40vh;
+  }
+
+  .zine-dropup-nav {
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+  }
+
+  .zine-dropup-nav-btn {
+    padding: var(--spacing-sm) var(--spacing-sm);
+    font-size: 0.8rem;
+    min-height: 44px;
+  }
+
+  .zine-dropup-gallery-prev,
+  .zine-dropup-gallery-next {
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
   }
 }
