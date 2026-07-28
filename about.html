@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-TW">
   <head>
     <meta charset="UTF-8" />
@@ -11,507 +11,433 @@
       rel="stylesheet"
     />
     <link rel="shortcut icon" href="image/icon-1.ico" />
-
     <link rel="stylesheet" href="css/mainpage.css" />
     <link rel="stylesheet" href="css/font.css" />
-    
-    <!-- About Slider Styles -->
-    <style>
-      .about-slider-container {
-        margin: 30px 0;
-        margin-top:0px;
-        padding: 20px 0;
-        padding-top:0px;
-        position: relative;
-      }
-      
-      .slider-wrapper {
-        width: 100%;
-        overflow: hidden;
-        border: 2px solid var(--main-color, #000);
-        border-radius: 12px;
-        background: #fff;
-        position: relative;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      }
-      
-      .slider-track {
-        display: flex;
-        transition: transform 0.5s ease-in-out;
-        will-change: transform;
-      }
-      
-      .slide {
-        min-width: 100%;
-        position: relative;
-        overflow: hidden;
-      }
-      
-      .slide img {
-        width: 100%;
-        height: auto;
-        display: block;
-        object-fit: cover;
-        max-height: 500px;
-      }
-      
-      .slider-controls {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-        margin-top: 20px;
-      }
-      
-      .slider-btn {
-        font-family: "IBM Plex Sans", sans-serif;
-        width: 30px;
-        height: 30px;
-        cursor: pointer;
-        font-size: 5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        user-select: none;
-        position: absolute;
-        z-index: 10;
-        background: transparent;
-        border: none;
-        color: blue;
-      }
-      
-      .prev-btn {
-        left: 20px;
-        top: 50%;
-        transform: translateY(-50%);
-      }
-      
-      .next-btn {
-        right: 20px;
-        top: 50%;
-        transform: translateY(-50%);
-      }
-      
-      
-      .slider-dots {
-        display: flex;
-        gap: 12px;
-        align-items: center;
-        position: absolute;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 10;
-      }
-      
-      .dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background: rgba(143, 152, 210, 0.5);
-        cursor: pointer;
-        transition: all 0.3s ease;
-      }
-      
-      .dot.active {
-        background: blue;
-        transform: scale(1.2);
-      }
-      
-      .dot:hover {
-        background: blue;
-      }
-      
-      @media (max-width: 768px) {
-        .slide img {
-          max-height: 300px;
-        }
-        
-        .slider-btn {
-          width: 40px;
-          height: 40px;
-          font-size: 28px;
-          border-width: 1.5px;
-        }
-        
-        .prev-btn {
-          left: 10px;
-        }
-        
-        .next-btn {
-          right: 10px;
-        }
-        
-        .slider-dots {
-          bottom: 15px;
-        }
-        
-        .dot {
-          width: 10px;
-          height: 10px;
-        }
-      }
-    </style>
+
+    <link rel="stylesheet" href="css/about.css" />
 
     <!-- Google tag (gtag.js) -->
-     <script
-     async
-     src="https://www.googletagmanager.com/gtag/js?id=G-EPSXJPDH6L"
-   ></script>
-   <script>
-     window.dataLayer = window.dataLayer || [];
-     function gtag() {
-       dataLayer.push(arguments);
-     }
-     gtag("js", new Date());
-
-     gtag("config", "G-EPSXJPDH6L");
-   </script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-EPSXJPDH6L"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-EPSXJPDH6L");
+    </script>
   </head>
   <body>
-
-    <!-- 主要內容容器 -->
     <div class="main-container">
-      <!-- 右上角控制區域 -->
-    <div class="top-controls">
-      <div class="top-controls-content">
-        <!-- <button id="language-toggle" class="language-btn">English</button> -->
-        <a href="login.html" class="exhibitor-login-btn">攤主登入｜EXHIBITOR LOGIN</a>
+      <!-- 右上角控制 -->
+      <div class="top-controls">
+        <div class="top-controls-content">
+          <a href="login.html" class="exhibitor-login-btn"
+            >攤主登入｜EXHIBITOR LOGIN</a
+          >
+        </div>
       </div>
-    </div>
 
-    <!-- 導航項目區域 - Sticky -->
-    <nav class="nav-items-area sticky-nav">
-      <div class="container">
-        <ul class="nav-menu">
-          <li><a href="https://www.taipeiartbookfair.com">HOME</a></li>
-          <li>
-            <a
-              href="https://shop.taipeiartbookfair.com/"
-              target="_blank"
-              id="nav-shop"
-              >STORE</a
-            >
-          </li>
-          <!-- <li><a href="#exhibitors" id="nav-exhibitors">ZINE WALL</a></li>
-          <li><a href="#exhibitors" id="nav-exhibitors">ARCHIVE</a></li> -->
-          <li><a href="https://about.taipeiartbookfair.com" id="nav-about">ABOUT</a></li>
-          <!-- <li><a href="#about" id="nav-about">FAQ</a></li> -->
-        </ul>
-      </div>
-    </nav>
+      <!-- Nav -->
+      <nav class="nav-items-area sticky-nav">
+        <div class="container">
+          <ul class="nav-menu">
+            <li><a href="https://www.taipeiartbookfair.com">HOME</a></li>
+            <li>
+              <a
+                href="https://shop.taipeiartbookfair.com/"
+                target="_blank"
+                id="nav-shop"
+                >STORE</a
+              >
+            </li>
+            <li><a href="about.html" id="nav-about">ABOUT</a></li>
+          </ul>
+        </div>
+      </nav>
 
-    <!-- About 內容區域 -->
-    <div class="about-section">
-      <div class="container">
-        <div class="about-content">
-          <!-- Image Slider -->
-          <div class="about-slider-container">
-            <div class="slider-wrapper">
-              <div class="slider-track" id="sliderTrack">
-                <div class="slide">
-                  <img src="image/horizental/hori1.jpg" alt="Event Image 1">
+      <!-- ── About Grid ──────────────────────────────────────────────── -->
+      <div class="ag-section">
+        <div class="ag-grid">
+          <!-- 1. 活動照片輪播 — span 2 ─────────────────────────────── -->
+          <div class="ag-card ag-card--carousel">
+            <!-- <div class="ag-carousel-label">活動照片 · Fair Archive</div> -->
+            <div class="ag-carousel-wrap">
+              <div class="ag-carousel-track" id="agCarouselTrack">
+                <div class="ag-carousel-slide">
+                  <img src="image/horizental/hori1.jpg" />
                 </div>
-                <div class="slide">
-                  <img src="image/horizental/hori2.jpg" alt="Event Image 2">
+                <div class="ag-carousel-slide">
+                  <img src="image/horizental/hori2.jpg" />
                 </div>
-                <div class="slide">
-                  <img src="image/horizental/hori3.jpg" alt="Event Image 3">
+                <div class="ag-carousel-slide">
+                  <img src="image/horizental/hori3.jpg" />
                 </div>
-                <div class="slide">
-                  <img src="image/horizental/hori4.jpg" alt="Event Image 4">
+                <div class="ag-carousel-slide">
+                  <img src="image/horizental/hori4.jpg" />
                 </div>
-                <div class="slide">
-                  <img src="image/horizental/hori5.jpg" alt="Event Image 5">
+                <div class="ag-carousel-slide">
+                  <img src="image/horizental/hori5.jpg" />
                 </div>
-                <div class="slide">
-                  <img src="image/horizental/hori6.jpg" alt="Event Image 6">
+                <div class="ag-carousel-slide">
+                  <img src="image/horizental/hori6.jpg" />
                 </div>
               </div>
-              <!-- Slider Controls -->
-              <button class="slider-btn prev-btn" id="prevBtn">‹</button>
-              <button class="slider-btn next-btn" id="nextBtn">›</button>
-              <div class="slider-dots" id="sliderDots"></div>
+              <button
+                class="ag-carousel-btn ag-carousel-prev"
+                id="agPrev"
+                aria-label="上一張"
+              >
+                ‹
+              </button>
+              <button
+                class="ag-carousel-btn ag-carousel-next"
+                id="agNext"
+                aria-label="下一張"
+              >
+                ›
+              </button>
+            </div>
+            <div class="ag-carousel-dots" id="agDots"></div>
+          </div>
+
+          <!-- 介紹 — span 2, 直接展開 ──────────────────────────────── -->
+          <div class="ag-card ag-card--intro">
+            <div class="ag-intro-eyebrow">
+              Taipei Art Book Fair · Since 2016
+            </div>
+            <p class="ag-intro-title">草率季</p>
+            <p class="ag-intro-quote">
+              「如果可以草莽率性，<br />誰想要一本正經？」
+            </p>
+            <p class="ag-intro-body">
+              從 2016
+              年開始，草率季每年聚集世界各地的創作者、出版社、獨立書店與藝術家，展出各種紙本刊物、攝影集、藝術書籍，也展各種創作作品、藝術計畫，以及這些作品背後獨一無二的靈魂。構成出版、學習、藝術、空間、體驗的大型共同創作。<br /><br />
+              Since 2016, Taipei Art Book Fair has brought together creators,
+              publishers, independent bookstores, and artists from around the
+              world — showcasing printed materials, photography, and art books
+              alongside the unique spirits behind each creation. A large-scale
+              collaborative platform that interweaves publishing, learning, art,
+              space, and experience.
+            </p>
+            <div class="ag-intro-contact">
+              CONTACT：<a href="mailto:hooroo@double-grass.com"
+                >hooroo@double-grass.com</a
+              >
+            </div>
+            <a href="login.html" class="ag-card-btn">攤商報名 Application →</a>
+          </div>
+
+          <!-- 2. Zine Wall ───────────────────────────────────────────── -->
+          <div
+            class="ag-card ag-card--toggle"
+            onclick="agToggle(this)"
+            role="button"
+            tabindex="0"
+            aria-expanded="false"
+          >
+            <div class="ag-card-top">
+              <span class="ag-card-eyebrow">TPABF · 01</span>
+              <div class="ag-plus" aria-hidden="true">+</div>
+            </div>
+            <div class="ag-card-title">Zine<br />Wall</div>
+            <div class="ag-card-body" aria-hidden="true">
+              <div class="ag-card-body-inner">
+                <p class="ag-card-desc">
+                  草率季 Zine Wall
+                  是一面線上書牆，收錄歷年參展出版品的圖像與資訊。從獨立刊物、手冊到藝術書籍，每年的參展作品都留存於此，構成草率季的年度紙本地圖。
+                </p>
+                <p class="ag-card-desc">
+                  The Zine Wall is a wall of zine. It collects images and
+                  information of the publications exhibited in the Taipei Art
+                  Book Fair over the years. From independent publications and
+                  manuals to art books, the works exhibited each year are
+                  preserved here, forming an annual paper map of the Taipei Art
+                  Book Fair.
+                </p>
+                <a href="zine-wall.html" class="ag-card-btn"
+                  >進入書牆 Zine Wall →</a
+                >
+              </div>
             </div>
           </div>
-          
-          <!-- 中文內容 -->
-          <div class="about-text">
-            <p class="about-quote">「如果可以草莽率性，誰想要一本正經？」</p>
-            <p class="about-description">
-              從2016年開始，草率季（Taipei Art Book Fair）每年聚集世界各地創作者、出版社、獨立書店、藝術家，展各種紙本刊物、攝影集、藝術書籍，也展各種創作作品、藝術計畫以及這些作品後獨一無二的靈魂，構成出版、學習、藝術、空間、體驗的大型共同創作。
-            </p>
+
+          <!-- 3. Fair-Archive ────────────────────────────────────────── -->
+          <div
+            class="ag-card ag-card--toggle"
+            onclick="agToggle(this)"
+            role="button"
+            tabindex="0"
+            aria-expanded="false"
+          >
+            <div class="ag-card-top">
+              <span class="ag-card-eyebrow">TPABF · 02</span>
+              <div class="ag-plus" aria-hidden="true">+</div>
+            </div>
+            <div class="ag-card-title">Fair<br />Archive</div>
+            <div class="ag-card-body" aria-hidden="true">
+              <div class="ag-card-body-inner">
+                <p class="ag-card-desc">
+                  從 2016 至今，草率季的展覽現場、攤位記錄與活動照片都保存於
+                  Fair-Archive。作為藝術書展的文獻見證，這裡是每一年草率季留給未來的座標。
+                </p>
+                <p class="ag-card-desc">
+                  Since 2016, the exhibition sites, booth records, and event
+                  photos of Taipei Art Book Fair have been preserved in the
+                  Fair-Archive. As a documentary witness of the art book fair,
+                  this is the coordinate that Taipei Art Book Fair leaves for
+                  the future.
+                </p>
+                <a href="#" class="ag-card-btn">瀏覽檔案 Archive →</a>
+              </div>
+            </div>
           </div>
-          
-          <!-- 英文內容 -->
-          <div class="about-text">
-            <p class="about-quote">"If one could be wild and unrestrained, who would choose to be rigidly serious?"</p>
-            <p class="about-description">
-              Since 2016, Taipei Art Book Fair (草率季) has brought together creators, publishers, independent bookstores, and artists from around the world each year. The fair showcases a diverse array of printed materials, including magazines, photography collections, and art books, alongside creative works, artistic projects, and the unique spirit behind each creation. It is a large-scale collaborative platform that interweaves publishing, learning, art, space, and experience.
-            </p>
+
+          <!-- 4. 實體書店 Bookstore ─────────────────────────────────── -->
+          <div
+            class="ag-card ag-card--toggle"
+            onclick="agToggle(this)"
+            role="button"
+            tabindex="0"
+            aria-expanded="false"
+          >
+            <div class="ag-card-top">
+              <span class="ag-card-eyebrow">TPABF · 03</span>
+              <div class="ag-plus" aria-hidden="true">+</div>
+            </div>
+            <div class="ag-card-title">Pretty<br />Fly<br />Books</div>
+            <div class="ag-card-body" aria-hidden="true">
+              <div class="ag-card-body-inner">
+                <p class="ag-card-desc">
+                  Pretty Fly Books by TPABF
+                  是草率季開設的實體書店，坐落於台北西門新宿
+                  1F。常態販售藝術出版品，也跟著草率季走進各地書展現場。
+                </p>
+                <p class="ag-card-desc">
+                  Pretty Fly Books by TPABF is a physical bookstore run by
+                  Taipei Art Book Fair, located on the first floor of Ximen
+                  Shinshu in Taipei. It regularly sells art publications and
+                  participates in book fairs alongside Taipei Art Book Fair.
+                </p>
+                <p class="ag-card-desc" style="font-size: 0.72rem; color: #666">
+                  營業時間 12:00–19:00（二–日）
+                </p>
+                <a href="login.html" class="ag-card-btn"
+                  >寄售申請 Consignment →</a
+                >
+              </div>
+            </div>
           </div>
 
-          <!-- vacancies -->
-           <!-- <div class="vacancies">
-            <h2 class="vacancies-title">Join Us!</h2>
-           </div> -->
-          
-          <!-- 聯絡資訊 -->
-          <div class="contact-info">
-            <p class="contact-text">
-              CONTACT：<a href="mailto:hooroo@double-grass.com" class="contact-email">hooroo@double-grass.com</a>
-            </p>
+          <!-- 5. 藝術家工作室 Polymer ──────────────────────────────── -->
+          <div
+            class="ag-card ag-card--toggle"
+            onclick="agToggle(this)"
+            role="button"
+            tabindex="0"
+            aria-expanded="false"
+          >
+            <div class="ag-card-top">
+              <span class="ag-card-eyebrow">TPABF · 04</span>
+              <div class="ag-plus" aria-hidden="true">+</div>
+            </div>
+            <div class="ag-card-title">Polymer<br />Studio</div>
+            <div class="ag-card-body" aria-hidden="true">
+              <div class="ag-card-body-inner">
+                <p class="ag-card-desc">
+                  Polymer
+                  是草率季的藝術家工作室空間，提供創作、實驗與跨域媒合的場域，讓出版與藝術實踐在同一屋簷下生長、對話。
+                </p>
+                <p class="ag-card-desc">
+                  Polymer is the artist studio space of Taipei Art Book Fair,
+                  providing a venue for creation, experimentation, and
+                  cross-disciplinary collaboration, allowing publishing and
+                  artistic practice to grow and converse under the same roof.
+                </p>
+                <a href="#" class="ag-card-btn">了解更多 More Info →</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <!-- /ag-section -->
 
-
-    <!-- 滾動橫幅 -->
-    <div class="banner">
-      <div class="banner-track">
-        <div class="banner-content">
-          <span class="dot"></span> 2025 草率季 TPABF
-          徵件結果已公布，請有報名的單位登入攤商系統查詢。 
-          <span class="dot"></span> The selection results for the 2025 TPABF are
-          now available. Please log in to the exhibitor system to check your
-          application status. 
-          <span class="dot" style="background-color: blueviolet"></span>
-          請持續關注我們的社群平台，掌握最新活動消息。Follow us on social media
-          for the latest updates.
-          <span class="dot"></span> 2025 草率季 TPABF
-          徵件結果已公布，請有報名的單位登入攤商系統查詢。 
-          <span class="dot"></span> The selection results for the 2025 TPABF are
-          now available. Please log in to the exhibitor system to check your
-          application status. 
-          <span class="dot" style="background-color: blueviolet"></span>
-          請持續關注我們的社群平台，掌握最新活動消息。Follow us on social media
-          for the latest updates.
-          <span class="dot"></span> 2025 草率季 TPABF
-          徵件結果已公布，請有報名的單位登入攤商系統查詢。 
-          <span class="dot"></span> The selection results for the 2025 TPABF are
-          now available. Please log in to the exhibitor system to check your
-          application status. 
-          <span class="dot" style="background-color: blueviolet"></span>
-          請持續關注我們的社群平台，掌握最新活動消息。Follow us on social media
-          for the latest updates.
-          <span class="dot"></span> 2025 草率季 TPABF
-          徵件結果已公布，請有報名的單位登入攤商系統查詢。 
-          <span class="dot"></span> The selection results for the 2025 TPABF are
-          now available. Please log in to the exhibitor system to check your
-          application status. 
-          <span class="dot" style="background-color: blueviolet"></span>
-          請持續關注我們的社群平台，掌握最新活動消息。Follow us on social media
-          for the latest updates.
-        </div>
-        <div class="banner-content">
-          <span class="dot"></span> 2025 草率季 TPABF
-          徵件結果已公布，請有報名的單位登入攤商系統查詢。 
-          <span class="dot"></span> The selection results for the 2025 TPABF are
-          now available. Please log in to the exhibitor system to check your
-          application status. 
-          <span class="dot" style="background-color: blueviolet"></span>
-          請持續關注我們的社群平台，掌握最新活動消息。Follow us on social media
-          for the latest updates.
-          <span class="dot"></span> 2025 草率季 TPABF
-          徵件結果已公布，請有報名的單位登入攤商系統查詢。 
-          <span class="dot"></span> The selection results for the 2025 TPABF are
-          now available. Please log in to the exhibitor system to check your
-          application status. 
-          <span class="dot" style="background-color: blueviolet"></span>
-          請持續關注我們的社群平台，掌握最新活動消息。Follow us on social media
-          for the latest updates.
-          <span class="dot"></span> 2025 草率季 TPABF
-          徵件結果已公布，請有報名的單位登入攤商系統查詢。 
-          <span class="dot"></span> The selection results for the 2025 TPABF are
-          now available. Please log in to the exhibitor system to check your
-          application status. 
-          <span class="dot" style="background-color: blueviolet"></span>
-          請持續關注我們的社群平台，掌握最新活動消息。Follow us on social media
-          for the latest updates.
-          <span class="dot"></span> 2025 草率季 TPABF
-          徵件結果已公布，請有報名的單位登入攤商系統查詢。 
-          <span class="dot"></span> The selection results for the 2025 TPABF are
-          now available. Please log in to the exhibitor system to check your
-          application status. 
-          <span class="dot" style="background-color: blueviolet"></span>
-          請持續關注我們的社群平台，掌握最新活動消息。Follow us on social media
-          for the latest updates.
+      <!-- 滾動橫幅 -->
+      <div class="banner">
+        <div class="banner-track">
+          <div class="banner-content">
+            <span class="dot"></span> 2025 草率季 TPABF
+            徵件結果已公布，請有報名的單位登入攤商系統查詢。
+            <span class="dot"></span> The selection results for the 2025 TPABF
+            are now available. Please log in to the exhibitor system to check
+            your application status.
+            <span class="dot" style="background-color: blueviolet"></span>
+            請持續關注我們的社群平台，掌握最新活動消息。Follow us on social
+            media for the latest updates.
+            <span class="dot"></span> 2025 草率季 TPABF
+            徵件結果已公布，請有報名的單位登入攤商系統查詢。
+            <span class="dot"></span> The selection results for the 2025 TPABF
+            are now available. Please log in to the exhibitor system to check
+            your application status.
+            <span class="dot" style="background-color: blueviolet"></span>
+            請持續關注我們的社群平台，掌握最新活動消息。Follow us on social
+            media for the latest updates.
+          </div>
+          <div class="banner-content">
+            <span class="dot"></span> 2025 草率季 TPABF
+            徵件結果已公布，請有報名的單位登入攤商系統查詢。
+            <span class="dot"></span> The selection results for the 2025 TPABF
+            are now available. Please log in to the exhibitor system to check
+            your application status.
+            <span class="dot" style="background-color: blueviolet"></span>
+            請持續關注我們的社群平台，掌握最新活動消息。Follow us on social
+            media for the latest updates.
+            <span class="dot"></span> 2025 草率季 TPABF
+            徵件結果已公布，請有報名的單位登入攤商系統查詢。
+            <span class="dot"></span> The selection results for the 2025 TPABF
+            are now available. Please log in to the exhibitor system to check
+            your application status.
+            <span class="dot" style="background-color: blueviolet"></span>
+            請持續關注我們的社群平台，掌握最新活動消息。Follow us on social
+            media for the latest updates.
+          </div>
         </div>
       </div>
-    </div>
-     <!-- Credit Drop-up -->
-     <div class="credit-dropup-container" aria-live="polite">
-      <div class="credit-panel" id="creditPanel" role="dialog" aria-modal="false" aria-labelledby="creditTitle">
-        <!-- Credits 內容由 js/credits-content.js 自動載入 -->
-      </div>
-    </div>
 
-    <!-- 頁腳 -->
-    <footer class="footer">
-      <div class="footer-content">
-        <!-- <div class="footer-left">
-        </div> -->
-        <div class="footer-right">
-          <a href="https://www.facebook.com/taipeiartbookfair/" class="social-link">FACEBOOK</a>
-          <a href="https://www.instagram.com/taipeiartbookfair/" class="social-link">INSTAGRAM</a>
-          <a href="#" id="footerCredits" class="footer-link">CREDITS</a>
+      <!-- Credit Drop-up -->
+      <div class="credit-dropup-container" aria-live="polite">
+        <div
+          class="credit-panel"
+          id="creditPanel"
+          role="dialog"
+          aria-modal="false"
+          aria-labelledby="creditTitle"
+        ></div>
+      </div>
+
+      <!-- 頁腳 -->
+      <footer class="footer">
+        <div class="footer-content">
+          <div class="footer-right">
+            <a
+              href="https://www.facebook.com/taipeiartbookfair/"
+              class="social-link"
+              >FACEBOOK</a
+            >
+            <a
+              href="https://www.instagram.com/taipeiartbookfair/"
+              class="social-link"
+              >INSTAGRAM</a
+            >
+            <a href="#" id="footerCredits" class="footer-link">CREDITS</a>
+          </div>
         </div>
-      </div>
-    </footer>
-
-   
+      </footer>
+    </div>
+    <!-- /main-container -->
 
     <script src="js/mainpage_image_rotata.js"></script>
     <script src="js/credits-content.js"></script>
-    
-    <!-- About Slider JavaScript -->
+
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const sliderTrack = document.getElementById('sliderTrack');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const sliderDots = document.getElementById('sliderDots');
-        
-        if (!sliderTrack || !prevBtn || !nextBtn || !sliderDots) return;
-        
-        const slides = sliderTrack.querySelectorAll('.slide');
-        let currentSlide = 0;
-        let autoSlideInterval;
-        
-        // Create dots
-        slides.forEach((_, index) => {
-          const dot = document.createElement('div');
-          dot.classList.add('dot');
-          if (index === 0) dot.classList.add('active');
-          dot.addEventListener('click', () => goToSlide(index));
-          sliderDots.appendChild(dot);
-        });
-        
-        function updateSlider() {
-          const translateX = -currentSlide * 100;
-          sliderTrack.style.transform = `translateX(${translateX}%)`;
-          
-          // Update dots
-          const dots = sliderDots.querySelectorAll('.dot');
-          dots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === currentSlide);
-          });
-        }
-        
-        function nextSlide() {
-          currentSlide = (currentSlide + 1) % slides.length;
-          updateSlider();
-        }
-        
-        function prevSlide() {
-          currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-          updateSlider();
-        }
-        
-        function goToSlide(index) {
-          currentSlide = index;
-          updateSlider();
-        }
-        
-        // Button event listeners
-        nextBtn.addEventListener('click', nextSlide);
-        prevBtn.addEventListener('click', prevSlide);
-        
-        // Auto-play functionality
-        function startAutoSlide() {
-          autoSlideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
-        }
-        
-        function stopAutoSlide() {
-          if (autoSlideInterval) {
-            clearInterval(autoSlideInterval);
-          }
-        }
-        
-        // Start auto-slide
-        startAutoSlide();
-        
-        // Pause on hover
-        const sliderWrapper = sliderTrack.closest('.slider-wrapper');
-        if (sliderWrapper) {
-          sliderWrapper.addEventListener('mouseenter', stopAutoSlide);
-          sliderWrapper.addEventListener('mouseleave', startAutoSlide);
-        }
-        
-        // Keyboard navigation
-        document.addEventListener('keydown', function(e) {
-          if (e.key === 'ArrowLeft') {
-            prevSlide();
-          } else if (e.key === 'ArrowRight') {
-            nextSlide();
+      // ── Card toggle ────────────────────────────────────────────────
+      function agToggle(card) {
+        const isOpen = card.classList.contains("ag-card--open");
+        card.classList.toggle("ag-card--open", !isOpen);
+        card.setAttribute("aria-expanded", String(!isOpen));
+        const body = card.querySelector(".ag-card-body");
+        if (body) body.setAttribute("aria-hidden", String(isOpen));
+      }
+
+      // Keyboard support for toggle cards
+      document.querySelectorAll(".ag-card--toggle").forEach(function (card) {
+        card.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            agToggle(card);
           }
         });
-        
-        // Touch/swipe support for mobile
-        let touchStartX = 0;
-        let touchEndX = 0;
-        
-        sliderTrack.addEventListener('touchstart', function(e) {
-          touchStartX = e.changedTouches[0].screenX;
-        });
-        
-        sliderTrack.addEventListener('touchend', function(e) {
-          touchEndX = e.changedTouches[0].screenX;
-          handleSwipe();
-        });
-        
-        function handleSwipe() {
-          const swipeThreshold = 50;
-          const diff = touchStartX - touchEndX;
-          
-          if (Math.abs(diff) > swipeThreshold) {
-            if (diff > 0) {
-              nextSlide(); // Swipe left - next
-            } else {
-              prevSlide(); // Swipe right - previous
-            }
-          }
-        }
       });
-    </script>
-    
-    <script>
-      // Credit drop-up toggle using existing footer CREDITS link
-      (function(){
-        const trigger = document.getElementById('footerCredits');
-        const panel = document.getElementById('creditPanel');
-        if (!trigger || !panel) return;
-        
-        trigger.addEventListener('click', function(e){
-          e.preventDefault();
-          e.stopPropagation(); // 阻止事件冒泡
-          const isOpen = panel.classList.toggle('open');
-          trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-          trigger.setAttribute('aria-controls', 'creditPanel');
-          
-          // 如果打開了，滾動到頁面最底部
-          if (isOpen) {
-            setTimeout(() => {
-              window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
-            }, 100);
-          }
+
+      // ── Carousel ───────────────────────────────────────────────────
+      (function () {
+        var track = document.getElementById("agCarouselTrack");
+        var dotsWrap = document.getElementById("agDots");
+        var prevBtn = document.getElementById("agPrev");
+        var nextBtn = document.getElementById("agNext");
+        if (!track) return;
+
+        var slides = track.querySelectorAll(".ag-carousel-slide");
+        var total = slides.length;
+        var current = 0;
+        var timer;
+
+        // build dots
+        slides.forEach(function (_, i) {
+          var dot = document.createElement("button");
+          dot.className = "ag-carousel-dot" + (i === 0 ? " active" : "");
+          dot.setAttribute("aria-label", "第 " + (i + 1) + " 張");
+          dot.addEventListener("click", function () {
+            go(i);
+          });
+          dotsWrap.appendChild(dot);
         });
-        
-        // click outside to close - 只在面板打開時才關閉
-        document.addEventListener('click', function(e){
-          if (panel.classList.contains('open')) {
-            // 如果點擊的不是面板內容也不是觸發按鈕，則關閉
-            if (!panel.contains(e.target) && e.target !== trigger) {
-              panel.classList.remove('open');
-              trigger.setAttribute('aria-expanded', 'false');
-            }
-          }
-        });
+
+        function go(n) {
+          current = (n + total) % total;
+          track.style.transform = "translateX(-" + current * 100 + "%)";
+          dotsWrap
+            .querySelectorAll(".ag-carousel-dot")
+            .forEach(function (d, i) {
+              d.classList.toggle("active", i === current);
+            });
+          clearInterval(timer);
+          timer = setInterval(next, 4200);
+        }
+
+        function next() {
+          go(current + 1);
+        }
+        function prev() {
+          go(current - 1);
+        }
+
+        prevBtn &&
+          prevBtn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            prev();
+          });
+        nextBtn &&
+          nextBtn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            next();
+          });
+
+        // touch swipe
+        var startX = null;
+        track.addEventListener(
+          "touchstart",
+          function (e) {
+            startX = e.touches[0].clientX;
+          },
+          { passive: true },
+        );
+        track.addEventListener(
+          "touchend",
+          function (e) {
+            if (startX === null) return;
+            var dx = e.changedTouches[0].clientX - startX;
+            if (Math.abs(dx) > 40) dx < 0 ? next() : prev();
+            startX = null;
+          },
+          { passive: true },
+        );
+
+        timer = setInterval(next, 4200);
       })();
     </script>
-
-    <!-- 關閉主要內容容器 -->
-    </div>
   </body>
 </html>

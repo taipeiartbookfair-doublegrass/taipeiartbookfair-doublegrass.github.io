@@ -1,0 +1,370 @@
+.ag-section {
+  padding: 1.5rem 1.5rem 3rem;
+}
+
+.ag-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  align-items: start;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ── Card base ─────────────────────────────────────────────────── */
+.ag-card {
+  border: 2px solid #111110;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  background: #f2f1eb;
+  position: relative;
+  transition: border-color 0.22s ease;
+}
+
+.ag-card--toggle {
+  cursor: pointer;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+}
+
+.ag-card--toggle:hover {
+  border-color: #3a5a22;
+}
+
+.ag-card--open {
+  border-color: #c4d821 !important;
+}
+
+/* top row: eyebrow + plus button */
+.ag-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.1rem 1.2rem 0;
+  flex-shrink: 0;
+}
+
+.ag-card-eyebrow {
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #888;
+  font-family: "Courier New", "Courier", monospace;
+  padding-top: 3px;
+  line-height: 1;
+}
+
+.ag-plus {
+  width: 26px;
+  height: 26px;
+  border: 1.5px solid #111110;
+  border-radius: 50%;
+  background: none;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    transform 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.2s ease,
+    border-color 0.2s ease;
+  flex-shrink: 0;
+  color: #111110;
+  pointer-events: none;
+}
+
+.ag-card--open .ag-plus {
+  transform: rotate(45deg);
+  background: #c4d821;
+  border-color: #c4d821;
+  color: #111110;
+}
+
+/* big title — large when collapsed, small when expanded */
+.ag-card-title {
+  font-family: "Helvetica Neue", "Arial Black", "Arial", sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.025em;
+  line-height: 0.87;
+  color: #111110;
+  padding: 0.5rem 1.2rem 1.2rem;
+  margin-top: auto;
+  font-size: clamp(2rem, 4.2vw, 3.6rem);
+  transition:
+    font-size 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.25s ease,
+    padding-bottom 0.35s ease,
+    margin-top 0.35s ease;
+  word-break: keep-all;
+  flex-shrink: 0;
+}
+
+.ag-card--open .ag-card-title {
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  font-weight: 600;
+  color: #3a5a22;
+  padding-bottom: 0.4rem;
+  margin-top: 0;
+}
+
+/* expandable body */
+.ag-card-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.ag-card--open .ag-card-body {
+  max-height: 520px;
+}
+
+.ag-card-body-inner {
+  padding: 0 1.2rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ag-card-desc {
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: #333;
+  margin: 0;
+}
+
+.ag-card-btn {
+  display: inline-block;
+  padding: 0.45em 1.3em;
+  border: 1.5px solid #111110;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-family: "Courier New", monospace;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #111110;
+  background: transparent;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease;
+  align-self: flex-start;
+}
+
+.ag-card-btn:hover {
+  background: #111110;
+  color: #f2f1eb;
+}
+
+/* ── Carousel Card ────────────────────────────────────────────── */
+.ag-card--carousel {
+  grid-column: span 2;
+  align-self: stretch;
+  background: #1a1a18;
+  border-color: #1a1a18;
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+  min-height: 480px;
+}
+
+.ag-carousel-label {
+  padding: 1rem 1.2rem 0.4rem;
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: "Courier New", monospace;
+  flex-shrink: 0;
+}
+
+.ag-carousel-wrap {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  min-height: 420px;
+}
+
+.ag-carousel-track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.52s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ag-carousel-slide {
+  min-width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.ag-carousel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ag-carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.18s ease;
+  line-height: 1;
+}
+
+.ag-carousel-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.ag-carousel-prev {
+  left: 0.8rem;
+}
+.ag-carousel-next {
+  right: 0.8rem;
+}
+
+.ag-carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: 0.55rem 0;
+  flex-shrink: 0;
+}
+
+.ag-carousel-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border: none;
+  padding: 0;
+}
+
+.ag-carousel-dot.active {
+  background: #c4d821;
+}
+
+/* ── Intro Card (always open, span 2) ───────────────────────── */
+.ag-card--intro {
+  grid-column: span 2;
+  align-self: stretch;
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+  padding: 1.4rem 1.5rem 1.5rem;
+  gap: 0.9rem;
+  min-height: 0;
+}
+
+.ag-intro-title {
+  font-family: "Helvetica Neue", "Arial Black", "Arial", sans-serif;
+  font-weight: 900;
+  font-size: clamp(2.2rem, 3.5vw, 3.2rem);
+  letter-spacing: -0.03em;
+  line-height: 0.9;
+  color: #111110;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.ag-intro-eyebrow {
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #888;
+  font-family: "Courier New", monospace;
+}
+
+.ag-intro-quote {
+  font-family: "Helvetica Neue", "Arial", sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  line-height: 1.15;
+  color: #111110;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.ag-intro-body {
+  font-size: 0.78rem;
+  line-height: 1.75;
+  color: #444;
+  margin: 0;
+}
+
+
+
+.ag-intro-contact {
+  margin-top: auto;
+  font-size: 0.65rem;
+  font-family: "Courier New", monospace;
+  letter-spacing: 0.08em;
+  color: #555;
+}
+
+.ag-intro-contact a {
+  color: #3a5a22;
+  text-decoration: none;
+}
+
+.ag-intro-contact a:hover {
+  text-decoration: underline;
+}
+
+/* ── Mobile ───────────────────────────────────────────────────── */
+@media (max-width: 680px) {
+  .ag-section {
+    padding: 0.8rem 0.7rem 2.5rem;
+  }
+  .ag-grid {
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+  }
+  .ag-card--carousel,
+  .ag-card--intro {
+    grid-column: span 1;
+    min-height: 200px;
+  }
+  .ag-card--toggle {
+    min-height: 160px;
+  }
+  .ag-card-title {
+    font-size: clamp(1.8rem, 9vw, 2.8rem);
+  }
+  .ag-card--open .ag-card-title {
+    font-size: 0.65rem;
+  }
+  .ag-carousel-wrap {
+    min-height: 180px;
+  }
+}
+
+@media (max-width: 900px) and (min-width: 681px) {
+  .ag-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .ag-card--carousel,
+  .ag-card--intro {
+    grid-column: span 2;
+  }
+}

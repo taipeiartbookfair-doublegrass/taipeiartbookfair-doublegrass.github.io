@@ -225,6 +225,33 @@
       .cs-remove-btn:hover {
         color: #555;
       }
+      @media (max-width: 480px) {
+        body {
+          padding: 0.8em 0.6em 4em;
+        }
+        .cs-card {
+          padding: 1.2em 1em;
+          border-radius: 1.5rem;
+        }
+        .cs-book-card {
+          padding: 0.9em 0.8em;
+          border-radius: 1rem;
+        }
+        .cs-field {
+          min-width: 0;
+          width: 100%;
+          flex: 1 1 100%;
+        }
+        .cs-field-row {
+          flex-direction: column;
+          gap: 0.5em;
+        }
+        .cs-lang-checks {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.2em 0.6em;
+        }
+      }
     </style>
   </head>
   <body>
