@@ -48,6 +48,9 @@
   background: darkgrey;
   border: 2px solid var(--border-light);
   margin-bottom: var(--spacing-md);
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .zine-filter-group {
@@ -72,8 +75,12 @@
   font-family: "Inclusive Sans", sans-serif;
   color: var(--text-primary);
   min-width: 140px;
+  max-width: 200px;
+  width: 100%;
   cursor: pointer;
   transition: all 0.2s ease;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .zine-filter-select:focus {
@@ -441,6 +448,10 @@
 
 .zine-dropup-store-badge.no-store {
   color: var(--text-secondary);
+}
+
+.zine-dropup-store-badge.has-store a:hover {
+  text-decoration: underline;
 }
 
 .zine-dropup-title {
