@@ -9,6 +9,11 @@
 
   const IMAGE_EXT_RE = /\.(jpe?g|png|gif|webp)$/i;
 
+  // 跟 timeline-visit.js 用同一個 Google Calendar，只是每年查詢的日期範圍不同
+  const CALENDAR_ID =
+    "90527f67fa462c83e184b0c62def10ebc8b00cc8c67a5b83af2afb90a1bdb293@group.calendar.google.com";
+  const CALENDAR_API_KEY = "AIzaSyCOLToQuZFbB1mULxYrMyQVeTVGnhk8-U4";
+
   const loadingEl = document.getElementById("archive-loading");
   const listEl = document.getElementById("archive-list");
   const emptyEl = document.getElementById("archive-empty");
@@ -70,6 +75,102 @@
       })
       .catch(() => []);
     return photoCache[year];
+  }
+
+  // ===== Programs（掃該年展期範圍的 Google Calendar 活動）=====
+  const programsCache = {}; // year -> Promise<event[]>
+
+  function loadYearPrograms(year, dateStart, dateEnd) {
+    if (programsCache[year]) return programsCache[year];
+    if (!dateStart || !dateEnd) {
+      programsCache[year] = Promise.resolve([]);
+      return programsCache[year];
+    }
+    const timeMin = new Date(dateStart + "T00:00:00+08:00").toISOString();
+    const timeMax = new Date(dateEnd + "T23:59:59+08:00").toISOString();
+    const url =
+      `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}` +
+      `/events?key=${CALENDAR_API_KEY}&singleEvents=true&orderBy=startTime&timeMin=${timeMin}&timeMax=${timeMax}`;
+    programsCache[year] = fetch(url)
+      .then((r) => (r.ok ? r.json() : { items: [] }))
+      .then((data) => data.items || [])
+      .catch(() => []);
+    return programsCache[year];
+  }
+
+  function cleanEventDescription(desc) {
+    return String(desc || "")
+      .replace(/<br\s*\/?>/gi, "\n")
+      .replace(/<[^>]*>/g, "")
+      .replace(/&nbsp;/g, " ")
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .trim();
+  }
+
+  function formatEventDateTime(event) {
+    const startInfo = event.start || {};
+    const endInfo = event.end || {};
+    if (startInfo.dateTime) {
+      const start = new Date(startInfo.dateTime);
+      const end = endInfo.dateTime ? new Date(endInfo.dateTime) : null;
+      const dateStr = start.toLocaleDateString("zh-TW", {
+        month: "2-digit",
+        day: "2-digit",
+      });
+      const startTime = start.toLocaleTimeString("zh-TW", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      });
+      const endTime = end
+        ? end.toLocaleTimeString("zh-TW", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          })
+        : "";
+      return dateStr + " " + startTime + (endTime ? "–" + endTime : "");
+    }
+    if (startInfo.date) {
+      const start = new Date(startInfo.date + "T00:00:00");
+      return start.toLocaleDateString("zh-TW", {
+        month: "2-digit",
+        day: "2-digit",
+      });
+    }
+    return "";
+  }
+
+  function createProgramItem(event) {
+    const el = document.createElement("div");
+    el.className = "archive-program-item";
+
+    const timeEl = document.createElement("div");
+    timeEl.className = "archive-program-time";
+    timeEl.textContent = formatEventDateTime(event);
+
+    const bodyEl = document.createElement("div");
+    bodyEl.className = "archive-program-body";
+
+    const titleEl = document.createElement("div");
+    titleEl.className = "archive-program-title";
+    titleEl.textContent = event.summary || "(無標題)";
+    bodyEl.appendChild(titleEl);
+
+    const desc = cleanEventDescription(event.description);
+    if (desc) {
+      const descEl = document.createElement("div");
+      descEl.className = "archive-program-desc";
+      descEl.innerHTML = withBr(desc);
+      bodyEl.appendChild(descEl);
+    }
+
+    el.appendChild(timeEl);
+    el.appendChild(bodyEl);
+    return el;
   }
 
   // ===== 燈箱 =====
@@ -238,6 +339,27 @@
     if (header) header.setAttribute("aria-expanded", "true");
     refreshPanelHeight(itemEl);
 
+    // Programs 是懶載入：第一次展開才去掃該年展期範圍的 Google Calendar
+    if (!itemEl.dataset.programsLoaded) {
+      itemEl.dataset.programsLoaded = "1";
+      const dateStart = itemEl.dataset.dateStart || "";
+      const dateEnd = itemEl.dataset.dateEnd || "";
+      const programsLabelEl = itemEl.querySelector(
+        ".archive-year-programs-label"
+      );
+      const programsListEl = itemEl.querySelector(
+        ".archive-year-programs-list"
+      );
+      loadYearPrograms(year, dateStart, dateEnd).then((events) => {
+        if (!events.length || !programsListEl) return;
+        if (programsLabelEl) programsLabelEl.style.display = "";
+        events.forEach((ev) => {
+          programsListEl.appendChild(createProgramItem(ev));
+        });
+        refreshPanelHeight(itemEl);
+      });
+    }
+
     // 照片是懶載入：第一次展開才去抓 GitHub 資料夾
     if (!itemEl.dataset.photosLoaded) {
       itemEl.dataset.photosLoaded = "1";
@@ -279,9 +401,13 @@
     const title = pick(fields.title) || year;
     const subtitle = pick(fields.subtitle);
     const desc = pick(fields.desc);
+    const dateStart = pick(fields.date_start);
+    const dateEnd = pick(fields.date_end);
 
     const itemEl = document.createElement("div");
     itemEl.className = "archive-year-item";
+    itemEl.dataset.dateStart = dateStart;
+    itemEl.dataset.dateEnd = dateEnd;
 
     const header = document.createElement("button");
     header.type = "button";
@@ -320,6 +446,16 @@
       descEl.innerHTML = withBr(desc);
       panelInner.appendChild(descEl);
     }
+
+    const programsLabel = document.createElement("div");
+    programsLabel.className = "archive-year-programs-label";
+    programsLabel.style.display = "none"; // 抓到活動才顯示
+    programsLabel.textContent = "活動節目 Programs";
+    panelInner.appendChild(programsLabel);
+
+    const programsListEl = document.createElement("div");
+    programsListEl.className = "archive-year-programs-list";
+    panelInner.appendChild(programsListEl);
 
     const photosEl = document.createElement("div");
     photosEl.className = "archive-year-photos";
