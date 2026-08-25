@@ -71,7 +71,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // 只給目前選到的加 <mark>
-    if (section === "dashboard" || section === "open-call" || section === "consignment" || section === "contact" || section === "faq") {
+    if (
+      section === "dashboard" ||
+      section === "open-call" ||
+      section === "consignment" ||
+      section === "contact" ||
+      section === "faq"
+    ) {
       const a = document.getElementById("sidebar-" + section);
       if (a) {
         const p = a.querySelector("p");
@@ -114,8 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const localFrame = document.getElementById("opencall-frame-local");
     const overseaFrame = document.getElementById("opencall-frame-oversea");
     if (!localFrame || !overseaFrame) return;
-    const r =
-      typeof getCookie === "function" ? getCookie("region") || "" : "";
+    const r = typeof getCookie === "function" ? getCookie("region") || "" : "";
     const isTW = r.trim().toUpperCase() === "TW";
     localFrame.classList.toggle("opencall-dashboard-iframe--hidden", !isTW);
     overseaFrame.classList.toggle("opencall-dashboard-iframe--hidden", isTW);
@@ -132,10 +137,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const contact = document.getElementById("contact-method");
     const openCallGated = document.getElementById("open-call-gated");
     const consignmentForm = document.getElementById("consignment-form");
-    const allSections = [mid, right, account, editAccountPage, faq, contact, openCallGated, consignmentForm];
-    
+    const allSections = [
+      mid,
+      right,
+      account,
+      editAccountPage,
+      faq,
+      contact,
+      openCallGated,
+      consignmentForm,
+    ];
+
     // 移除所有 active class 和 inline style
-    allSections.forEach(el => {
+    allSections.forEach((el) => {
       if (el) {
         el.classList.remove("mobile-active");
         if (isMobile) {
@@ -145,7 +159,19 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
     });
-    
+    // 確保 body 的 scroll lock 被解除（若先前被 FAQ 上鎖）
+    document.body.classList.remove("disable-body-scroll");
+    // 確保 body 的 scroll lock 被解除（若先前被 FAQ 上鎖）
+    document.body.classList.remove("disable-body-scroll");
+    // 確保 body 的 scroll lock 被解除（若先前被 FAQ 上鎖）
+    document.body.classList.remove("disable-body-scroll");
+    // 確保 body 的 scroll lock 被解除（若先前被 FAQ 上鎖）
+    document.body.classList.remove("disable-body-scroll");
+    // 確保 body 的 scroll lock 被解除（若先前被 FAQ 上鎖）
+    document.body.classList.remove("disable-body-scroll");
+    // 確保 body 的 scroll lock 被解除（若先前被 FAQ 上鎖）
+    document.body.classList.remove("disable-body-scroll");
+
     // 顯示編輯頁面
     if (editPage) {
       if (isMobile) {
@@ -227,10 +253,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const openCallForm = document.getElementById("open-call-form");
     const openCallGated = document.getElementById("open-call-gated");
     const consignmentForm = document.getElementById("consignment-form");
-    const allSections = [editBrandPage, mid, right, editPage, account, faq, contact, openCallForm, openCallGated, consignmentForm];
-    
+    const allSections = [
+      editBrandPage,
+      mid,
+      right,
+      editPage,
+      account,
+      faq,
+      contact,
+      openCallForm,
+      openCallGated,
+      consignmentForm,
+    ];
+
     // 移除所有 active class 和 inline style
-    allSections.forEach(el => {
+    allSections.forEach((el) => {
       if (el) {
         el.classList.remove("mobile-active");
         if (isMobile) {
@@ -240,17 +277,19 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
     });
-    
+
     // 顯示選中的區塊
     if (faq) {
       if (isMobile) {
         faq.classList.add("mobile-active");
+        // Lock body scrolling but allow the FAQ iframe/container to scroll
+        document.body.classList.add("disable-body-scroll");
       } else {
         faq.style.display = "table-cell";
       }
     }
   };
-  
+
   window.showContactSection = function showContactSection() {
     const editBrandPage = document.getElementById("edit-brand-page");
     const mid = document.querySelector(".mid");
@@ -262,10 +301,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const openCallForm = document.getElementById("open-call-form");
     const openCallGated = document.getElementById("open-call-gated");
     const consignmentForm = document.getElementById("consignment-form");
-    const allSections = [editBrandPage, mid, right, editPage, account, faq, contact, openCallForm, openCallGated, consignmentForm];
-    
+    const allSections = [
+      editBrandPage,
+      mid,
+      right,
+      editPage,
+      account,
+      faq,
+      contact,
+      openCallForm,
+      openCallGated,
+      consignmentForm,
+    ];
+
     // 移除所有 active class 和 inline style
-    allSections.forEach(el => {
+    allSections.forEach((el) => {
       if (el) {
         el.classList.remove("mobile-active");
         if (isMobile) {
@@ -275,7 +325,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
     });
-    
+
     // 顯示選中的區塊
     if (contact) {
       if (isMobile) {
@@ -285,7 +335,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   };
-  
+
   window.showAccountSection = function showAccountSection() {
     const editBrandPage = document.getElementById("edit-brand-page");
     const mid = document.querySelector(".mid");
@@ -297,10 +347,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const openCallForm = document.getElementById("open-call-form");
     const openCallGated = document.getElementById("open-call-gated");
     const consignmentForm = document.getElementById("consignment-form");
-    const allSections = [editBrandPage, mid, right, editPage, account, faq, contact, openCallForm, openCallGated, consignmentForm];
-    
+    const allSections = [
+      editBrandPage,
+      mid,
+      right,
+      editPage,
+      account,
+      faq,
+      contact,
+      openCallForm,
+      openCallGated,
+      consignmentForm,
+    ];
+
     // 移除所有 active class 和 inline style
-    allSections.forEach(el => {
+    allSections.forEach((el) => {
       if (el) {
         el.classList.remove("mobile-active");
         if (isMobile) {
@@ -310,7 +371,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
     });
-    
+
     // 顯示選中的區塊
     if (account) {
       if (isMobile) {
@@ -327,7 +388,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const mid = document.querySelector(".mid");
     const right = document.querySelector(".right");
     const account = document.querySelector(".account");
-    
+
     if (editPage) {
       editPage.classList.remove("mobile-active");
       if (isMobile) {
@@ -336,7 +397,7 @@ document.addEventListener("DOMContentLoaded", function () {
         editPage.style.display = "none";
       }
     }
-    
+
     // 顯示 dashboard
     if (window.showDashboardSection) {
       window.showDashboardSection();
@@ -347,7 +408,7 @@ document.addEventListener("DOMContentLoaded", function () {
   window.closeEditAccountPage = function closeEditAccountPage() {
     const editAccountPage = document.getElementById("edit-account-page");
     const account = document.getElementById("account");
-    
+
     if (editAccountPage) {
       editAccountPage.classList.remove("mobile-active");
       if (isMobile) {
@@ -356,7 +417,7 @@ document.addEventListener("DOMContentLoaded", function () {
         editAccountPage.style.display = "none";
       }
     }
-    
+
     // 顯示 account 區塊
     if (account) {
       if (isMobile) {
@@ -378,10 +439,20 @@ document.addEventListener("DOMContentLoaded", function () {
     const openCallForm = document.getElementById("open-call-form");
     const openCallGated = document.getElementById("open-call-gated");
     const consignmentForm = document.getElementById("consignment-form");
-    const allSections = [editBrandPage, mid, right, editPage, account, faq, contact, openCallGated, consignmentForm];
-    
+    const allSections = [
+      editBrandPage,
+      mid,
+      right,
+      editPage,
+      account,
+      faq,
+      contact,
+      openCallGated,
+      consignmentForm,
+    ];
+
     // 移除所有 active class 和 inline style
-    allSections.forEach(el => {
+    allSections.forEach((el) => {
       if (el) {
         el.classList.remove("mobile-active");
         if (isMobile) {
@@ -391,7 +462,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
     });
-    
+
     syncOpenCallIframeByRegion();
     // 顯示 OPEN CALL 表單
     if (openCallForm) {
@@ -414,9 +485,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const openCallForm = document.getElementById("open-call-form");
     const openCallGated = document.getElementById("open-call-gated");
     const consignmentForm = document.getElementById("consignment-form");
-    const allSections = [editBrandPage, mid, right, editPage, account, faq, contact, openCallForm, consignmentForm];
+    const allSections = [
+      editBrandPage,
+      mid,
+      right,
+      editPage,
+      account,
+      faq,
+      contact,
+      openCallForm,
+      consignmentForm,
+    ];
 
-    allSections.forEach(el => {
+    allSections.forEach((el) => {
       if (el) {
         el.classList.remove("mobile-active");
         if (isMobile) {
@@ -447,9 +528,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const openCallForm = document.getElementById("open-call-form");
     const openCallGated = document.getElementById("open-call-gated");
     const consignmentForm = document.getElementById("consignment-form");
-    const allSections = [editBrandPage, mid, right, editPage, account, faq, contact, openCallForm, openCallGated];
+    const allSections = [
+      editBrandPage,
+      mid,
+      right,
+      editPage,
+      account,
+      faq,
+      contact,
+      openCallForm,
+      openCallGated,
+    ];
 
-    allSections.forEach(el => {
+    allSections.forEach((el) => {
       if (el) {
         el.classList.remove("mobile-active");
         if (isMobile) {
@@ -471,9 +562,17 @@ document.addEventListener("DOMContentLoaded", function () {
     // Send user data to the consignment iframe
     const csIframe = document.getElementById("consignment-iframe");
     if (csIframe && csIframe.contentWindow) {
-      const name  = (document.getElementById("contact-person") || {}).textContent?.trim() || "";
-      const email = (document.getElementById("email") || {}).textContent?.trim() || "";
-      try { csIframe.contentWindow.postMessage({ type: "cs-user-data", name, email }, "*"); } catch (e) {}
+      const name =
+        (document.getElementById("contact-person") || {}).textContent?.trim() ||
+        "";
+      const email =
+        (document.getElementById("email") || {}).textContent?.trim() || "";
+      try {
+        csIframe.contentWindow.postMessage(
+          { type: "cs-user-data", name, email },
+          "*",
+        );
+      } catch (e) {}
     }
   };
 
@@ -488,10 +587,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const openCallForm = document.getElementById("open-call-form");
     const openCallGated = document.getElementById("open-call-gated");
     const consignmentForm = document.getElementById("consignment-form");
-    const allSections = [editBrandPage, editPage, account, faq, contact, openCallForm, openCallGated, consignmentForm];
-    
+    const allSections = [
+      editBrandPage,
+      editPage,
+      account,
+      faq,
+      contact,
+      openCallForm,
+      openCallGated,
+      consignmentForm,
+    ];
+
     // 移除所有 active class 和 inline style
-    allSections.forEach(el => {
+    allSections.forEach((el) => {
       if (el) {
         el.classList.remove("mobile-active");
         if (isMobile) {
@@ -501,7 +609,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
     });
-    
+
     // 顯示選中的區塊
     if (mid) {
       if (isMobile) {
@@ -525,9 +633,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const mid = document.querySelector(".mid");
     const right = document.querySelector(".right");
     const allSections = [account, mid, right];
-    
+
     // 移除所有 active class 和 inline style
-    allSections.forEach(el => {
+    allSections.forEach((el) => {
       if (el) {
         el.classList.remove("mobile-active");
         if (isMobile) {
@@ -537,7 +645,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
     });
-    
+
     // 顯示選中的區塊
     if (editAccountPage) {
       if (isMobile) {
@@ -585,7 +693,7 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("open-call-gated"),
       document.getElementById("consignment-form"),
     ];
-    allSections.forEach(el => {
+    allSections.forEach((el) => {
       if (el) {
         el.classList.remove("mobile-active");
       }
@@ -599,14 +707,18 @@ document.addEventListener("DOMContentLoaded", function () {
 window.addEventListener("message", function (e) {
   if (!e.data || e.data.type !== "opencall-submitted") return;
 
-  const POLL_DELAY = 2000;   // 第一次等待 2 秒
+  const POLL_DELAY = 2000; // 第一次等待 2 秒
   const POLL_INTERVAL = 1500; // 每次輪詢間隔
-  const POLL_MAX = 6;         // 最多輪詢 6 次（共約 11 秒）
+  const POLL_MAX = 6; // 最多輪詢 6 次（共約 11 秒）
 
-  const accountVal = (typeof getCookie === "function") ? getCookie("account") : "";
+  const accountVal =
+    typeof getCookie === "function" ? getCookie("account") : "";
 
   function poll(attempt) {
-    if (!accountVal) { window.location.reload(); return; }
+    if (!accountVal) {
+      window.location.reload();
+      return;
+    }
 
     const params = new URLSearchParams({
       action: "get_dashboard_info",
@@ -619,22 +731,28 @@ window.addEventListener("message", function (e) {
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: params,
     })
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
+      .then(function (r) {
+        return r.json();
+      })
+      .then(function (data) {
         // 確認報名編號已寫入才 reload
         if (data.success && data.data && data.data["報名編號"]) {
           window.location.reload();
         } else if (attempt < POLL_MAX) {
-          setTimeout(function() { poll(attempt + 1); }, POLL_INTERVAL);
+          setTimeout(function () {
+            poll(attempt + 1);
+          }, POLL_INTERVAL);
         } else {
           // 超時仍 reload，讓使用者看到最新狀態
           window.location.reload();
         }
       })
-      .catch(function() {
+      .catch(function () {
         window.location.reload();
       });
   }
 
-  setTimeout(function() { poll(1); }, POLL_DELAY);
+  setTimeout(function () {
+    poll(1);
+  }, POLL_DELAY);
 });
