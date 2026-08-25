@@ -1,0 +1,272 @@
+/* ARCHIVE 頁面樣式：沿用 ticketvisit.css 的 CSS variables / nav / back-to-top */
+
+.archive-hero-section {
+  margin-top: var(--spacing-sm);
+  padding: var(--spacing-lg) var(--spacing-sm);
+  background: var(--bg-primary);
+  border-bottom: 2px solid var(--border-light);
+}
+
+.archive-hero-title {
+  font-size: var(--font-section, 6.5rem);
+  font-weight: bold;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 0.95;
+  margin-bottom: var(--spacing-xs);
+}
+
+.archive-hero-subtitle {
+  font-size: var(--font-md);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.archive-section {
+  padding: var(--spacing-md);
+  background: lightgrey;
+  min-height: 60vh;
+}
+
+.archive-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.archive-loading,
+.archive-empty {
+  padding: var(--spacing-xl);
+  text-align: center;
+  font-size: var(--font-lg);
+  color: var(--text-secondary);
+}
+
+/* ===== 年份折疊清單 ===== */
+.archive-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.archive-year-item {
+  background: var(--bg-primary);
+  border: 2px solid var(--border-light);
+}
+
+.archive-year-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  color: var(--text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.archive-year-header:hover {
+  background-color: rgb(50, 50, 50);
+  color: ghostwhite;
+}
+
+.archive-year-num {
+  font-size: var(--font-xxl);
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+  min-width: 4.5ch;
+}
+
+.archive-year-title {
+  flex: 1;
+  font-size: var(--font-sm);
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.archive-year-toggle {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid var(--border-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-lg);
+  font-weight: bold;
+  transition: transform 0.3s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.archive-year-item.open .archive-year-toggle {
+  transform: rotate(45deg);
+  background: var(--color-one, yellowgreen);
+  border-color: var(--color-one, yellowgreen);
+}
+
+.archive-year-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.archive-year-panel-inner {
+  padding: 0 var(--spacing-lg) var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  border-top: 1px solid var(--border-light);
+  padding-top: var(--spacing-md);
+}
+
+.archive-year-cover {
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  display: block;
+  cursor: pointer;
+  border: 2px solid var(--border-light);
+}
+
+.archive-year-subtitle {
+  font-size: var(--font-lg);
+  font-weight: bold;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.archive-year-desc {
+  font-size: var(--font-md);
+  line-height: 1.6;
+  color: var(--text-primary);
+  white-space: normal;
+}
+
+/* 照片相簿 */
+.archive-year-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: var(--spacing-sm);
+}
+
+.archive-year-photos img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid var(--border-light);
+  transition: transform 0.15s ease;
+}
+
+.archive-year-photos img:hover {
+  transform: scale(1.03);
+}
+
+/* 攤商名單 */
+.archive-year-exhibitors-label {
+  font-size: var(--font-sm);
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin-top: var(--spacing-xs);
+}
+
+/* 攤商卡片沿用 ticketvisit.css 的 .exhibitors-grid-main / .exhibitor-card-main，
+   這裡只縮減欄數以符合 archive 面板較窄的寬度 */
+.archive-year-exhibitors-grid.exhibitors-grid-main {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 900px) {
+  .archive-year-exhibitors-grid.exhibitors-grid-main {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ===== 相片燈箱 ===== */
+.archive-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.archive-lightbox[aria-hidden="false"] {
+  display: flex;
+}
+
+.archive-lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.archive-lightbox-img {
+  position: relative;
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border: 2px solid white;
+}
+
+.archive-lightbox-close,
+.archive-lightbox-prev,
+.archive-lightbox-next {
+  position: absolute;
+  background: white;
+  border: 2px solid var(--border-light);
+  cursor: pointer;
+  font-weight: bold;
+  font-size: var(--font-lg);
+  z-index: 1;
+}
+
+.archive-lightbox-close {
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.archive-lightbox-prev,
+.archive-lightbox-next {
+  top: 50%;
+  transform: translateY(-50%);
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+}
+
+.archive-lightbox-prev {
+  left: 20px;
+}
+
+.archive-lightbox-next {
+  right: 20px;
+}
+
+@media (max-width: 680px) {
+  .archive-year-num {
+    font-size: var(--font-lg);
+    min-width: auto;
+  }
+  .archive-year-header {
+    flex-wrap: wrap;
+  }
+  .archive-year-title {
+    flex-basis: 100%;
+    order: 3;
+  }
+}
