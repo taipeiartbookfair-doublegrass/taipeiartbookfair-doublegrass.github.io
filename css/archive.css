@@ -75,17 +75,9 @@
   color: ghostwhite;
 }
 
-.archive-year-num {
-  font-size: var(--font-xxl);
-  font-weight: bold;
-  letter-spacing: 0.05em;
-  flex-shrink: 0;
-  min-width: 4.5ch;
-}
-
-.archive-year-title {
+.archive-year-label {
   flex: 1;
-  font-size: var(--font-sm);
+  font-size: var(--font-lg);
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -126,13 +118,41 @@
   padding-top: var(--spacing-md);
 }
 
-.archive-year-cover {
+/* 照片滑動輪播：不顯示張數，純圖片一張一張切換 */
+.archive-year-slider {
+  position: relative;
   width: 100%;
-  max-height: 420px;
+}
+
+.archive-year-slider-img {
+  width: 100%;
+  max-height: 480px;
   object-fit: cover;
   display: block;
-  cursor: pointer;
   border: 2px solid var(--border-light);
+}
+
+.archive-year-slider-prev,
+.archive-year-slider-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--border-light);
+  background: white;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: var(--font-lg);
+}
+
+.archive-year-slider-prev {
+  left: 10px;
+}
+
+.archive-year-slider-next {
+  right: 10px;
 }
 
 .archive-year-subtitle {
@@ -199,26 +219,6 @@
   margin-top: 2px;
 }
 
-/* 照片相簿 */
-.archive-year-photos {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-  gap: var(--spacing-sm);
-}
-
-.archive-year-photos img {
-  width: 100%;
-  height: 110px;
-  object-fit: cover;
-  cursor: pointer;
-  border: 2px solid var(--border-light);
-  transition: transform 0.15s ease;
-}
-
-.archive-year-photos img:hover {
-  transform: scale(1.03);
-}
-
 /* 攤商名單 */
 .archive-year-exhibitors-label {
   font-size: var(--font-sm);
@@ -241,81 +241,8 @@
   }
 }
 
-/* ===== 相片燈箱 ===== */
-.archive-lightbox {
-  position: fixed;
-  inset: 0;
-  z-index: 999;
-  display: none;
-  align-items: center;
-  justify-content: center;
-}
-
-.archive-lightbox[aria-hidden="false"] {
-  display: flex;
-}
-
-.archive-lightbox-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.85);
-}
-
-.archive-lightbox-img {
-  position: relative;
-  max-width: 90vw;
-  max-height: 85vh;
-  object-fit: contain;
-  border: 2px solid white;
-}
-
-.archive-lightbox-close,
-.archive-lightbox-prev,
-.archive-lightbox-next {
-  position: absolute;
-  background: white;
-  border: 2px solid var(--border-light);
-  cursor: pointer;
-  font-weight: bold;
-  font-size: var(--font-lg);
-  z-index: 1;
-}
-
-.archive-lightbox-close {
-  top: 20px;
-  right: 20px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-
-.archive-lightbox-prev,
-.archive-lightbox-next {
-  top: 50%;
-  transform: translateY(-50%);
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-}
-
-.archive-lightbox-prev {
-  left: 20px;
-}
-
-.archive-lightbox-next {
-  right: 20px;
-}
-
 @media (max-width: 680px) {
-  .archive-year-num {
-    font-size: var(--font-lg);
-    min-width: auto;
-  }
-  .archive-year-header {
-    flex-wrap: wrap;
-  }
-  .archive-year-title {
-    flex-basis: 100%;
-    order: 3;
+  .archive-year-label {
+    font-size: var(--font-md);
   }
 }
