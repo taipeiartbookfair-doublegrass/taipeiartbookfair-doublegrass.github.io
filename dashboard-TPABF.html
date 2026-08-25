@@ -462,7 +462,8 @@
                       value=""
                       style="width: 95%"
                       id="brandName-edit"
-                      maxlength="150"
+                      pattern="^[a-zA-Z\u0100-\u024F0-9\s\-_]*$"
+                      maxlength="80"
                       required
                     />
                   </td>
@@ -477,7 +478,8 @@
                       value=""
                       style="width: 95%"
                       id="brandName-original-edit"
-                      maxlength="150"
+                      maxlength="80"
+                      title="請勿輸入特殊符號；可不填"
                     />
                   </td>
                 </tr>

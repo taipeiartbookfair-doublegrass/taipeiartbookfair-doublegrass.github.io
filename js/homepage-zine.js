@@ -7,26 +7,9 @@
  * @param {string} englishTitle - 英文書名
  * @returns {string|null} - 生成的商店 URL，如果無法生成則返回 null
  */
-function generateShopUrl(englishTitle) {
-  // 檢查輸入是否有效
-  if (!englishTitle || englishTitle.trim() === '') return null;
-  
-  // 步驟 1: 轉換為小寫（統一格式）
-  // 步驟 2: 移除所有非英數字的特殊字符（保留字母、數字和空格）
-  // 步驟 3: 將多個空格替換為單個連字符（用於 URL slug）
-  // 步驟 4: 清理首尾空白
-  const urlSlug = englishTitle
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, '') // 移除特殊字符，只保留字母、數字和空格
-    .replace(/\s+/g, '-') // 將一個或多個空格替換為連字符
-    .trim();
-  
-  // 如果處理後的字串為空，無法生成有效的 URL
-  if (urlSlug === '') return null;
-  
-  // 組合成完整的商品頁面 URL
-  // 格式：https://shop.taipeiartbookfair.com/products/{url-slug}
-  return `https://shop.taipeiartbookfair.com/products/${urlSlug}`;
+function generateShopUrl(title) {
+  if (!title || title.trim() === '') return null;
+  return `https://shop.taipeiartbookfair.com/products/${encodeURIComponent(title.trim())}`;
 }
 
 /**
@@ -105,8 +88,8 @@ function populateZineElements(booksArray) {
         }
       }
 
-      const englishTitle = item["商品名稱(英)"] || item["書名"] || item["品名"] || item["商品名稱(中)"];
-      const shopUrl = generateShopUrl(englishTitle);
+      const shopTitle = item["商品名稱(中)"] || item["書名"] || item["品名"] || item["商品名稱(英)"];
+      const shopUrl = generateShopUrl(shopTitle);
 
       zineElement.setAttribute("data-title", title);
       zineElement.setAttribute("data-shop-url", shopUrl || "");
