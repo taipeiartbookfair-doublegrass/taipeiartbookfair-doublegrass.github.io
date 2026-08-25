@@ -144,7 +144,8 @@ td.admin#consignment-form {
   height: 100vh;
   max-height: 100vh;
   min-height: 0;
-  overflow: hidden;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
   padding-bottom: 0;
   box-sizing: border-box;
 }
@@ -518,6 +519,30 @@ html::-webkit-scrollbar-thumb:hover {
       #3a7d6a 6px,
       #2d2d2d 9px
     ),
+/* Mobile: make dashboard FAQ non-scrollable when opened */
+@media (max-width: 600px) {
+  #faq.mobile-active {
+    touch-action: none !important;
+  }
+  /* allow the scroll-inner (which contains the iframe) to scroll on mobile */
+  #faq.mobile-active .scroll-inner {
+    overflow: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  #faq.mobile-active .faq-pdf-embed,
+  #faq.mobile-active iframe {
+    height: 100vh;
+    max-height: 100vh;
+  }
+}
+
+/* Body scroll lock used when a modal-like section (FAQ) is active on mobile */
+.disable-body-scroll {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+  touch-action: none !important;
+}
     linear-gradient(to bottom, #d0d0d0, #0f0f0f);
   border: 1px solid #777;
   box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4);

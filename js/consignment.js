@@ -52,6 +52,16 @@ function normalizePagesValue(value) {
 
 function attachBookUnitHandlers() {}
 
+// Toggle visibility of "Other" text input for book language selects
+window.onLangSelectChange = function (idx, sel) {
+  const t = document.getElementById(`lang-other-text-${idx}`);
+  if (!t) return;
+  const otherSelected = Array.from(sel.selectedOptions).some(
+    (o) => o.value === "Other 其他",
+  );
+  t.style.display = otherSelected ? "block" : "none";
+};
+
 // ── Book entry template ────────────────────────────────────────────────────────
 let bookCount = 0;
 
@@ -96,15 +106,12 @@ window.addConsignmentBook = function () {
   const catOptions = CATEGORIES.map(
     (c) => `<option value="${c}">${c}</option>`,
   ).join("");
+  const langOptions = LANGUAGES.map(
+    (l) => `<option value="${l}">${l}</option>`,
+  ).join("");
   const langCheckboxes =
-    LANGUAGES.filter((l) => l !== "Other 其他")
-      .map(
-        (l) =>
-          `<label class="cs-check-label"><input type="checkbox" name="lang_opt_${idx}" value="${l}"> ${l}</label>`,
-      )
-      .join("") +
-    `<label class="cs-check-label"><input type="checkbox" name="lang_other_${idx}" value="Other 其他" onchange="var t=document.getElementById('lang-other-text-${idx}');t.style.display=this.checked?'block':'none';"> Other 其他</label>` +
-    `<input type="text" id="lang-other-text-${idx}" name="lang_other_text_${idx}" placeholder="請填入 please specify" style="display:none;margin-top:4px;width:100%;box-sizing:border-box;">`;
+    `<select id="lang-select-${idx}" name="lang_${idx}[]" multiple onchange="onLangSelectChange(${idx}, this)" style="min-width:160px;padding:6px;border-radius:6px;border:1px solid #ccc;background:#fff;">${langOptions}</select>` +
+    `<input type="text" id="lang-other-text-${idx}" name="lang_other_text_${idx}" placeholder="請填入 please specify" style="display:none;margin-top:6px;width:100%;box-sizing:border-box;">`;
 
   const div = document.createElement("div");
   div.className = "consignment-book-entry cs-book-card";
@@ -259,9 +266,9 @@ window.addConsignmentBook = function () {
   attachBookUnitHandlers(div, idx);
 
   // Re-apply current language to the newly added entry
-  const btnZh = document.getElementById("consignment-lang-zh");
-  if (btnZh && !btnZh.classList.contains("active")) {
-    setConsignmentLang("en");
+  const sel = document.getElementById("consignment-lang-select");
+  if (sel) {
+    updateConsignmentLangFromSelect();
   }
 };
 
@@ -474,14 +481,20 @@ document.addEventListener("DOMContentLoaded", function () {
         break;
       }
 
-      const langs = Array.from(
-        entry.querySelectorAll(`[name="lang_opt_${idx}"]:checked`),
-      ).map((c) => c.value);
-      const otherCb = entry.querySelector(`[name="lang_other_${idx}"]`);
+      const langSelect = entry.querySelector(`#lang-select-${idx}`);
+      let langs = [];
+      if (langSelect) {
+        langs = Array.from(langSelect.selectedOptions).map((o) => o.value);
+      }
       const otherTxt = (
-        entry.querySelector(`[name="lang_other_text_${idx}"]`) || {}
+        entry.querySelector(`#lang-other-text-${idx}`) || {}
       ).value?.trim();
-      if (otherCb && otherCb.checked) langs.push(otherTxt || "Other 其他");
+      if (langs.includes("Other 其他")) {
+        // prefer custom text when provided
+        const idxOfOther = langs.indexOf("Other 其他");
+        langs.splice(idxOfOther, 1);
+        langs.push(otherTxt || "Other 其他");
+      }
 
       const rawSize = get("size");
       const rawPages = get("pages");

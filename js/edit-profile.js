@@ -2,6 +2,21 @@ document.addEventListener("DOMContentLoaded", function () {
   const apiUrl =
     "https://script.google.com/macros/s/AKfycbyRV_uiklsvHWPeBblxTz47OlTnQ-IeKIxifYZ1D-8ZzHdljVMEbXwsKGO84Agon7mU8g/exec";
 
+  // 英文品牌名稱只允許羅馬字母（含重音字母）、數字、空格、連字號、底線
+  const BRAND_NAME_PATTERN = /^[a-zA-ZĀ-ɏ0-9\s\-_]*$/;
+
+  // 輸入當下就過濾掉不允許的字元（例如中文），不用等到送出才擋
+  const brandNameInput = document.getElementById("brandName-edit");
+  if (brandNameInput) {
+    brandNameInput.addEventListener("input", function () {
+      const filtered = this.value.replace(
+        /[^a-zA-ZĀ-ɏ0-9\s\-_]/g,
+        "",
+      );
+      if (filtered !== this.value) this.value = filtered;
+    });
+  }
+
   // 編輯品牌資料
   const branch_summit_btn = document.getElementById("submit-edit-brand");
   if (branch_summit_btn) {
@@ -25,6 +40,13 @@ document.addEventListener("DOMContentLoaded", function () {
       const bio = document.getElementById("bio-edit").value.trim();
       const bioEn = (document.getElementById("bio-edit-en")?.value || "").trim();
 
+      if (!BRAND_NAME_PATTERN.test(brandName)) {
+        document.getElementById("loading-mask").style.display = "none";
+        alert(
+          "英文品牌名稱只能輸入羅馬字母、數字、空格、連字號或底線，請勿輸入中文或其他符號。\nEnglish Brand Name can only contain Roman letters, numbers, spaces, hyphens, or underscores.",
+        );
+        return;
+      }
       if (bio.length > BIO_ZH_MAX) {
         document.getElementById("loading-mask").style.display = "none";
         alert(
