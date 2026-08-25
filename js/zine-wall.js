@@ -132,14 +132,9 @@ const BILINGUAL_PAIRS = {
 
 function generateShopUrl(item) {
   const title =
-    item["商品名稱(英)"] || item["書名(英)"] || item["書名"] || item["品名"] || "";
+    item["商品名稱(中)"] || item["書名"] || item["品名"] || item["商品名稱(英)"] || "";
   if (!title || title.trim() === "") return null;
-  const slug = title
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, "")
-    .replace(/\s+/g, "-")
-    .trim();
-  return slug ? `https://shop.taipeiartbookfair.com/products/${slug}` : null;
+  return `https://shop.taipeiartbookfair.com/products/${encodeURIComponent(title.trim())}`;
 }
 
 function getFirstMatch(item, keys) {
