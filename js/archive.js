@@ -80,8 +80,17 @@
   // ===== Programs（掃該年展期範圍的 Google Calendar 活動）=====
   const programsCache = {}; // year -> Promise<event[]>
 
-  function loadYearPrograms(year, dateStart, dateEnd) {
+  // 接受純日期 "2026-03-18" 或完整 ISO 字串 "2026-03-17T23:00:00.000Z"，
+  // 只取前 10 碼的日期部分，避免試算表儲存格格式不一致造成解析失敗
+  function toDateOnly(str) {
+    const s = String(str || "").trim();
+    return s.slice(0, 10);
+  }
+
+  function loadYearPrograms(year, dateStartRaw, dateEndRaw) {
     if (programsCache[year]) return programsCache[year];
+    const dateStart = toDateOnly(dateStartRaw);
+    const dateEnd = toDateOnly(dateEndRaw);
     if (!dateStart || !dateEnd) {
       programsCache[year] = Promise.resolve([]);
       return programsCache[year];
@@ -172,51 +181,6 @@
     el.appendChild(bodyEl);
     return el;
   }
-
-  // ===== 燈箱 =====
-  const lightboxEl = document.getElementById("archive-lightbox");
-  const lightboxImg = document.getElementById("archive-lightbox-img");
-  const lightboxBackdrop = document.getElementById("archive-lightbox-backdrop");
-  const lightboxClose = document.getElementById("archive-lightbox-close");
-  const lightboxPrev = document.getElementById("archive-lightbox-prev");
-  const lightboxNext = document.getElementById("archive-lightbox-next");
-  let lightboxPhotos = [];
-  let lightboxIndex = 0;
-
-  function openLightbox(photos, index) {
-    lightboxPhotos = photos;
-    lightboxIndex = index;
-    updateLightboxImg();
-    lightboxEl.setAttribute("aria-hidden", "false");
-  }
-
-  function closeLightbox() {
-    lightboxEl.setAttribute("aria-hidden", "true");
-  }
-
-  function updateLightboxImg() {
-    lightboxImg.src = lightboxPhotos[lightboxIndex] || "";
-  }
-
-  lightboxBackdrop.addEventListener("click", closeLightbox);
-  lightboxClose.addEventListener("click", closeLightbox);
-  lightboxPrev.addEventListener("click", () => {
-    if (!lightboxPhotos.length) return;
-    lightboxIndex =
-      (lightboxIndex - 1 + lightboxPhotos.length) % lightboxPhotos.length;
-    updateLightboxImg();
-  });
-  lightboxNext.addEventListener("click", () => {
-    if (!lightboxPhotos.length) return;
-    lightboxIndex = (lightboxIndex + 1) % lightboxPhotos.length;
-    updateLightboxImg();
-  });
-  document.addEventListener("keydown", (e) => {
-    if (lightboxEl.getAttribute("aria-hidden") === "true") return;
-    if (e.key === "Escape") closeLightbox();
-    if (e.key === "ArrowLeft") lightboxPrev.click();
-    if (e.key === "ArrowRight") lightboxNext.click();
-  });
 
   // ===== 攤商卡片（跟 ticket&visit 的 exhibitor-display.js 同一套結構/樣式）=====
   function createExhibitorCard(row) {
@@ -363,27 +327,25 @@
     // 照片是懶載入：第一次展開才去抓 GitHub 資料夾
     if (!itemEl.dataset.photosLoaded) {
       itemEl.dataset.photosLoaded = "1";
-      const coverEl = itemEl.querySelector(".archive-year-cover");
-      const photosEl = itemEl.querySelector(".archive-year-photos");
+      const sliderEl = itemEl.querySelector(".archive-year-slider");
+      const sliderImg = itemEl.querySelector(".archive-year-slider-img");
+      const prevBtn = itemEl.querySelector(".archive-year-slider-prev");
+      const nextBtn = itemEl.querySelector(".archive-year-slider-next");
       loadYearPhotos(year).then((photos) => {
-        if (!photos.length) {
-          if (coverEl) coverEl.style.display = "none";
-          return;
+        if (!photos.length || !sliderEl) return;
+        sliderEl.style.display = "block";
+        let index = 0;
+        function show(i) {
+          index = (i + photos.length) % photos.length;
+          sliderImg.src = photos[index];
         }
-        const [cover, ...rest] = photos;
-        if (coverEl) {
-          coverEl.src = cover;
-          coverEl.style.display = "block";
-          coverEl.addEventListener("click", () => openLightbox(photos, 0));
+        show(0);
+        if (photos.length > 1) {
+          prevBtn.style.display = "";
+          nextBtn.style.display = "";
+          prevBtn.addEventListener("click", () => show(index - 1));
+          nextBtn.addEventListener("click", () => show(index + 1));
         }
-        rest.forEach((url, i) => {
-          const img = document.createElement("img");
-          img.src = url;
-          img.alt = "";
-          img.loading = "lazy";
-          img.addEventListener("click", () => openLightbox(photos, i + 1));
-          photosEl.appendChild(img);
-        });
         refreshPanelHeight(itemEl);
       });
     }
@@ -398,11 +360,15 @@
   }
 
   function buildYearItem(year, fields, exhibitors) {
-    const title = pick(fields.title) || year;
-    const subtitle = pick(fields.subtitle);
-    const desc = pick(fields.desc);
+    // id 沿用主站 pageconfig 同一套命名（exhibition-title / exhibition-subtitle / exhibition-poem）
+    const title = pick(fields["exhibition-title"]) || year;
+    const subtitle = pick(fields["exhibition-subtitle"]);
+    const desc = pick(fields["exhibition-poem"]);
     const dateStart = pick(fields.date_start);
     const dateEnd = pick(fields.date_end);
+    // 手風琴標題：年份 + 當屆主題（subtitle 本身不含年份，才需要補上）；
+    // 沒有 subtitle 才退回 title（title 通常已經包含年份，不再重複補一次）
+    const headerLabel = subtitle ? year + "　" + subtitle : title || year;
 
     const itemEl = document.createElement("div");
     itemEl.className = "archive-year-item";
@@ -414,10 +380,8 @@
     header.className = "archive-year-header";
     header.setAttribute("aria-expanded", "false");
     header.innerHTML =
-      '<span class="archive-year-num">' +
-      year +
-      '</span><span class="archive-year-title">' +
-      (title || "") +
+      '<span class="archive-year-label">' +
+      headerLabel +
       '</span><span class="archive-year-toggle" aria-hidden="true">+</span>';
     header.addEventListener("click", () => toggleYear(itemEl, year));
 
@@ -427,11 +391,32 @@
     const panelInner = document.createElement("div");
     panelInner.className = "archive-year-panel-inner";
 
-    const coverImg = document.createElement("img");
-    coverImg.className = "archive-year-cover";
-    coverImg.style.display = "none";
-    coverImg.alt = title || year;
-    panelInner.appendChild(coverImg);
+    const sliderEl = document.createElement("div");
+    sliderEl.className = "archive-year-slider";
+    sliderEl.style.display = "none";
+
+    const sliderImg = document.createElement("img");
+    sliderImg.className = "archive-year-slider-img";
+    sliderImg.alt = title || year;
+
+    const prevBtn = document.createElement("button");
+    prevBtn.type = "button";
+    prevBtn.className = "archive-year-slider-prev";
+    prevBtn.setAttribute("aria-label", "上一張");
+    prevBtn.style.display = "none";
+    prevBtn.textContent = "‹";
+
+    const nextBtn = document.createElement("button");
+    nextBtn.type = "button";
+    nextBtn.className = "archive-year-slider-next";
+    nextBtn.setAttribute("aria-label", "下一張");
+    nextBtn.style.display = "none";
+    nextBtn.textContent = "›";
+
+    sliderEl.appendChild(sliderImg);
+    sliderEl.appendChild(prevBtn);
+    sliderEl.appendChild(nextBtn);
+    panelInner.appendChild(sliderEl);
 
     if (subtitle) {
       const subtitleEl = document.createElement("p");
@@ -456,10 +441,6 @@
     const programsListEl = document.createElement("div");
     programsListEl.className = "archive-year-programs-list";
     panelInner.appendChild(programsListEl);
-
-    const photosEl = document.createElement("div");
-    photosEl.className = "archive-year-photos";
-    panelInner.appendChild(photosEl);
 
     if (exhibitors && exhibitors.length) {
       const label = document.createElement("div");
