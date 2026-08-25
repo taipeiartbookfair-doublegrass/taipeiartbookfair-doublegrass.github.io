@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Archive | Taipei Art Book Fair</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=BioRhyme+Expanded:wght@200;300;400;700;800&family=Libre+Franklin:ital,wght@0,100..900;1,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="shortcut icon" href="image/icon-1.ico" />
+    <link rel="stylesheet" href="css/font.css" />
+    <link rel="stylesheet" href="css/ticketvisit.css" />
+    <link rel="stylesheet" href="css/archive.css" />
+  </head>
+  <body>
+    <!-- 頂部導航 -->
+    <nav class="top-navigation">
+      <div class="nav-container">
+        <a
+          href="index.html"
+          class="nav-back-btn"
+          style="
+            background-color: lime;
+            border: none;
+            color: black;
+            font-weight: bold;
+          "
+          >← 返回主頁 Home</a
+        >
+      </div>
+    </nav>
+
+    <button id="backToTop" class="back-to-top-btn">↑</button>
+
+    <!-- 標題區 -->
+    <section class="archive-hero-section">
+      <div class="archive-hero-title">ARCHIVE</div>
+      <div class="archive-hero-subtitle">歷屆迴顧 · Past Editions</div>
+    </section>
+
+    <!-- 年份折疊清單 -->
+    <section class="archive-section" id="archive-content">
+      <div class="archive-container">
+        <div id="archive-loading" class="archive-loading">讀取中 Loading…</div>
+        <div id="archive-list" class="archive-list"></div>
+        <div id="archive-empty" class="archive-empty" style="display: none">
+          目前沒有歷屆資料。
+        </div>
+      </div>
+    </section>
+
+    <!-- 相片燈箱 -->
+    <div id="archive-lightbox" class="archive-lightbox" aria-hidden="true">
+      <div class="archive-lightbox-backdrop" id="archive-lightbox-backdrop"></div>
+      <button
+        type="button"
+        class="archive-lightbox-close"
+        id="archive-lightbox-close"
+        aria-label="關閉"
+      >
+        ×
+      </button>
+      <button
+        type="button"
+        class="archive-lightbox-prev"
+        id="archive-lightbox-prev"
+        aria-label="上一張"
+      >
+        ‹
+      </button>
+      <img class="archive-lightbox-img" id="archive-lightbox-img" src="" alt="" />
+      <button
+        type="button"
+        class="archive-lightbox-next"
+        id="archive-lightbox-next"
+        aria-label="下一張"
+      >
+        ›
+      </button>
+    </div>
+
+    <script src="js/archive.js"></script>
+  </body>
+</html>
