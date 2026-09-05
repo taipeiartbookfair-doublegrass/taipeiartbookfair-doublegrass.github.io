@@ -31,7 +31,6 @@
 }
 
 .archive-container {
-  max-width: 1100px;
   margin: 0 auto;
 }
 
@@ -67,7 +66,9 @@
   font-family: inherit;
   text-align: left;
   color: var(--text-primary);
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .archive-year-header:hover {
@@ -94,7 +95,10 @@
   justify-content: center;
   font-size: var(--font-lg);
   font-weight: bold;
-  transition: transform 0.3s ease, background-color 0.2s ease, color 0.2s ease;
+  transition:
+    transform 0.3s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .archive-year-item.open .archive-year-toggle {
