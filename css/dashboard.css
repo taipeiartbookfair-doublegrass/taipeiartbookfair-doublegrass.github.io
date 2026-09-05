@@ -519,6 +519,22 @@ html::-webkit-scrollbar-thumb:hover {
       #3a7d6a 6px,
       #2d2d2d 9px
     ),
+    linear-gradient(to bottom, #d0d0d0, #0f0f0f);
+  border: 1px solid #777;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4);
+  color: #a2b5b5;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: all;
+  user-select: none;
+  font-weight: bold;
+  transform: translateY(-100%);
+  transition: transform 5s cubic-bezier(0.77, 0, 0.18, 1);
+}
+
 /* Mobile: make dashboard FAQ non-scrollable when opened */
 @media (max-width: 600px) {
   #faq.mobile-active {
@@ -542,21 +558,6 @@ html::-webkit-scrollbar-thumb:hover {
   position: fixed !important;
   width: 100% !important;
   touch-action: none !important;
-}
-    linear-gradient(to bottom, #d0d0d0, #0f0f0f);
-  border: 1px solid #777;
-  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4);
-  color: #a2b5b5;
-  font-size: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  pointer-events: all;
-  user-select: none;
-  font-weight: bold;
-  transform: translateY(-100%);
-  transition: transform 5s cubic-bezier(0.77, 0, 0.18, 1);
 }
 
 .overlay-completed.active,
