@@ -92,6 +92,30 @@ document.addEventListener("DOMContentLoaded", function () {
   const isMobile = window.innerWidth <= 600;
   const displayValue = isMobile ? "block" : "table-cell";
 
+  function applyPanelPriority(activeEl) {
+    const allPanels = [
+      document.getElementById("edit-brand-page"),
+      document.querySelector(".mid"),
+      document.querySelector(".right"),
+      document.getElementById("edit-account-page"),
+      document.getElementById("account"),
+      document.getElementById("faq"),
+      document.getElementById("contact-method"),
+      document.getElementById("open-call-form"),
+      document.getElementById("open-call-gated"),
+      document.getElementById("consignment-form"),
+    ].filter(Boolean);
+
+    allPanels.forEach((el) => {
+      el.style.zIndex = el === activeEl ? "30" : "0";
+      if (el === activeEl) {
+        el.style.position = "relative";
+      } else if (el.style.position === "relative") {
+        el.style.position = "";
+      }
+    });
+  }
+
   const OPEN_CALL_IFRAME_LOCAL = "localapplication.html?embed=1";
   const OPEN_CALL_IFRAME_OVERSEA = "overseaapplication.html?embed=1";
 
@@ -159,17 +183,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
     });
-    // 確保 body 的 scroll lock 被解除（若先前被 FAQ 上鎖）
     document.body.classList.remove("disable-body-scroll");
-    // 確保 body 的 scroll lock 被解除（若先前被 FAQ 上鎖）
     document.body.classList.remove("disable-body-scroll");
-    // 確保 body 的 scroll lock 被解除（若先前被 FAQ 上鎖）
     document.body.classList.remove("disable-body-scroll");
-    // 確保 body 的 scroll lock 被解除（若先前被 FAQ 上鎖）
     document.body.classList.remove("disable-body-scroll");
-    // 確保 body 的 scroll lock 被解除（若先前被 FAQ 上鎖）
     document.body.classList.remove("disable-body-scroll");
-    // 確保 body 的 scroll lock 被解除（若先前被 FAQ 上鎖）
     document.body.classList.remove("disable-body-scroll");
 
     // 顯示編輯頁面
@@ -275,6 +293,7 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
           el.style.display = "none";
         }
+        el.style.zIndex = "0";
       }
     });
 
@@ -282,11 +301,12 @@ document.addEventListener("DOMContentLoaded", function () {
     if (faq) {
       if (isMobile) {
         faq.classList.add("mobile-active");
-        // Lock body scrolling but allow the FAQ iframe/container to scroll
         document.body.classList.add("disable-body-scroll");
       } else {
         faq.style.display = "table-cell";
       }
+      faq.style.zIndex = "30";
+      faq.style.position = "relative";
     }
   };
 
@@ -323,6 +343,7 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
           el.style.display = "none";
         }
+        el.style.zIndex = "0";
       }
     });
 
@@ -333,6 +354,8 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         contact.style.display = "table-cell";
       }
+      contact.style.zIndex = "30";
+      contact.style.position = "relative";
     }
   };
 
@@ -369,6 +392,7 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
           el.style.display = "none";
         }
+        el.style.zIndex = "0";
       }
     });
 
@@ -379,6 +403,8 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         account.style.display = "table-cell";
       }
+      account.style.zIndex = "30";
+      account.style.position = "relative";
     }
   };
 
@@ -460,6 +486,7 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
           el.style.display = "none";
         }
+        el.style.zIndex = "0";
       }
     });
 
@@ -471,6 +498,8 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         openCallForm.style.display = "table-cell";
       }
+      openCallForm.style.zIndex = "30";
+      openCallForm.style.position = "relative";
     }
   };
 
@@ -505,6 +534,7 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
           el.style.display = "none";
         }
+        el.style.zIndex = "0";
       }
     });
 
@@ -514,6 +544,8 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         openCallGated.style.display = "table-cell";
       }
+      openCallGated.style.zIndex = "30";
+      openCallGated.style.position = "relative";
     }
   };
 
@@ -548,6 +580,7 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
           el.style.display = "none";
         }
+        el.style.zIndex = "0";
       }
     });
 
@@ -557,6 +590,8 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         consignmentForm.style.display = "table-cell";
       }
+      consignmentForm.style.zIndex = "30";
+      consignmentForm.style.position = "relative";
     }
 
     // Send user data to the consignment iframe
@@ -607,6 +642,7 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
           el.style.display = "none";
         }
+        el.style.zIndex = "0";
       }
     });
 
@@ -617,6 +653,8 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         mid.style.display = "table-cell";
       }
+      mid.style.zIndex = "30";
+      mid.style.position = "relative";
     }
     if (right) {
       if (isMobile) {
@@ -624,6 +662,8 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         right.style.display = "table-cell";
       }
+      right.style.zIndex = "30";
+      right.style.position = "relative";
     }
   };
 

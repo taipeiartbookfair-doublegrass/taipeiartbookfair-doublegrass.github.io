@@ -1333,9 +1333,16 @@
         <!-- 帳號完 -->
 
         <!-- faq -->
-        <td class="admin" id="faq" style="display: none">
+        <td class="admin" id="faq" style="display: none; padding: 0;">
           <div class="scroll-inner">
-            <div class="faq-pdf-viewer" id="faq-pdf-viewer"></div>
+            <iframe
+              id="faq-pdf-frame"
+              class="faq-pdf-frame"
+              title="FAQ PDF"
+              src="dashboard/faq.pdf"
+              type="application/pdf"
+              style="border: 0; width: 100%; height: 100%; min-height: 70vh; background: #fff;"
+            ></iframe>
           </div>
         </td>
 
@@ -1476,7 +1483,5 @@
 
     <script src="js/dashboardupload/upload_dashboard.js?v=20260512c"></script>
     <script src="js/dashboard-body.js?v=20260513a"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-    <script src="js/faq-pdf-viewer.js"></script>
   </body>
 </html>
