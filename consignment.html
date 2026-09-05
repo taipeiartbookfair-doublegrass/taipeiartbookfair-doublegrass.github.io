@@ -159,9 +159,21 @@
         gap: 4px 12px;
         padding: 6px 0 2px;
       }
-      /* 語言欄位實際是 <select multiple>，桌機瀏覽器沒設 size 時預設會撐成
-         約 4 行高的 listbox，害同一列的「出版年」欄位被拉伸跟著變高、跑位。
-         這裡固定一個合理高度，手機版是系統原生選單樣式不受影響。 */
+      /* 語言可以複選：桌機用真的 checkbox（點哪個就切哪個，不會互相取消），
+         手機版維持 <select multiple>，因為手機瀏覽器會換成自己的原生多選介面，
+         比一堆 checkbox 更好操作。兩種只顯示其中一種，資料共用同一個 <select>。 */
+      .cs-lang-checkbox-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 12px;
+      }
+      .cs-lang-select-wrap {
+        display: none;
+        width: 100%;
+      }
+      /* <select multiple> 沒設 size 時桌機瀏覽器預設會撐成約 4 行高的 listbox，
+         固定一個合理高度避免跑位（雖然桌機現在改用 checkbox，這裡是保險，
+         也讓手機版的高度可控） */
       .cs-lang-checks select[multiple] {
         height: 6.5em;
       }
@@ -257,6 +269,13 @@
           display: flex;
           flex-wrap: wrap;
           gap: 0.2em 0.6em;
+        }
+        /* 手機版維持下拉式：換成顯示 <select multiple>，隱藏桌機用的 checkbox 群組 */
+        .cs-lang-checkbox-wrap {
+          display: none;
+        }
+        .cs-lang-select-wrap {
+          display: block;
         }
       }
     </style>
