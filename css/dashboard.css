@@ -157,6 +157,13 @@ td.admin#consignment-form {
   border: 1px solid #ddd;
   box-sizing: border-box;
 }
+/* 手機瀏覽器（尤其 iOS Safari／App 內建 WebView）大多不支援在 iframe 裡面
+   顯示可滑動、可縮放的 PDF 內容——這是瀏覽器本身的限制，不是 CSS 能解的，
+   所以桌機維持原本的 iframe 嵌入，手機另外提供一個「開新分頁」連結，
+   讓手機系統原生的 PDF 檢視器接手（那個一定能滑動、縮放） */
+.faq-pdf-open-link {
+  display: none;
+}
 /* 避免全域 h3 的裝飾用超大字級壓縮 FAQ PDF 區 */
 #faq.admin .scroll-inner > h3 {
   flex: 0 0 auto;
@@ -556,6 +563,20 @@ html::-webkit-scrollbar-thumb:hover {
     height: 100vh;
     max-height: 100vh;
     touch-action: pan-y !important;
+  }
+
+  /* 手機版一定顯示這個連結，因為 iframe 裡的 PDF 在手機瀏覽器上很可能滑不動 */
+  .faq-pdf-open-link {
+    display: block;
+    flex: 0 0 auto;
+    margin: 0.6rem 0 0.75rem;
+    padding: 0.7rem 1rem;
+    background: #333;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 6px;
   }
 }
 
