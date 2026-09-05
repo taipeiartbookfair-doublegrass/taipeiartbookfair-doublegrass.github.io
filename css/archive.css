@@ -243,6 +243,34 @@
   overflow-wrap: anywhere;
 }
 
+/* Credit：放在面板最後面，內容支援粗體/斜體/刪除線/顏色/小字/自動連結/原生 HTML
+   （見 js/archive.js 的 formatCreditText），所以文字顏色、連結顏色等都交給
+   內文自己的公式控制，這裡只固定版面本身的樣式 */
+.archive-year-credit-section {
+  margin-top: var(--spacing-sm);
+  padding-top: var(--spacing-md);
+  border-top: 2px solid var(--border-light);
+}
+
+.archive-year-credit-title {
+  font-size: var(--font-lg);
+  font-weight: bold;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--spacing-sm);
+}
+
+.archive-year-credit-body {
+  font-size: var(--font-sm);
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.archive-year-credit-body a {
+  color: var(--color-seven, rgb(52, 77, 203));
+}
+
 @media (max-width: 680px) {
   .archive-year-label {
     font-size: var(--font-md);
