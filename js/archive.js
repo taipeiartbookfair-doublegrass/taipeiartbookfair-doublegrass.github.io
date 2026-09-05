@@ -869,33 +869,62 @@
     return wrap;
   }
 
-  function buildAccessInfo(mrtInfo, busInfo, byCarInfo, youbikeInfo) {
-    if (!mrtInfo && !busInfo && !byCarInfo && !youbikeInfo) return null;
+  // Credit 區塊支援的排版公式（跟主站 info-log 用同一套語法，多加「純網址自動變連結」
+  // 跟「支援直接寫 HTML 標籤」）：
+  //   Enter 換行         → <br>
+  //   **粗體**           → <strong>
+  //   *斜體* 或 _斜體_    → <em>
+  //   ~~刪除線~~         → <del>
+  //   {顏色}文字（一行的最前面）→ <span style="color: 顏色">文字</span>
+  //   {small}文字{small} → <small>
+  //   https://example.com → 自動變成可點擊連結
+  //   <a href="...">...</a> 這種直接寫的 HTML 標籤也支援，因為這裡完全沒有把輸入
+  //   先跳脫（escape），所以本來就會照樣輸出，不需要額外處理
+  function formatCreditText(raw) {
+    let html = String(raw || "")
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      .replace(/\*(.*?)\*/g, "<em>$1</em>")
+      .replace(/_(.*?)_/g, "<em>$1</em>")
+      .replace(/~~(.*?)~~/g, "<del>$1</del>")
+      .replace(/\{(.*?)\}(.*?)(?=\n|\r|$)/g, function (_match, color, text) {
+        return '<span style="color: ' + color + '">' + text + "</span>";
+      })
+      .replace(/\{small\}(.*?)\{small\}/g, "<small>$1</small>")
+      .replace(/\n/g, "<br>");
+
+    // 純文字網址 → <a>，只走訪文字節點，不會動到已經寫好的 <a> 標籤或 href 屬性
+    const temp = document.createElement("div");
+    temp.innerHTML = html;
+    const walker = document.createTreeWalker(temp, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    let node;
+    while ((node = walker.nextNode())) textNodes.push(node);
+    textNodes.forEach((textNode) => {
+      if (!/https?:\/\//.test(textNode.nodeValue)) return;
+      const span = document.createElement("span");
+      span.innerHTML = textNode.nodeValue.replace(
+        /(https?:\/\/[^\s<>"]+)/g,
+        '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>',
+      );
+      textNode.parentNode.replaceChild(span, textNode);
+    });
+    return temp.innerHTML;
+  }
+
+  function buildCreditSection(credit) {
+    if (!credit) return null;
     const section = document.createElement("div");
-    section.className = "access-info-section";
+    section.className = "archive-year-credit-section";
 
     const title = document.createElement("h2");
-    title.className = "access-section-title";
-    title.textContent = "Access";
+    title.className = "archive-year-credit-title";
+    title.textContent = "CREDIT";
     section.appendChild(title);
 
-    const info = document.createElement("div");
-    info.className = "access-info";
-    [
-      ["捷運", mrtInfo],
-      ["公車", busInfo],
-      ["自行開車", byCarInfo],
-      ["YouBike", youbikeInfo],
-    ].forEach(([label, value]) => {
-      if (!value) return;
-      const h3 = document.createElement("h3");
-      h3.textContent = label;
-      const p = document.createElement("p");
-      p.innerHTML = withBr(value);
-      info.appendChild(h3);
-      info.appendChild(p);
-    });
-    section.appendChild(info);
+    const body = document.createElement("div");
+    body.className = "archive-year-credit-body";
+    body.innerHTML = formatCreditText(credit);
+    section.appendChild(body);
 
     return section;
   }
@@ -910,10 +939,7 @@
     const location = pick(fields["location"]);
     const locationLink = pick(fields["location_link"]);
     const googlemap = pick(fields["googlemap"]);
-    const mrtInfo = pick(fields["mrt-info"]);
-    const busInfo = pick(fields["bus-info"]);
-    const byCarInfo = pick(fields["by-car-info"]);
-    const youbikeInfo = pick(fields["youbike-info"]);
+    const credit = pick(fields["credit"]);
     const dateStart = pick(fields.date_start);
     const dateEnd = pick(fields.date_end);
     // 手風琴標題：年份 + 當屆主題（subtitle 本身不含年份，才需要補上）；
@@ -981,9 +1007,6 @@
       if (detailsEl) themeRow.appendChild(detailsEl);
       panelInner.appendChild(themeRow);
     }
-
-    const accessEl = buildAccessInfo(mrtInfo, busInfo, byCarInfo, youbikeInfo);
-    if (accessEl) panelInner.appendChild(accessEl);
 
     // Programs：跟 ticketvisit.html 同一套時間軸 class（timeline-mode-container /
     // timeline-scroll-container / timeline-calendar），內容懶載入時才由
@@ -1060,6 +1083,10 @@
       });
       panelInner.appendChild(exhibitorsGrid);
     }
+
+    // Credit 放最後面（在攤商名單之後）
+    const creditEl = buildCreditSection(credit);
+    if (creditEl) panelInner.appendChild(creditEl);
 
     panel.appendChild(panelInner);
     itemEl.appendChild(header);
