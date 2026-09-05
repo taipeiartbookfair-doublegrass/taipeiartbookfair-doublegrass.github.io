@@ -115,7 +115,7 @@
   }
 
   function cleanEventDescription(desc) {
-    return String(desc || "")
+    const cleaned = String(desc || "")
       .replace(/<br\s*\/?>/gi, "\n")
       .replace(/<[^>]*>/g, "")
       .replace(/&nbsp;/g, " ")
@@ -124,69 +124,412 @@
       .replace(/&gt;/g, ">")
       .replace(/&quot;/g, '"')
       .trim();
+
+    // Archive 是歷史紀錄，不需要顯示現場報名用的 SIGN UP 欄位（跟 timeline-visit.js
+    // 的 parseDescription 認得同一種格式：一行 "SIGN UP: ..."）
+    return cleaned
+      .split("\n")
+      .filter((line) => !/^sign\s*up\s*:?/i.test(line.trim()))
+      .join("\n")
+      .trim();
   }
 
-  function formatEventDateTime(event) {
-    const startInfo = event.start || {};
-    const endInfo = event.end || {};
-    if (startInfo.dateTime) {
-      const start = new Date(startInfo.dateTime);
-      const end = endInfo.dateTime ? new Date(endInfo.dateTime) : null;
-      const dateStr = start.toLocaleDateString("zh-TW", {
-        month: "2-digit",
-        day: "2-digit",
+  // 解析活動描述裡的 "KEY: value" 欄位（跟 timeline-visit.js 的 parseDescription 同一種格式），
+  // 但不讀取 SIGN UP —— archive 是歷史紀錄，不需要現場報名連結
+  function parseEventDescription(description) {
+    if (!description) return {};
+    const cleanDescription = String(description)
+      .replace(/<br\s*\/?>/gi, "\n")
+      .replace(/<[^>]*>/g, "")
+      .replace(/&nbsp;/g, " ")
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/[ \t]+/g, " ")
+      .replace(/\n\s+/g, "\n")
+      .replace(/\s+\n/g, "\n")
+      .trim();
+
+    const fields = {};
+    let currentKey = null;
+    let currentValue = "";
+    cleanDescription.split("\n").forEach((rawLine) => {
+      const line = rawLine.trim();
+      const colonIndex = line.indexOf(":");
+      if (colonIndex > 0) {
+        if (currentKey) fields[currentKey] = currentValue.trim();
+        currentKey = line.substring(0, colonIndex).trim();
+        currentValue = line.substring(colonIndex + 1).trim();
+      } else if (currentKey && line) {
+        currentValue += " " + line;
+      }
+    });
+    if (currentKey) fields[currentKey] = currentValue.trim();
+    delete fields["SIGN UP"];
+    return fields;
+  }
+
+  // 依日期範圍（含頭尾）列出每一天，給時間軸畫日期欄用
+  function getEventDaysInRange(dateStartRaw, dateEndRaw) {
+    const days = [];
+    const dateStart = toDateOnly(dateStartRaw);
+    const dateEnd = toDateOnly(dateEndRaw);
+    if (!dateStart || !dateEnd) return days;
+    const start = new Date(dateStart + "T00:00:00+08:00");
+    const end = new Date(dateEnd + "T00:00:00+08:00");
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) return days;
+    for (
+      let d = new Date(start);
+      d.getTime() <= end.getTime();
+      d.setDate(d.getDate() + 1)
+    ) {
+      days.push({ year: d.getFullYear(), month: d.getMonth(), day: d.getDate() });
+    }
+    return days;
+  }
+
+  // 跟 ticketvisit.html 的 Programs 時間軸同一套視覺（時間格線＋日期欄＋活動長條＋
+  // 篩選按鈕＋點擊預覽），沿用同一組 CSS class（timeline-*），但整個函式吃 container 和
+  // 日期範圍當參數，不靠任何固定 id ——這樣才能同一頁同時存在好幾個年份而不互相打架。
+  function renderYearTimeline(container, events, eventDays) {
+    container.innerHTML = "";
+    if (!events.length || !eventDays.length) {
+      container.innerHTML =
+        '<div class="timeline-empty-state"><h3>Programs</h3><p>目前沒有活動安排</p></div>';
+      return;
+    }
+
+    // 預設顯示 9:00-22:00，若有活動超出這個範圍則自動擴大，避免資料被裁掉
+    let startHour = 9;
+    let endHour = 22;
+    events.forEach((event) => {
+      const s = new Date(event.start.dateTime || event.start.date);
+      const e = new Date(event.end.dateTime || event.end.date);
+      if (event.start.dateTime && s.getHours() < startHour) startHour = s.getHours();
+      if (event.end.dateTime) {
+        const eh = e.getHours() + (e.getMinutes() > 0 ? 1 : 0);
+        if (eh > endHour) endHour = eh;
+      }
+    });
+    const timelineHeight = (endHour - startHour) * 60;
+    const timelineStartY = 100;
+
+    const mainContainer = document.createElement("div");
+    mainContainer.className = "timeline-main-container dynamic-height";
+    mainContainer.style.height = `${timelineHeight + 100}px`;
+
+    const timelineArea = document.createElement("div");
+    timelineArea.className = "timeline-area dynamic-height";
+    timelineArea.style.height = `${timelineHeight + 100}px`;
+
+    const previewContainer = document.createElement("div");
+    previewContainer.className =
+      "timeline-right-container dynamic dynamic-height";
+    previewContainer.style.height = `${timelineHeight + 100}px`;
+    previewContainer.innerHTML =
+      '<div class="timeline-preview-default"><p>點擊左側活動查看詳情</p></div>';
+
+    const availableWidth = timelineArea.offsetWidth || 1200;
+    const dayWidth = Math.floor((availableWidth - 60) / eventDays.length);
+
+    // 時間格線（縱軸）
+    for (let hour = startHour; hour < endHour; hour++) {
+      const yPosition = timelineStartY + (hour - startHour) * 60;
+      const timeLine = document.createElement("div");
+      timeLine.className = "timeline-time-line dynamic";
+      timeLine.style.top = `${yPosition}px`;
+      const timeLabel = document.createElement("div");
+      timeLabel.className = "timeline-time-label dynamic";
+      timeLabel.style.top = `${yPosition}px`;
+      timeLabel.textContent = `${hour.toString().padStart(2, "0")}:00`;
+      timelineArea.appendChild(timeLine);
+      timelineArea.appendChild(timeLabel);
+    }
+
+    // 日期分區邊界線
+    eventDays.forEach((_day, dayIndex) => {
+      const columnStartX = 30 + dayIndex * dayWidth;
+      if (dayIndex > 0) {
+        const leftBorder = document.createElement("div");
+        leftBorder.className = "timeline-zone-border dynamic";
+        leftBorder.style.left = `${columnStartX}px`;
+        leftBorder.style.top = `${timelineStartY}px`;
+        leftBorder.style.height = `${timelineHeight}px`;
+        timelineArea.appendChild(leftBorder);
+      }
+      if (dayIndex === eventDays.length - 1) {
+        const rightBorder = document.createElement("div");
+        rightBorder.className = "timeline-zone-border dynamic";
+        rightBorder.style.left = `${columnStartX + dayWidth}px`;
+        rightBorder.style.top = `${timelineStartY}px`;
+        rightBorder.style.height = `${timelineHeight}px`;
+        timelineArea.appendChild(rightBorder);
+      }
+    });
+
+    // 日期標籤（橫軸）
+    eventDays.forEach(({ year, month, day }, dayIndex) => {
+      const columnStartX = 30 + dayIndex * dayWidth;
+      const columnCenterX = columnStartX + dayWidth / 2;
+
+      const dateColumn = document.createElement("div");
+      dateColumn.className = "timeline-date-column dynamic";
+      dateColumn.style.left = `${columnStartX}px`;
+      dateColumn.style.width = `${dayWidth}px`;
+      const date = new Date(
+        `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}T00:00:00+08:00`,
+      );
+      const weekday = date.toLocaleDateString("en-US", {
+        weekday: "short",
+        timeZone: "Asia/Taipei",
       });
-      const startTime = start.toLocaleTimeString("zh-TW", {
+      const monthDay = date.toLocaleDateString("en-US", {
+        month: "numeric",
+        day: "numeric",
+        timeZone: "Asia/Taipei",
+      });
+      dateColumn.textContent = `${weekday} ${monthDay}`;
+
+      const dateLine = document.createElement("div");
+      dateLine.className = "timeline-date-line dynamic";
+      dateLine.style.left = `${columnCenterX}px`;
+      dateLine.style.top = `${timelineStartY}px`;
+      dateLine.style.height = `${timelineHeight}px`;
+
+      timelineArea.appendChild(dateColumn);
+      timelineArea.appendChild(dateLine);
+    });
+
+    // 篩選按鈕（ALL / TALK / WORKSHOP / PERFORMANCE）
+    const filterContainer = document.createElement("div");
+    filterContainer.className = "timeline-filter-container";
+    const allEventElements = [];
+    ["all", "talk", "workshop", "performance"].forEach((key) => {
+      const button = document.createElement("button");
+      button.className = `timeline-filter-btn ${key}`;
+      button.textContent = key.toUpperCase();
+      button.dataset.filter = key;
+      if (key === "all") {
+        button.style.backgroundColor = "#333";
+        button.style.color = "#fff";
+      }
+      button.addEventListener("click", () => {
+        filterContainer.querySelectorAll(".timeline-filter-btn").forEach((btn) => {
+          btn.className = `timeline-filter-btn ${btn.dataset.filter}`;
+          if (btn.dataset.filter === "all") {
+            btn.style.backgroundColor = "";
+            btn.style.color = "";
+          }
+        });
+        button.className = `timeline-filter-btn ${key}`;
+        if (key === "all") {
+          button.style.backgroundColor = "#333";
+          button.style.color = "#fff";
+        }
+        allEventElements.forEach((eventElement) => {
+          const evType = eventElement.dataset.eventType || "default";
+          eventElement.className =
+            key === "all" || evType === key
+              ? `timeline-event-bar dynamic ${evType} visible`
+              : `timeline-event-bar dynamic ${evType} hidden`;
+        });
+      });
+      filterContainer.appendChild(button);
+    });
+    timelineArea.appendChild(filterContainer);
+
+    // 依日期分組活動
+    const eventsByDay = {};
+    events.forEach((event) => {
+      const eventDate = new Date(event.start.dateTime || event.start.date);
+      const taiwanDateFormatter = new Intl.DateTimeFormat("en-US", {
+        timeZone: "Asia/Taipei",
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+      });
+      const dateParts = taiwanDateFormatter.formatToParts(eventDate);
+      const taiwanYear = parseInt(dateParts.find((p) => p.type === "year").value, 10);
+      const taiwanMonth =
+        parseInt(dateParts.find((p) => p.type === "month").value, 10) - 1;
+      const taiwanDay = parseInt(dateParts.find((p) => p.type === "day").value, 10);
+
+      const dayIndex = eventDays.findIndex(
+        ({ year, month, day }) =>
+          taiwanYear === year && taiwanMonth === month && taiwanDay === day,
+      );
+      if (dayIndex === -1) return;
+
+      const eventFields = parseEventDescription(event.description);
+      const eventType = (eventFields.TYPE || "default").toLowerCase();
+
+      const eventStartTime = new Date(event.start.dateTime || event.start.date);
+      const eventEndTime = new Date(event.end.dateTime || event.end.date);
+      const taiwanFormatter = new Intl.DateTimeFormat("en-US", {
+        timeZone: "Asia/Taipei",
         hour: "2-digit",
         minute: "2-digit",
         hour12: false,
       });
-      const endTime = end
-        ? end.toLocaleTimeString("zh-TW", {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false,
-          })
-        : "";
-      return dateStr + " " + startTime + (endTime ? "–" + endTime : "");
-    }
-    if (startInfo.date) {
-      const start = new Date(startInfo.date + "T00:00:00");
-      return start.toLocaleDateString("zh-TW", {
-        month: "2-digit",
-        day: "2-digit",
+      const startParts = taiwanFormatter.formatToParts(eventStartTime);
+      const endParts = taiwanFormatter.formatToParts(eventEndTime);
+      const startHourNum = parseInt(startParts.find((p) => p.type === "hour").value, 10);
+      const startMinuteNum = parseInt(
+        startParts.find((p) => p.type === "minute").value,
+        10,
+      );
+      const endHourNum = parseInt(endParts.find((p) => p.type === "hour").value, 10);
+      const endMinuteNum = parseInt(endParts.find((p) => p.type === "minute").value, 10);
+
+      const taiwanEventDate = new Date(
+        taiwanYear,
+        taiwanMonth,
+        taiwanDay,
+        startHourNum,
+        startMinuteNum,
+      );
+      const startTimeY =
+        timelineStartY + (startHourNum - startHour) * 60 + startMinuteNum;
+
+      if (!eventsByDay[dayIndex]) eventsByDay[dayIndex] = [];
+      eventsByDay[dayIndex].push({
+        event,
+        eventFields,
+        eventType,
+        startTimeY,
+        taiwanEventDate,
+        startHourNum,
+        startMinuteNum,
+        endHourNum,
+        endMinuteNum,
       });
-    }
-    return "";
-  }
+    });
 
-  function createProgramItem(event) {
-    const el = document.createElement("div");
-    el.className = "archive-program-item";
+    // 畫每一天的活動長條；同一時間有多筆活動時做 zigzag 位移避免重疊
+    Object.keys(eventsByDay).forEach((dayKey) => {
+      const dayIndex = parseInt(dayKey, 10);
+      const eventsInDay = eventsByDay[dayKey]
+        .slice()
+        .sort((a, b) => a.startTimeY - b.startTimeY);
+      const columnStartX = 30 + dayIndex * dayWidth;
+      const strictZoneLeft = columnStartX + 10;
+      const strictZoneRight = columnStartX + dayWidth - 10;
 
-    const timeEl = document.createElement("div");
-    timeEl.className = "archive-program-time";
-    timeEl.textContent = formatEventDateTime(event);
+      const placedEvents = [];
+      eventsInDay.forEach((eventData) => {
+        const {
+          event,
+          eventFields,
+          eventType,
+          taiwanEventDate,
+          startHourNum,
+          startMinuteNum,
+          endHourNum,
+          endMinuteNum,
+        } = eventData;
+        let startTimeY = eventData.startTimeY;
 
-    const bodyEl = document.createElement("div");
-    bodyEl.className = "archive-program-body";
+        const eventBar = document.createElement("div");
+        eventBar.className = `timeline-event-bar dynamic ${eventType}`;
+        eventBar.dataset.eventType = eventType;
+        allEventElements.push(eventBar);
 
-    const titleEl = document.createElement("div");
-    titleEl.className = "archive-program-title";
-    titleEl.textContent = event.summary || "(無標題)";
-    bodyEl.appendChild(titleEl);
+        const eventContent = document.createElement("div");
+        eventContent.className = "timeline-event-content";
+        const titleText = event.summary || "未命名活動";
+        const eventTitleEl = document.createElement("div");
+        eventTitleEl.className = "timeline-event-title large";
+        eventTitleEl.style.maxWidth = "200px";
+        eventTitleEl.textContent = titleText;
+        const eventTimeEl = document.createElement("div");
+        eventTimeEl.className = "timeline-event-time";
+        eventTimeEl.textContent =
+          `${startHourNum.toString().padStart(2, "0")}:${startMinuteNum.toString().padStart(2, "0")} - ` +
+          `${endHourNum.toString().padStart(2, "0")}:${endMinuteNum.toString().padStart(2, "0")}`;
+        eventContent.appendChild(eventTitleEl);
+        eventContent.appendChild(eventTimeEl);
+        eventBar.appendChild(eventContent);
 
-    const desc = cleanEventDescription(event.description);
-    if (desc) {
-      const descEl = document.createElement("div");
-      descEl.className = "archive-program-desc";
-      descEl.innerHTML = withBr(desc);
-      bodyEl.appendChild(descEl);
-    }
+        timelineArea.appendChild(eventBar);
+        const actualWidth = eventBar.offsetWidth || 150;
 
-    el.appendChild(timeEl);
-    el.appendChild(bodyEl);
-    return el;
+        let maxAllowedWidth = 225;
+        if (titleText.length > 30) maxAllowedWidth = 160;
+        else if (titleText.length > 20) maxAllowedWidth = 200;
+        else if (titleText.length > 15) maxAllowedWidth = 220;
+        maxAllowedWidth = Math.min(maxAllowedWidth, dayWidth - 20);
+        const adjustedWidth = Math.min(actualWidth, maxAllowedWidth);
+        eventBar.style.width = `${adjustedWidth}px`;
+
+        const sameTimeCount = placedEvents.filter(
+          (p) => Math.abs(p.top - startTimeY) <= 5,
+        ).length;
+        let bestPosition = strictZoneLeft;
+        if (sameTimeCount > 0) {
+          bestPosition = strictZoneLeft + sameTimeCount * 100;
+          startTimeY += sameTimeCount * 15;
+        }
+        if (bestPosition < strictZoneLeft) {
+          bestPosition = strictZoneLeft;
+        } else if (bestPosition + adjustedWidth > strictZoneRight) {
+          bestPosition = strictZoneRight - adjustedWidth;
+        }
+
+        eventBar.style.height = "30px";
+        eventBar.style.left = `${bestPosition}px`;
+        eventBar.style.top = `${startTimeY}px`;
+        placedEvents.push({ left: bestPosition, top: startTimeY });
+
+        eventBar.addEventListener("click", () => {
+          const hasTime = Boolean(event.start.dateTime);
+          const dateStr = taiwanEventDate.toLocaleDateString("en-US", {
+            weekday: "short",
+            month: "numeric",
+            day: "numeric",
+            timeZone: "Asia/Taipei",
+          });
+          const dateTimeStr = hasTime
+            ? `${dateStr} | ${startHourNum.toString().padStart(2, "0")}:${startMinuteNum.toString().padStart(2, "0")} - ${endHourNum.toString().padStart(2, "0")}:${endMinuteNum.toString().padStart(2, "0")}`
+            : dateStr;
+
+          previewContainer.innerHTML = "";
+          if (eventFields.IMAGE) {
+            const img = document.createElement("img");
+            img.src = `image/programIMG/${eventFields.IMAGE}`;
+            img.className = "timeline-preview-image";
+            img.alt = "";
+            img.onerror = function () {
+              this.style.display = "none";
+            };
+            previewContainer.appendChild(img);
+          }
+          const tag = document.createElement("div");
+          tag.className = `timeline-preview-type-tag ${eventType}`;
+          tag.textContent = `#${eventType.toUpperCase()}`;
+          const dt = document.createElement("div");
+          dt.className = "timeline-preview-date-time";
+          dt.textContent = dateTimeStr;
+          const titleEl = document.createElement("div");
+          titleEl.className = "timeline-preview-event-title";
+          titleEl.textContent = event.summary || "未命名活動";
+          const descEl = document.createElement("div");
+          descEl.className = "timeline-preview-description";
+          descEl.innerHTML = withBr(
+            cleanEventDescription(eventFields.DESCRIPTION || event.description || "暫無詳細描述"),
+          );
+
+          previewContainer.appendChild(tag);
+          previewContainer.appendChild(dt);
+          previewContainer.appendChild(titleEl);
+          previewContainer.appendChild(descEl);
+        });
+      });
+    });
+
+    mainContainer.appendChild(timelineArea);
+    mainContainer.appendChild(previewContainer);
+    container.appendChild(mainContainer);
   }
 
   // ===== 攤商卡片（跟 ticket&visit 的 exhibitor-display.js 同一套結構/樣式）=====
@@ -315,18 +658,11 @@
       itemEl.dataset.programsLoaded = "1";
       const dateStart = itemEl.dataset.dateStart || "";
       const dateEnd = itemEl.dataset.dateEnd || "";
-      const programsLabelEl = itemEl.querySelector(
-        ".archive-year-programs-label"
-      );
-      const programsListEl = itemEl.querySelector(
-        ".archive-year-programs-list"
-      );
+      const timelineCalendarEl = itemEl.querySelector(".archive-year-timeline-calendar");
       loadYearPrograms(year, dateStart, dateEnd).then((events) => {
-        if (!events.length || !programsListEl) return;
-        if (programsLabelEl) programsLabelEl.style.display = "";
-        events.forEach((ev) => {
-          programsListEl.appendChild(createProgramItem(ev));
-        });
+        if (!timelineCalendarEl) return;
+        const eventDays = getEventDaysInRange(dateStart, dateEnd);
+        renderYearTimeline(timelineCalendarEl, events, eventDays);
         refreshPanelHeight(itemEl);
       });
     }
@@ -548,15 +884,26 @@
     const accessEl = buildAccessInfo(mrtInfo, busInfo, byCarInfo, youbikeInfo);
     if (accessEl) panelInner.appendChild(accessEl);
 
-    const programsLabel = document.createElement("div");
-    programsLabel.className = "archive-year-programs-label";
-    programsLabel.style.display = "none"; // 抓到活動才顯示
-    programsLabel.textContent = "活動節目 Programs";
-    panelInner.appendChild(programsLabel);
+    // Programs：跟 ticketvisit.html 同一套時間軸 class（timeline-mode-container /
+    // timeline-scroll-container / timeline-calendar），內容懶載入時才由
+    // renderYearTimeline() 動態填進 .archive-year-timeline-calendar
+    const programsTitle = document.createElement("h2");
+    programsTitle.className = "timeline-title";
+    programsTitle.textContent = "Programs";
+    panelInner.appendChild(programsTitle);
 
-    const programsListEl = document.createElement("div");
-    programsListEl.className = "archive-year-programs-list";
-    panelInner.appendChild(programsListEl);
+    const timelineModeContainer = document.createElement("div");
+    timelineModeContainer.className = "timeline-mode-container visible";
+
+    const timelineScroll = document.createElement("div");
+    timelineScroll.className = "timeline-scroll-container";
+
+    const timelineCalendarEl = document.createElement("div");
+    timelineCalendarEl.className = "timeline-calendar archive-year-timeline-calendar";
+
+    timelineScroll.appendChild(timelineCalendarEl);
+    timelineModeContainer.appendChild(timelineScroll);
+    panelInner.appendChild(timelineModeContainer);
 
     const sliderEl = document.createElement("div");
     sliderEl.className = "archive-year-slider";
