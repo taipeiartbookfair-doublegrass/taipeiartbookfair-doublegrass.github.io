@@ -172,6 +172,16 @@
 
 /* 活動節目 Programs 沿用 ticketvisit.css 的 .timeline-* 時間軸樣式，不用另外寫 CSS */
 
+/* 攤位地圖：純大圖，放在攤商名單上面（跟 ticketvisit 的浮動地圖元件不同，
+   那個是 position:absolute 可拖拉/縮放的懸浮視窗，這裡只要單純的靜態大圖） */
+.archive-year-map-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 2px solid var(--border-light);
+  margin-top: var(--spacing-sm);
+}
+
 /* 攤商名單 */
 .archive-year-exhibitors-label {
   font-size: var(--font-sm);
