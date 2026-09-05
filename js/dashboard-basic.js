@@ -1358,9 +1358,19 @@ document.addEventListener("DOMContentLoaded", async function () {
     const now = new Date();
     const publishTime = info.publishTime ? new Date(info.publishTime) : null;
 
-    if (section) {
-      section.style.position = "relative";
-      section.style.overflow = "hidden";
+    // overlay 實際掛載／定位的容器：如果 section 是 <tr>，
+    // 改用它底下的 <td>。<div> 不是合法的 <tr> 子元素，且
+    // position:relative 在 <tr> 上不保證能正確包住 position:absolute
+    // 的子元素（尤其在手機瀏覽器）——包不住的話，這個滿版 overlay
+    // 就會往上找到頁面本身當定位基準，變成整個頁面被「關」起來。
+    const overlayHost =
+      section && section.tagName === "TR"
+        ? section.querySelector("td") || section
+        : section;
+
+    if (overlayHost) {
+      overlayHost.style.position = "relative";
+      overlayHost.style.overflow = "hidden";
     }
 
     // 未公布前
@@ -1386,7 +1396,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         const overlay = document.createElement("div");
         overlay.className = "overlay-closed";
         overlay.textContent = "Close";
-        section.appendChild(overlay);
+        (overlayHost || section).appendChild(overlay);
         setTimeout(() => overlay.classList.add("active"), 10);
         section.classList.add("disabled");
         section.style.opacity = 1;
@@ -1400,13 +1410,21 @@ document.addEventListener("DOMContentLoaded", async function () {
             : info.afterMessage;
         if (msg && desc) desc.innerHTML = processAfterMessage(msg);
         // 鐵捲門降到 edit-button-row（編輯按鈕那列）
+        // 注意：overlay 要掛在 <td> 上，不能直接掛在 <tr> 上 ——
+        // <div> 不是合法的 <tr> 子元素，且 position:relative 在 <tr>
+        // 上不保證能正確包住 position:absolute 的子元素（尤其在手機瀏覽器），
+        // 一旦包不住，這個滿版的 overlay 就會往上找到頁面本身當定位基準，
+        // 變成整個頁面被「關」起來。
         const editButtonRow = document.getElementById("edit-button-row");
-        if (editButtonRow && !editButtonRow.querySelector(".overlay-closed")) {
-          editButtonRow.style.pointerEvents = "none";
+        const editButtonCell = editButtonRow
+          ? editButtonRow.querySelector("td")
+          : null;
+        if (editButtonCell && !editButtonCell.querySelector(".overlay-closed")) {
+          editButtonCell.style.pointerEvents = "none";
           const overlay = document.createElement("div");
           overlay.className = "overlay-closed";
           overlay.textContent = "Close";
-          editButtonRow.appendChild(overlay);
+          editButtonCell.appendChild(overlay);
           setTimeout(() => overlay.classList.add("active"), 10);
         }
       }
