@@ -22,6 +22,13 @@
     return String(text || "").replace(/\n/g, "<br>");
   }
 
+  function splitLines(text) {
+    return String(text || "")
+      .split("\n")
+      .map((s) => s.trim())
+      .filter(Boolean);
+  }
+
   // ===== 試算表資料 pivot =====
   // info 是「一列一個欄位」的長格式，依 年份 + id 轉成 { year: { title:{zh,en}, subtitle:{zh,en}, desc:{zh,en} } }
   function pivotInfo(rows) {
@@ -359,11 +366,131 @@
     if (panel) panel.style.maxHeight = "0px";
   }
 
+  // ===== Hero 影片 / 時間・地點 / Access（跟 ticketvisit.html 同一套排版與 CSS class，
+  // 但完全不用 id —— ticketvisit.html 用 id="time-list"／id="location"／id="googlemap" 等
+  // 固定 id，因為那頁只會有「當屆」一份資料；archive 是每個年份都會重複這個區塊，
+  // 若照搬固定 id，同一頁會出現重複 id，document.getElementById 永遠只抓得到第一個年份，
+  // 其他年份就會是空的。這裡改成純 class + createElement，靠 DOM 節點本身而不是 id 來定位）=====
+  function buildHeroVideo(heroVideo) {
+    if (!heroVideo) return null;
+    const heroSection = document.createElement("div");
+    heroSection.className = "hero-poster-section";
+    const iframe = document.createElement("iframe");
+    iframe.src = heroVideo;
+    iframe.setAttribute("frameborder", "0");
+    iframe.setAttribute("allow", "autoplay; fullscreen; picture-in-picture");
+    iframe.allowFullscreen = true;
+    iframe.loading = "lazy";
+    heroSection.appendChild(iframe);
+    return heroSection;
+  }
+
+  function buildExhibitionDetails(timeListRaw, location, locationLink, googlemap) {
+    if (!timeListRaw && !location && !googlemap) return null;
+    const wrap = document.createElement("div");
+    wrap.className = "exhibition-details";
+
+    if (timeListRaw) {
+      const item = document.createElement("div");
+      item.className = "detail-item";
+      const h3 = document.createElement("h3");
+      h3.className = "detail-item-title";
+      h3.textContent = "時間 Time";
+      const ul = document.createElement("ul");
+      ul.className = "time-list";
+      splitLines(timeListRaw).forEach((line) => {
+        const li = document.createElement("li");
+        li.textContent = line;
+        ul.appendChild(li);
+      });
+      item.appendChild(h3);
+      item.appendChild(ul);
+      wrap.appendChild(item);
+    }
+
+    if (location || googlemap) {
+      const item = document.createElement("div");
+      item.className = "detail-item";
+      const h3 = document.createElement("h3");
+      h3.className = "detail-item-title";
+      h3.textContent = "活動地點 Location";
+      item.appendChild(h3);
+
+      if (location) {
+        const p = document.createElement("p");
+        const a = document.createElement("a");
+        a.textContent = location;
+        if (locationLink) {
+          a.href = locationLink;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+        }
+        p.appendChild(a);
+        item.appendChild(p);
+      }
+
+      if (googlemap) {
+        const mapContainer = document.createElement("div");
+        mapContainer.className = "map-container";
+        const mapIframe = document.createElement("iframe");
+        mapIframe.src = googlemap;
+        mapIframe.loading = "lazy";
+        mapIframe.setAttribute("referrerpolicy", "no-referrer-when-downgrade");
+        mapContainer.appendChild(mapIframe);
+        item.appendChild(mapContainer);
+      }
+
+      wrap.appendChild(item);
+    }
+
+    return wrap;
+  }
+
+  function buildAccessInfo(mrtInfo, busInfo, byCarInfo, youbikeInfo) {
+    if (!mrtInfo && !busInfo && !byCarInfo && !youbikeInfo) return null;
+    const section = document.createElement("div");
+    section.className = "access-info-section";
+
+    const title = document.createElement("h2");
+    title.className = "access-section-title";
+    title.textContent = "Access";
+    section.appendChild(title);
+
+    const info = document.createElement("div");
+    info.className = "access-info";
+    [
+      ["捷運", mrtInfo],
+      ["公車", busInfo],
+      ["自行開車", byCarInfo],
+      ["YouBike", youbikeInfo],
+    ].forEach(([label, value]) => {
+      if (!value) return;
+      const h3 = document.createElement("h3");
+      h3.textContent = label;
+      const p = document.createElement("p");
+      p.innerHTML = withBr(value);
+      info.appendChild(h3);
+      info.appendChild(p);
+    });
+    section.appendChild(info);
+
+    return section;
+  }
+
   function buildYearItem(year, fields, exhibitors) {
     // id 沿用主站 pageconfig 同一套命名（exhibition-title / exhibition-subtitle / exhibition-poem）
     const title = pick(fields["exhibition-title"]) || year;
     const subtitle = pick(fields["exhibition-subtitle"]);
     const desc = pick(fields["exhibition-poem"]);
+    const heroVideo = pick(fields["hero-video"]);
+    const timeListRaw = pick(fields["time-list"]);
+    const location = pick(fields["location"]);
+    const locationLink = pick(fields["location_link"]);
+    const googlemap = pick(fields["googlemap"]);
+    const mrtInfo = pick(fields["mrt-info"]);
+    const busInfo = pick(fields["bus-info"]);
+    const byCarInfo = pick(fields["by-car-info"]);
+    const youbikeInfo = pick(fields["youbike-info"]);
     const dateStart = pick(fields.date_start);
     const dateEnd = pick(fields.date_end);
     // 手風琴標題：年份 + 當屆主題（subtitle 本身不含年份，才需要補上）；
@@ -391,6 +518,46 @@
     const panelInner = document.createElement("div");
     panelInner.className = "archive-year-panel-inner";
 
+    // 排版順序跟 ticketvisit.html 一致：影片 → 主題文字 → 時間/地點 → Access → Programs
+    // → 相簿（archive 專屬，試算表沒有這個區塊）→ 攤商名單
+    const heroVideoEl = buildHeroVideo(heroVideo);
+    if (heroVideoEl) panelInner.appendChild(heroVideoEl);
+
+    if (subtitle) {
+      const subtitleEl = document.createElement("p");
+      subtitleEl.className = "archive-year-subtitle";
+      subtitleEl.textContent = subtitle;
+      panelInner.appendChild(subtitleEl);
+    }
+
+    if (desc) {
+      const descEl = document.createElement("p");
+      descEl.className = "archive-year-desc";
+      descEl.innerHTML = withBr(desc);
+      panelInner.appendChild(descEl);
+    }
+
+    const detailsEl = buildExhibitionDetails(
+      timeListRaw,
+      location,
+      locationLink,
+      googlemap,
+    );
+    if (detailsEl) panelInner.appendChild(detailsEl);
+
+    const accessEl = buildAccessInfo(mrtInfo, busInfo, byCarInfo, youbikeInfo);
+    if (accessEl) panelInner.appendChild(accessEl);
+
+    const programsLabel = document.createElement("div");
+    programsLabel.className = "archive-year-programs-label";
+    programsLabel.style.display = "none"; // 抓到活動才顯示
+    programsLabel.textContent = "活動節目 Programs";
+    panelInner.appendChild(programsLabel);
+
+    const programsListEl = document.createElement("div");
+    programsListEl.className = "archive-year-programs-list";
+    panelInner.appendChild(programsListEl);
+
     const sliderEl = document.createElement("div");
     sliderEl.className = "archive-year-slider";
     sliderEl.style.display = "none";
@@ -417,30 +584,6 @@
     sliderEl.appendChild(prevBtn);
     sliderEl.appendChild(nextBtn);
     panelInner.appendChild(sliderEl);
-
-    if (subtitle) {
-      const subtitleEl = document.createElement("p");
-      subtitleEl.className = "archive-year-subtitle";
-      subtitleEl.textContent = subtitle;
-      panelInner.appendChild(subtitleEl);
-    }
-
-    if (desc) {
-      const descEl = document.createElement("p");
-      descEl.className = "archive-year-desc";
-      descEl.innerHTML = withBr(desc);
-      panelInner.appendChild(descEl);
-    }
-
-    const programsLabel = document.createElement("div");
-    programsLabel.className = "archive-year-programs-label";
-    programsLabel.style.display = "none"; // 抓到活動才顯示
-    programsLabel.textContent = "活動節目 Programs";
-    panelInner.appendChild(programsLabel);
-
-    const programsListEl = document.createElement("div");
-    programsListEl.className = "archive-year-programs-list";
-    panelInner.appendChild(programsListEl);
 
     if (exhibitors && exhibitors.length) {
       const label = document.createElement("div");
