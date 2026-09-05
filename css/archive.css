@@ -174,6 +174,40 @@
   white-space: normal;
 }
 
+/* 主題文字（左）+ 時間地點（右）：桌機併排，手機版 media query 改回上下堆疊 */
+.archive-year-theme-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-lg);
+}
+
+.archive-year-theme-col {
+  flex: 1 1 50%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.archive-year-details-col {
+  flex: 1 1 50%;
+  min-width: 0;
+}
+
+/* 相簿（左）+ 攤位地圖（右）：桌機併排，手機版 media query 改回上下堆疊 */
+.archive-year-media-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+}
+
+.archive-year-media-row > .archive-year-slider,
+.archive-year-media-row > .archive-year-map-image {
+  flex: 1 1 50%;
+  min-width: 0;
+  margin-top: 0;
+}
+
 /* 活動節目 Programs 沿用 ticketvisit.css 的 .timeline-* 時間軸樣式，不用另外寫 CSS */
 
 /* 攤位地圖：純大圖，放在攤商名單上面（跟 ticketvisit 的浮動地圖元件不同，
@@ -212,5 +246,16 @@
 @media (max-width: 680px) {
   .archive-year-label {
     font-size: var(--font-md);
+  }
+
+  /* 手機版維持上下堆疊：主題文字/時間地點、相簿/地圖都改回單欄 */
+  .archive-year-theme-row,
+  .archive-year-media-row {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .archive-year-media-row > .archive-year-map-image {
+    margin-top: var(--spacing-sm);
   }
 }

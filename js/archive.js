@@ -946,18 +946,24 @@
     const heroVideoEl = buildHeroVideo(heroVideo);
     if (heroVideoEl) panelInner.appendChild(heroVideoEl);
 
+    // 主題文字（當屆主題／當屆文字）放左邊、時間地點放右邊，桌機併排顯示；
+    // 手機版用 CSS media query 改回上下堆疊（.archive-year-theme-row 加
+    // flex-direction:column），跟其他手機版排版邏輯一致
+    const themeCol = document.createElement("div");
+    themeCol.className = "archive-year-theme-col";
+
     if (subtitle) {
       const subtitleEl = document.createElement("p");
       subtitleEl.className = "archive-year-subtitle";
       subtitleEl.textContent = subtitle;
-      panelInner.appendChild(subtitleEl);
+      themeCol.appendChild(subtitleEl);
     }
 
     if (desc) {
       const descEl = document.createElement("p");
       descEl.className = "archive-year-desc";
       descEl.innerHTML = withBr(desc);
-      panelInner.appendChild(descEl);
+      themeCol.appendChild(descEl);
     }
 
     const detailsEl = buildExhibitionDetails(
@@ -966,7 +972,15 @@
       locationLink,
       googlemap,
     );
-    if (detailsEl) panelInner.appendChild(detailsEl);
+    if (detailsEl) detailsEl.classList.add("archive-year-details-col");
+
+    if (themeCol.childNodes.length || detailsEl) {
+      const themeRow = document.createElement("div");
+      themeRow.className = "archive-year-theme-row";
+      if (themeCol.childNodes.length) themeRow.appendChild(themeCol);
+      if (detailsEl) themeRow.appendChild(detailsEl);
+      panelInner.appendChild(themeRow);
+    }
 
     const accessEl = buildAccessInfo(mrtInfo, busInfo, byCarInfo, youbikeInfo);
     if (accessEl) panelInner.appendChild(accessEl);
@@ -1017,7 +1031,6 @@
     sliderEl.appendChild(sliderImg);
     sliderEl.appendChild(prevBtn);
     sliderEl.appendChild(nextBtn);
-    panelInner.appendChild(sliderEl);
 
     // 攤位地圖：不從試算表讀，直接對應 GitHub repo 的 image/archive/map/{年份}.jpg，
     // 跟相簿一樣懶載入（第一次展開才去查 GitHub 資料夾），查不到就維持隱藏
@@ -1025,7 +1038,13 @@
     mapImg.className = "archive-year-map-image";
     mapImg.alt = "攤位地圖 Booth Map";
     mapImg.style.display = "none";
-    panelInner.appendChild(mapImg);
+
+    // 相簿放左邊、地圖放右邊，桌機併排；手機版用 CSS media query 改回上下堆疊
+    const mediaRow = document.createElement("div");
+    mediaRow.className = "archive-year-media-row";
+    mediaRow.appendChild(sliderEl);
+    mediaRow.appendChild(mapImg);
+    panelInner.appendChild(mediaRow);
 
     if (exhibitors && exhibitors.length) {
       const label = document.createElement("div");
