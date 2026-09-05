@@ -1335,19 +1335,7 @@
         <!-- faq -->
         <td class="admin" id="faq" style="display: none">
           <div class="scroll-inner">
-            <a
-              href="dashboard/faq.pdf"
-              target="_blank"
-              rel="noopener"
-              class="faq-pdf-open-link"
-              >📄 在新分頁開啟 FAQ PDF｜Open FAQ PDF in a new tab</a
-            >
-            <iframe
-              class="faq-pdf-embed"
-              src="dashboard/faq.pdf"
-              width="100%"
-              title="FAQ PDF"
-            ></iframe>
+            <div class="faq-pdf-viewer" id="faq-pdf-viewer"></div>
           </div>
         </td>
 
@@ -1488,5 +1476,7 @@
 
     <script src="js/dashboardupload/upload_dashboard.js?v=20260512c"></script>
     <script src="js/dashboard-body.js?v=20260513a"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script src="js/faq-pdf-viewer.js"></script>
   </body>
 </html>

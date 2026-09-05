@@ -149,20 +149,30 @@ td.admin#consignment-form {
   padding-bottom: 0;
   box-sizing: border-box;
 }
-#faq .faq-pdf-embed {
+/* FAQ PDF 改用 PDF.js 把每一頁畫成 <canvas> 直接放進 DOM（不再用 <iframe>），
+   這樣它就是普通的頁面內容，會被上面 #faq.admin > .scroll-inner 的 overflow
+   正常捲動處理，手機滑動、桌機滾輪都不需要額外處理 */
+.faq-pdf-viewer {
   flex: 1 1 auto;
   width: 100%;
   min-height: 0;
-  height: 100%;
+  box-sizing: border-box;
+}
+
+.faq-pdf-page {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: 0.75rem;
   border: 1px solid #ddd;
   box-sizing: border-box;
 }
-/* 手機瀏覽器（尤其 iOS Safari／App 內建 WebView）大多不支援在 iframe 裡面
-   顯示可滑動、可縮放的 PDF 內容——這是瀏覽器本身的限制，不是 CSS 能解的，
-   所以桌機維持原本的 iframe 嵌入，手機另外提供一個「開新分頁」連結，
-   讓手機系統原生的 PDF 檢視器接手（那個一定能滑動、縮放） */
-.faq-pdf-open-link {
-  display: none;
+
+.faq-pdf-loading,
+.faq-pdf-error {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #666;
 }
 /* 避免全域 h3 的裝飾用超大字級壓縮 FAQ PDF 區 */
 #faq.admin .scroll-inner > h3 {
@@ -547,36 +557,15 @@ html::-webkit-scrollbar-thumb:hover {
   #faq.mobile-active {
     touch-action: none !important;
   }
-  /* allow the scroll-inner (which contains the iframe) to scroll on mobile */
-  /* touch-action: none on #faq above blocks touch gestures for its whole
-     subtree (the used value is the intersection of an element's and its
-     ancestors' touch-action) — overflow:auto alone doesn't undo that, so
-     touch-action has to be reopened explicitly here for swipe-to-scroll
-     to actually work on a touchscreen. */
+  /* allow the scroll-inner (which now holds the PDF.js-rendered <canvas> pages)
+     to scroll on mobile. touch-action: none on #faq above blocks touch
+     gestures for its whole subtree (the used value is the intersection of an
+     element's and its ancestors' touch-action) — overflow:auto alone doesn't
+     undo that, so touch-action has to be reopened explicitly here. */
   #faq.mobile-active .scroll-inner {
     overflow: auto !important;
     touch-action: pan-y !important;
     -webkit-overflow-scrolling: touch !important;
-  }
-  #faq.mobile-active .faq-pdf-embed,
-  #faq.mobile-active iframe {
-    height: 100vh;
-    max-height: 100vh;
-    touch-action: pan-y !important;
-  }
-
-  /* 手機版一定顯示這個連結，因為 iframe 裡的 PDF 在手機瀏覽器上很可能滑不動 */
-  .faq-pdf-open-link {
-    display: block;
-    flex: 0 0 auto;
-    margin: 0.6rem 0 0.75rem;
-    padding: 0.7rem 1rem;
-    background: #333;
-    color: #fff;
-    text-align: center;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 6px;
   }
 }
 
@@ -889,9 +878,8 @@ html::-webkit-scrollbar-thumb:hover {
     overflow: visible !important;
     padding-bottom: 2em;
   }
-  /* Open Call / FAQ：覆寫手機版 .scroll-inner，讓 iframe／PDF 仍有足夠視窗高度 */
-  #open-call-form.admin.mobile-active > .scroll-inner.opencall-dashboard-host,
-  #faq.admin.mobile-active > .scroll-inner {
+  /* Open Call：覆寫手機版 .scroll-inner，讓 iframe 仍有足夠視窗高度 */
+  #open-call-form.admin.mobile-active > .scroll-inner.opencall-dashboard-host {
     height: 100dvh !important;
     max-height: 100dvh !important;
     min-height: 0 !important;
@@ -900,10 +888,28 @@ html::-webkit-scrollbar-thumb:hover {
     flex-direction: column !important;
     padding-bottom: 0 !important;
   }
-  #open-call-form.admin.mobile-active .opencall-dashboard-iframe,
-  #faq.admin.mobile-active .faq-pdf-embed {
+  #open-call-form.admin.mobile-active .opencall-dashboard-iframe {
     flex: 1 1 auto !important;
     min-height: 65dvh !important;
+    width: 100% !important;
+  }
+  /* FAQ：這裡本來也是 overflow:hidden !important，選擇器比前面 #faq.mobile-active
+     .scroll-inner 的 overflow:auto !important 更精確（多兩個 class），會直接蓋掉
+     那個修正，導致 PDF 內容一直滑不動——這才是真正一直修不好的原因，不是 PDF.js
+     能不能解決的問題。這裡改成跟前面一致的 overflow:auto。 */
+  #faq.admin.mobile-active > .scroll-inner {
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    min-height: 0 !important;
+    overflow: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding-bottom: 0 !important;
+  }
+  #faq.admin.mobile-active .faq-pdf-viewer {
+    flex: 1 1 auto !important;
     width: 100% !important;
   }
   table.layout,
