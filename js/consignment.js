@@ -62,6 +62,18 @@ window.onLangSelectChange = function (idx, sel) {
   t.style.display = otherSelected ? "block" : "none";
 };
 
+// 桌機版用真的 checkbox（點一個不會取消另一個）；<select multiple> 只留給手機版
+// 用，因為手機瀏覽器會換成自己的原生多選介面。這裡點 checkbox 時同步把對應的
+// <option>.selected 設好，讓送出表單時讀 langSelect.selectedOptions 的邏輯完全
+// 不用改，兩種介面共用同一份資料來源。
+window.onLangCheckboxChange = function (idx, checkbox) {
+  const sel = document.getElementById(`lang-select-${idx}`);
+  if (!sel) return;
+  const opt = Array.from(sel.options).find((o) => o.value === checkbox.value);
+  if (opt) opt.selected = checkbox.checked;
+  onLangSelectChange(idx, sel);
+};
+
 // ── Book entry template ────────────────────────────────────────────────────────
 let bookCount = 0;
 
@@ -109,8 +121,13 @@ window.addConsignmentBook = function () {
   const langOptions = LANGUAGES.map(
     (l) => `<option value="${l}">${l}</option>`,
   ).join("");
+  const langCheckboxItems = LANGUAGES.map(
+    (l) =>
+      `<label class="cs-check-label"><input type="checkbox" value="${l}" onchange="onLangCheckboxChange(${idx}, this)">${l}</label>`,
+  ).join("");
   const langCheckboxes =
-    `<select id="lang-select-${idx}" name="lang_${idx}[]" multiple onchange="onLangSelectChange(${idx}, this)" style="min-width:160px;padding:6px;border-radius:6px;border:1px solid #ccc;background:#fff;">${langOptions}</select>` +
+    `<div class="cs-lang-checkbox-wrap">${langCheckboxItems}</div>` +
+    `<div class="cs-lang-select-wrap"><select id="lang-select-${idx}" name="lang_${idx}[]" multiple onchange="onLangSelectChange(${idx}, this)" style="min-width:160px;padding:6px;border-radius:6px;border:1px solid #ccc;background:#fff;">${langOptions}</select></div>` +
     `<input type="text" id="lang-other-text-${idx}" name="lang_other_text_${idx}" placeholder="請填入 please specify" style="display:none;margin-top:6px;width:100%;box-sizing:border-box;">`;
 
   const div = document.createElement("div");
