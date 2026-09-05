@@ -170,54 +170,7 @@
   white-space: normal;
 }
 
-/* 活動節目 Programs（掃 Google Calendar） */
-.archive-year-programs-label {
-  font-size: var(--font-sm);
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-secondary);
-  margin-top: var(--spacing-xs);
-}
-
-.archive-year-programs-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-.archive-program-item {
-  display: flex;
-  gap: var(--spacing-md);
-  padding: var(--spacing-sm) 0;
-  border-bottom: 1px solid var(--border-light);
-}
-
-.archive-program-time {
-  flex-shrink: 0;
-  min-width: 9ch;
-  font-size: var(--font-xs);
-  font-weight: bold;
-  color: var(--text-secondary);
-  white-space: nowrap;
-}
-
-.archive-program-body {
-  flex: 1;
-}
-
-.archive-program-title {
-  font-size: var(--font-sm);
-  font-weight: bold;
-  color: var(--text-primary);
-}
-
-.archive-program-desc {
-  font-size: var(--font-xs);
-  line-height: 1.5;
-  color: var(--text-secondary);
-  margin-top: 2px;
-}
+/* 活動節目 Programs 沿用 ticketvisit.css 的 .timeline-* 時間軸樣式，不用另外寫 CSS */
 
 /* 攤商名單 */
 .archive-year-exhibitors-label {
@@ -230,15 +183,16 @@
 }
 
 /* 攤商卡片沿用 ticketvisit.css 的 .exhibitors-grid-main / .exhibitor-card-main，
-   這裡只縮減欄數以符合 archive 面板較窄的寬度 */
+   這裡改成依可用寬度自動排欄（而不是照抄原本固定 5 欄），確保 archive 面板較窄時
+   每張卡至少有 180px 可以放品牌名稱，不會被切字 */
 .archive-year-exhibitors-grid.exhibitors-grid-main {
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
 }
 
-@media (max-width: 900px) {
-  .archive-year-exhibitors-grid.exhibitors-grid-main {
-    grid-template-columns: repeat(2, 1fr);
-  }
+/* 品牌名稱允許換行，避免長名稱被 .exhibitor-card-main 的 overflow:hidden 切掉 */
+.archive-year-exhibitors-grid .exhibitor-brand-display {
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 @media (max-width: 680px) {
