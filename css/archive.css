@@ -200,7 +200,7 @@
    這裡改成依可用寬度自動排欄（而不是照抄原本固定 5 欄），確保 archive 面板較窄時
    每張卡至少有 180px 可以放品牌名稱，不會被切字 */
 .archive-year-exhibitors-grid.exhibitors-grid-main {
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 }
 
 /* 品牌名稱允許換行，避免長名稱被 .exhibitor-card-main 的 overflow:hidden 切掉 */
