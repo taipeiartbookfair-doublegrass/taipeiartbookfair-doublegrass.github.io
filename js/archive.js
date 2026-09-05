@@ -84,6 +84,33 @@
     return photoCache[year];
   }
 
+  // ===== GitHub 攤位地圖資料夾（image/archive/map/{年份}.jpg，副檔名不限）=====
+  const GITHUB_MAP_PATH = "image/archive/map"; // 跟 GITHUB_PHOTO_BASE_PATH 同一層，放地圖圖檔
+  let mapFolderPromise = null; // 整個資料夾只列一次，所有年份共用同一次 API 呼叫
+
+  function loadMapFolder() {
+    if (mapFolderPromise) return mapFolderPromise;
+    const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_MAP_PATH}`;
+    mapFolderPromise = fetch(url)
+      .then((r) => (r.ok ? r.json() : []))
+      .then((files) => (Array.isArray(files) ? files : []))
+      .catch(() => []);
+    return mapFolderPromise;
+  }
+
+  // 找檔名（去掉副檔名）等於年份的那一張，例如 image/archive/map/2026.jpg
+  function loadYearMap(year) {
+    return loadMapFolder().then((files) => {
+      const match = files.find(
+        (f) =>
+          f.type === "file" &&
+          IMAGE_EXT_RE.test(f.name) &&
+          f.name.replace(IMAGE_EXT_RE, "") === String(year),
+      );
+      return match ? match.download_url : "";
+    });
+  }
+
   // ===== Programs（掃該年展期範圍的 Google Calendar 活動）=====
   const programsCache = {}; // year -> Promise<event[]>
 
@@ -91,7 +118,28 @@
   // 只取前 10 碼的日期部分，避免試算表儲存格格式不一致造成解析失敗
   function toDateOnly(str) {
     const s = String(str || "").trim();
-    return s.slice(0, 10);
+    if (!s) return "";
+
+    // 已經是純日期字串（沒有時間），直接取前 10 碼即可
+    if (!/t\d{2}:\d{2}/i.test(s)) return s.slice(0, 10);
+
+    // 帶時間的完整時間戳（試算表的日期儲存格常常這樣序列化）：不能直接切前 10 碼，
+    // 那是原始字串裡的日期，不一定等於轉成台灣時區之後的日曆日期
+    // （e.g. "2026-03-05T23:00:00.000Z" 切出來是 3/5，但轉成台灣時區其實是 3/6）。
+    // 一律當成一個絕對時間點，換算成台灣時區的日曆日期，才會跟活動比對時用的
+    // 時區基準一致。
+    const d = new Date(s);
+    if (isNaN(d.getTime())) return s.slice(0, 10);
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Taipei",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).formatToParts(d);
+    const y = parts.find((p) => p.type === "year").value;
+    const m = parts.find((p) => p.type === "month").value;
+    const day = parts.find((p) => p.type === "day").value;
+    return `${y}-${m}-${day}`;
   }
 
   function loadYearPrograms(year, dateStartRaw, dateEndRaw) {
@@ -170,23 +218,51 @@
     return fields;
   }
 
-  // 依日期範圍（含頭尾）列出每一天，給時間軸畫日期欄用
+  // 依日期範圍（含頭尾）列出每一天，給時間軸畫日期欄用。
+  // 注意：不能用 new Date(...).getFullYear()/getMonth()/getDate() 來取值——
+  // 那些吃的是瀏覽器「本地時區」，但下面比對活動所屬日期時是用
+  // Intl.DateTimeFormat({ timeZone: "Asia/Taipei" }) 抽取台灣時區的年月日。
+  // 如果瀏覽器本地時區不是 +08:00，這兩邊算出來的日期會差一天，
+  // 導致大部分活動對不到任何一欄、只剩下剛好還對得上的那一天有顯示。
+  // 這裡改成純日曆日期的整數運算（配合 Date.UTC 只是拿來做加一天的進位，
+  // 不代表任何實際時區），完全不經過本地時區轉換。
   function getEventDaysInRange(dateStartRaw, dateEndRaw) {
     const days = [];
     const dateStart = toDateOnly(dateStartRaw);
     const dateEnd = toDateOnly(dateEndRaw);
     if (!dateStart || !dateEnd) return days;
-    const start = new Date(dateStart + "T00:00:00+08:00");
-    const end = new Date(dateEnd + "T00:00:00+08:00");
-    if (isNaN(start.getTime()) || isNaN(end.getTime())) return days;
-    for (
-      let d = new Date(start);
-      d.getTime() <= end.getTime();
-      d.setDate(d.getDate() + 1)
-    ) {
-      days.push({ year: d.getFullYear(), month: d.getMonth(), day: d.getDate() });
+
+    const [sy, sm, sd] = dateStart.split("-").map(Number);
+    const [ey, em, ed] = dateEnd.split("-").map(Number);
+    if (!sy || !sm || !sd || !ey || !em || !ed) return days;
+
+    let cursor = Date.UTC(sy, sm - 1, sd);
+    const endCursor = Date.UTC(ey, em - 1, ed);
+    while (cursor <= endCursor) {
+      const d = new Date(cursor);
+      days.push({
+        year: d.getUTCFullYear(),
+        month: d.getUTCMonth(),
+        day: d.getUTCDate(),
+      });
+      cursor += 24 * 60 * 60 * 1000;
     }
     return days;
+  }
+
+  // 用台灣時區抽取一個 Date 的小時／分鐘，取代 Date.prototype.getHours()/getMinutes()
+  // （本地時區），確保跟時間軸定位公式用的是同一套時區基準
+  function getTaipeiHourMinute(date) {
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone: "Asia/Taipei",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }).formatToParts(date);
+    return {
+      hour: parseInt(parts.find((p) => p.type === "hour").value, 10),
+      minute: parseInt(parts.find((p) => p.type === "minute").value, 10),
+    };
   }
 
   // 跟 ticketvisit.html 的 Programs 時間軸同一套視覺（時間格線＋日期欄＋活動長條＋
@@ -200,15 +276,20 @@
       return;
     }
 
-    // 預設顯示 9:00-22:00，若有活動超出這個範圍則自動擴大，避免資料被裁掉
+    // 預設顯示 9:00-22:00，若有活動超出這個範圍則自動擴大，避免資料被裁掉。
+    // 這裡一定要用台灣時區抽取小時／分鐘（跟下面畫活動長條時算 startHourNum 用同一套
+    // 邏輯），不能用 Date.prototype.getHours()——那是本地時區，跟下面的定位公式
+    // 對不起來的話，某一天的活動就會被算到畫面外面，看起來像整天都沒有活動一樣。
     let startHour = 9;
     let endHour = 22;
     events.forEach((event) => {
-      const s = new Date(event.start.dateTime || event.start.date);
-      const e = new Date(event.end.dateTime || event.end.date);
-      if (event.start.dateTime && s.getHours() < startHour) startHour = s.getHours();
+      if (event.start.dateTime) {
+        const { hour } = getTaipeiHourMinute(new Date(event.start.dateTime));
+        if (hour < startHour) startHour = hour;
+      }
       if (event.end.dateTime) {
-        const eh = e.getHours() + (e.getMinutes() > 0 ? 1 : 0);
+        const { hour, minute } = getTaipeiHourMinute(new Date(event.end.dateTime));
+        const eh = hour + (minute > 0 ? 1 : 0);
         if (eh > endHour) endHour = eh;
       }
     });
@@ -366,28 +447,16 @@
 
       const eventStartTime = new Date(event.start.dateTime || event.start.date);
       const eventEndTime = new Date(event.end.dateTime || event.end.date);
-      const taiwanFormatter = new Intl.DateTimeFormat("en-US", {
-        timeZone: "Asia/Taipei",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      });
-      const startParts = taiwanFormatter.formatToParts(eventStartTime);
-      const endParts = taiwanFormatter.formatToParts(eventEndTime);
-      const startHourNum = parseInt(startParts.find((p) => p.type === "hour").value, 10);
-      const startMinuteNum = parseInt(
-        startParts.find((p) => p.type === "minute").value,
-        10,
-      );
-      const endHourNum = parseInt(endParts.find((p) => p.type === "hour").value, 10);
-      const endMinuteNum = parseInt(endParts.find((p) => p.type === "minute").value, 10);
+      const { hour: startHourNum, minute: startMinuteNum } =
+        getTaipeiHourMinute(eventStartTime);
+      const { hour: endHourNum, minute: endMinuteNum } =
+        getTaipeiHourMinute(eventEndTime);
 
+      // 用 Date.UTC 只是拿來裝 taiwanYear/Month/Day 這些「已經是台灣時區的日曆值」，
+      // 不代表任何實際時區——之後格式化時要搭配 timeZone:"UTC" 讀回來，
+      // 才不會又被瀏覽器本地時區轉一次（跟上面 getEventDaysInRange 同一種坑）
       const taiwanEventDate = new Date(
-        taiwanYear,
-        taiwanMonth,
-        taiwanDay,
-        startHourNum,
-        startMinuteNum,
+        Date.UTC(taiwanYear, taiwanMonth, taiwanDay, startHourNum, startMinuteNum),
       );
       const startTimeY =
         timelineStartY + (startHourNum - startHour) * 60 + startMinuteNum;
@@ -487,7 +556,7 @@
             weekday: "short",
             month: "numeric",
             day: "numeric",
-            timeZone: "Asia/Taipei",
+            timeZone: "UTC",
           });
           const dateTimeStr = hasTime
             ? `${dateStr} | ${startHourNum.toString().padStart(2, "0")}:${startMinuteNum.toString().padStart(2, "0")} - ${endHourNum.toString().padStart(2, "0")}:${endMinuteNum.toString().padStart(2, "0")}`
@@ -689,6 +758,18 @@
           prevBtn.addEventListener("click", () => show(index - 1));
           nextBtn.addEventListener("click", () => show(index + 1));
         }
+        refreshPanelHeight(itemEl);
+      });
+    }
+
+    // 攤位地圖也是懶載入：第一次展開才去查 GitHub 的 image/archive/map 資料夾
+    if (!itemEl.dataset.mapLoaded) {
+      itemEl.dataset.mapLoaded = "1";
+      const mapImg = itemEl.querySelector(".archive-year-map-image");
+      loadYearMap(year).then((url) => {
+        if (!url || !mapImg) return;
+        mapImg.src = url;
+        mapImg.style.display = "block";
         refreshPanelHeight(itemEl);
       });
     }
@@ -931,6 +1012,14 @@
     sliderEl.appendChild(prevBtn);
     sliderEl.appendChild(nextBtn);
     panelInner.appendChild(sliderEl);
+
+    // 攤位地圖：不從試算表讀，直接對應 GitHub repo 的 image/archive/map/{年份}.jpg，
+    // 跟相簿一樣懶載入（第一次展開才去查 GitHub 資料夾），查不到就維持隱藏
+    const mapImg = document.createElement("img");
+    mapImg.className = "archive-year-map-image";
+    mapImg.alt = "攤位地圖 Booth Map";
+    mapImg.style.display = "none";
+    panelInner.appendChild(mapImg);
 
     if (exhibitors && exhibitors.length) {
       const label = document.createElement("div");

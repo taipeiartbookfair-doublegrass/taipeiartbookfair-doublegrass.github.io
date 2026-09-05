@@ -31,7 +31,6 @@
 }
 
 .archive-container {
-  max-width: 1100px;
   margin: 0 auto;
 }
 
@@ -67,7 +66,9 @@
   font-family: inherit;
   text-align: left;
   color: var(--text-primary);
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .archive-year-header:hover {
@@ -94,7 +95,10 @@
   justify-content: center;
   font-size: var(--font-lg);
   font-weight: bold;
-  transition: transform 0.3s ease, background-color 0.2s ease, color 0.2s ease;
+  transition:
+    transform 0.3s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .archive-year-item.open .archive-year-toggle {
@@ -172,6 +176,16 @@
 
 /* 活動節目 Programs 沿用 ticketvisit.css 的 .timeline-* 時間軸樣式，不用另外寫 CSS */
 
+/* 攤位地圖：純大圖，放在攤商名單上面（跟 ticketvisit 的浮動地圖元件不同，
+   那個是 position:absolute 可拖拉/縮放的懸浮視窗，這裡只要單純的靜態大圖） */
+.archive-year-map-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 2px solid var(--border-light);
+  margin-top: var(--spacing-sm);
+}
+
 /* 攤商名單 */
 .archive-year-exhibitors-label {
   font-size: var(--font-sm);
@@ -186,7 +200,7 @@
    這裡改成依可用寬度自動排欄（而不是照抄原本固定 5 欄），確保 archive 面板較窄時
    每張卡至少有 180px 可以放品牌名稱，不會被切字 */
 .archive-year-exhibitors-grid.exhibitors-grid-main {
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 }
 
 /* 品牌名稱允許換行，避免長名稱被 .exhibitor-card-main 的 overflow:hidden 切掉 */
