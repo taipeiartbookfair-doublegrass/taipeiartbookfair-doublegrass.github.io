@@ -134,7 +134,7 @@ td.admin#consignment-form {
   display: block;
   background: transparent;
 }
-/* FAQ：PDF 嵌入改為視窗比例高度，不再固定 600px */
+/* FAQ：PDF 直接用 iframe 嵌入 */
 #faq.admin {
   overflow: hidden !important;
 }
@@ -149,30 +149,21 @@ td.admin#consignment-form {
   padding-bottom: 0;
   box-sizing: border-box;
 }
-/* FAQ PDF 改用 PDF.js 把每一頁畫成 <canvas> 直接放進 DOM（不再用 <iframe>），
-   這樣它就是普通的頁面內容，會被上面 #faq.admin > .scroll-inner 的 overflow
-   正常捲動處理，手機滑動、桌機滾輪都不需要額外處理 */
-.faq-pdf-viewer {
+#faq.admin > .scroll-inner > .faq-pdf-frame {
   flex: 1 1 auto;
   width: 100%;
   min-height: 0;
-  box-sizing: border-box;
-}
-
-.faq-pdf-page {
+  height: 100%;
+  background: #fff;
   display: block;
-  width: 100%;
-  height: auto;
-  margin-bottom: 0.75rem;
-  border: 1px solid #ddd;
   box-sizing: border-box;
 }
 
+.faq-pdf-page,
+.faq-pdf-viewer,
 .faq-pdf-loading,
 .faq-pdf-error {
-  padding: 2rem 1rem;
-  text-align: center;
-  color: #666;
+  display: none;
 }
 /* 避免全域 h3 的裝飾用超大字級壓縮 FAQ PDF 區 */
 #faq.admin .scroll-inner > h3 {
