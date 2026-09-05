@@ -541,14 +541,21 @@ html::-webkit-scrollbar-thumb:hover {
     touch-action: none !important;
   }
   /* allow the scroll-inner (which contains the iframe) to scroll on mobile */
+  /* touch-action: none on #faq above blocks touch gestures for its whole
+     subtree (the used value is the intersection of an element's and its
+     ancestors' touch-action) — overflow:auto alone doesn't undo that, so
+     touch-action has to be reopened explicitly here for swipe-to-scroll
+     to actually work on a touchscreen. */
   #faq.mobile-active .scroll-inner {
     overflow: auto !important;
+    touch-action: pan-y !important;
     -webkit-overflow-scrolling: touch !important;
   }
   #faq.mobile-active .faq-pdf-embed,
   #faq.mobile-active iframe {
     height: 100vh;
     max-height: 100vh;
+    touch-action: pan-y !important;
   }
 }
 
