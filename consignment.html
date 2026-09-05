@@ -114,6 +114,7 @@
         gap: 1em;
         margin-bottom: 0.65em;
         flex-wrap: wrap;
+        align-items: flex-start;
       }
       .cs-field {
         flex: 1;
@@ -157,6 +158,12 @@
         flex-wrap: wrap;
         gap: 4px 12px;
         padding: 6px 0 2px;
+      }
+      /* 語言欄位實際是 <select multiple>，桌機瀏覽器沒設 size 時預設會撐成
+         約 4 行高的 listbox，害同一列的「出版年」欄位被拉伸跟著變高、跑位。
+         這裡固定一個合理高度，手機版是系統原生選單樣式不受影響。 */
+      .cs-lang-checks select[multiple] {
+        height: 6.5em;
       }
       .cs-check-label {
         display: flex;
