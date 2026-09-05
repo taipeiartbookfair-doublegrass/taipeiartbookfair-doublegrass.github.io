@@ -691,6 +691,12 @@
           if (d !== details) d.classList.remove("expanded");
         });
       details.classList.toggle("expanded", !isExpanded);
+
+      // 手風琴的 max-height 是開啟當下量好的，攤商卡片展開後內容變高
+      // 卻沒有人重新量過，會被 .archive-year-panel 的 overflow:hidden 卡住
+      // ——尤其是最下面那幾張卡片，展開的內容直接被切掉看不到
+      const yearItem = card.closest(".archive-year-item");
+      if (yearItem) refreshPanelHeight(yearItem);
     });
 
     return card;
